@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa — Campus Event Operations &amp; Attendance Engine</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            serif: ['"Cinzel"', 'serif']
+          },
+          colors: {
+            ink: {
+              950: '#090D16',
+              900: '#0F172A',
+              700: '#334155',
+              500: '#64748B'
+            },
+            scholastic: {
+              500: '#D97706',
+              600: '#B45309',
+              50: '#FEF3C7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-ink-950 antialiased font-sans bg-[#F8FAFC]">
+
+  <!-- Institutional Top Bar -->
+  <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight leading-tight block text-ink-950">AttendTa</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">AY 2026–2027</span>
+          </div>
+          <span class="text-[11px] font-medium text-slate-500 block">USTP Student Organization Operations Engine</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="kiosk/index.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors border border-slate-200/60">
+          <svg class="w-3.5 h-3.5 text-scholastic-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          <span>Door Scanner Desk</span>
+        </a>
+        <a href="account/login.html" class="btn-tactile px-4 py-2 rounded-lg bg-ink-950 hover:bg-ink-900 text-white font-bold text-xs shadow-xs">
+          Sign In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Asymmetric Workspace (Anti-AI-Slop Command Architecture) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+
+    <!-- Campus Lead Banner -->
+    <div class="mb-8 max-w-3xl">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-scholastic-600 font-mono">University Dispatch</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-xs font-mono text-slate-500">1st Semester Academic Term Active</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink-950 leading-tight">
+        Campus Event Registration, Live QR Verification &amp; Credential Vault
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 leading-relaxed mt-2">
+        Direct portal access for university attendees, chapter officers, and administrative officers. Verify admission passes instantly below or access your tailored workstation.
+      </p>
+    </div>
+
+    <!-- Asymmetric Split: 60% Live Event Operations Marquee / 40% Action Console -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT: Live Event Operations Marquee (60% / 7 cols) -->
+      <section class="lg:col-span-7 space-y-6">
+
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-wider font-bold text-slate-400">Featured Session</span>
+              <h2 class="text-lg font-extrabold text-ink-950 mt-0.5">AI Architecture &amp; High-Agency Systems</h2>
+            </div>
+            <span class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-mono">
+              Registrations Open
+            </span>
+          </div>
+
+          <div class="py-4 space-y-3 text-xs text-slate-600">
+            <p class="leading-relaxed">
+              Exploration of modern LLM reasoning loops, sovereign AI agents, and production architecture. Keynote lecture by Dr. Julian Ramos followed by hands-on code laboratory.
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-[11px] font-mono text-slate-700">
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                <span class="block text-slate-400 uppercase text-[9px]">Date &amp; Schedule</span>
+                <span class="font-bold">Oct 15, 2026 • 09:00</span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                <span class="block text-slate-400 uppercase text-[9px]">Venue Facility</span>
+                <span class="font-bold">Main Auditorium</span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100 col-span-2 sm:col-span-1">
+                <span class="block text-slate-400 uppercase text-[9px]">Available Seats</span>
+                <span class="font-bold text-emerald-700">66 of 150 Open</span>
+              </div>
+            </div>
+
+            <!-- Capacity Gauge -->
+            <div class="pt-2">
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 mb-1">
+                <span>Roster Capacity Fill: 56%</span>
+                <span class="font-semibold text-slate-700">84 Registered</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-scholastic-500 h-full rounded-full transition-all" style="width: 56%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+            <a href="student/details.html?eventId=1" class="text-xs font-bold text-slate-700 hover:text-ink-950 underline underline-offset-4">
+              Inspect Seating Dossier
+            </a>
+            <div class="flex items-center gap-2">
+              <a href="student/passes.html" class="btn-tactile px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200">
+                View Pass
+              </a>
+              <a href="student/events.html" class="btn-tactile px-4 py-2 rounded-lg bg-ink-950 hover:bg-ink-900 text-white font-bold text-xs shadow-xs">
+                Browse All Sessions
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Schedule Ticker (High-Density Tabular Cockpit) -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-2xs">
+          <div class="px-5 py-3.5 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-ink-950">Active Academic Roster</span>
+            <span class="text-xs font-mono text-slate-500">3 Sessions Scheduled</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 text-xs">
+            <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-ink-950">C# ASP.NET Core &amp; Razor Systems Bootcamp</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-mono">EVT-02</span>
+                </div>
+                <div class="text-slate-500 text-[11px] font-mono">Oct 22, 2026 • IT Laboratory 401 • 35/45 Seats Taken</div>
+              </div>
+              <a href="student/details.html?eventId=2" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500 shrink-0">
+                Reserve Seat
+              </a>
+            </div>
+
+            <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-ink-950">Student Organization General Assembly 2026</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-mono">EVT-03</span>
+                </div>
+                <div class="text-slate-500 text-[11px] font-mono">Nov 05, 2026 • AV Amphitheater • Open to All Students</div>
+              </div>
+              <a href="student/details.html?eventId=3" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500 shrink-0">
+                Reserve Seat
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT: Interactive Console & Role Navigation (40% / 5 cols) -->
+      <aside class="lg:col-span-5 space-y-6">
+
+        <!-- Instant Pass & Application Query Tool (Don't Make Me Think) -->
+        <div class="bg-white border-2 border-ink-950 rounded-2xl p-5 shadow-xs space-y-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] font-mono uppercase font-bold text-scholastic-600 tracking-wider">Fast Access Desk</span>
+              <h3 class="text-base font-extrabold text-ink-950">Instant Student Pass Lookup</h3>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
+              No Login Needed
+            </span>
+          </div>
+          <p class="text-xs text-slate-600">
+            Have a confirmed session? Enter your Student Number to immediately render your official door pass or inspect registration approval status.
+          </p>
+
+          <form onsubmit="handleQuickLookup(event)" class="space-y-3">
+            <div>
+              <label for="lookup-student-id" class="sr-only">Student ID</label>
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="lookup-student-id" 
+                  placeholder="e.g. 2023-10482" 
+                  value="2023-10482"
+                  required
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono font-bold text-ink-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ink-950 focus:border-ink-950"
+                >
+                <button 
+                  type="submit" 
+                  class="btn-tactile absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded bg-ink-950 hover:bg-ink-900 text-white font-bold text-xs"
+                >
+                  Verify
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Result Card -->
+            <div id="lookup-result" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-ink-950">Maria Clara C. Santos</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Pass Active</span>
+              </div>
+              <div class="text-[11px] text-slate-600 font-mono">
+                Session: AI Architecture • Seat Confirmed
+              </div>
+              <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                <a href="student/passes.html" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500">
+                  Open Vector QR Pass
+                </a>
+                <span class="text-[10px] font-mono text-slate-400">Token Verified</span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Workstation Directory (Structured Hairline Nav, Anti-Card Overuse) -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-2xs">
+          <div class="px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+            <span class="text-xs font-bold uppercase tracking-wider text-ink-950">Role Workstations</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 text-xs">
+
+            <!-- Student Workstation -->
+            <div class="p-4 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                  <span class="font-bold text-ink-950 text-sm">Student Attendee</span>
+                </div>
+                <a href="student/events.html" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500">
+                  Enter Portal
+                </a>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <a href="student/events.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Browse Sessions
+                </a>
+                <a href="student/passes.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  My Door Passes (1)
+                </a>
+                <a href="student/history.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Academic Vault
+                </a>
+                <a href="account/register.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Request Account
+                </a>
+              </div>
+            </div>
+
+            <!-- Chapter Officer Workstation -->
+            <div class="p-4 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-scholastic-500"></div>
+                  <span class="font-bold text-ink-950 text-sm">Officer Operations</span>
+                </div>
+                <a href="events/index.html" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500">
+                  Enter Portal
+                </a>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <a href="kiosk/index.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors font-semibold">
+                  Door Scanner Kiosk
+                </a>
+                <a href="account/approvals.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Approvals (3 Pending)
+                </a>
+                <a href="masterdata/members.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Member Directory
+                </a>
+                <a href="reports/participation.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Turnout Reports
+                </a>
+              </div>
+            </div>
+
+            <!-- Administrator Console -->
+            <div class="p-4 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-ink-950"></div>
+                  <span class="font-bold text-ink-950 text-sm">Administration</span>
+                </div>
+                <a href="admin/users.html" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500">
+                  Enter Portal
+                </a>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <a href="admin/users.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Role Management
+                </a>
+                <a href="admin/auditlogs.html" class="p-2 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium transition-colors">
+                  Security Audit Trail
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- Grounded Collegiate Footer -->
+  <footer class="border-t border-slate-200/90 bg-white py-6 text-xs text-slate-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/attendTa_logo.jpg" alt="Logo" class="w-6 h-6 rounded object-contain border border-slate-200">
+        <span class="font-bold text-ink-950">AttendTa Event Platform</span>
+        <span class="text-slate-300">•</span>
+        <span>USTP Student Organization Council</span>
+      </div>
+      <div class="font-mono text-[11px] text-slate-500">
+        AY 2026–2027 • Standalone Python / Razor Compatible
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleQuickLookup(e) {
+      e.preventDefault();
+      const id = document.getElementById('lookup-student-id').value.trim();
+      const res = document.getElementById('lookup-result');
+      if (id === '2023-10482') {
+        res.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink-950">Maria Clara C. Santos</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Pass Active</span>
+          </div>
+          <div class="text-[11px] text-slate-600 font-mono">
+            Session: AI Architecture • Seat Confirmed
+          </div>
+          <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+            <a href="student/passes.html" class="text-xs font-bold text-scholastic-600 hover:text-scholastic-500">
+              Open Vector QR Pass
+            </a>
+            <span class="text-[10px] font-mono text-slate-400">Token Verified</span>
+          </div>
+        `;
+      } else {
+        res.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink-950">Student ID: ${id}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">Application Pending</span>
+          </div>
+          <div class="text-[11px] text-slate-600 font-mono">
+            Account registration under officer verification.
+          </div>
+          <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+            <a href="account/register.html" class="text-xs font-bold text-slate-700 hover:text-ink-950">
+              Check Status
+            </a>
+            <span class="text-[10px] font-mono text-slate-400">Queue #4</span>
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

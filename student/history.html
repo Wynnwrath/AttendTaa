@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa &bull; Student &bull; Attendance Records &amp; Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="../index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
+            <span class="text-[11px] font-semibold text-emerald-600 uppercase tracking-wider">Student Portal</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="events.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">Browse Sessions</a>
+          <a href="passes.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            My Door Passes
+            <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-600 text-white font-mono">1</span>
+          </a>
+          <a href="history.html" class="px-3 py-1.5 rounded-md text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200/60">Records &amp; Certificates</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-bold text-slate-900">Maria Clara Santos</div>
+          <div class="text-[11px] font-mono text-slate-500">2023-10482 &bull; BSIT 3-A</div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">MS</div>
+        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Title -->
+    <div>
+      <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Attendance Records &amp; Academic Vault</h1>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        Official verified participation records and issued digital credentials for your academic transcript and portfolio.
+      </p>
+    </div>
+
+    <!-- Executive Academic Dossier Summary Strip -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Accrued Academic Hours</div>
+          <div class="text-xl font-black text-slate-900 font-mono">3.0 <span class="text-xs font-normal text-slate-500 font-sans">Hours</span></div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 15l-2 5l9-11h-7l2-5l-9 11h7z"/></svg>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Verified Credentials</div>
+          <div class="text-xl font-black text-emerald-700 font-mono">1 <span class="text-xs font-normal text-slate-500 font-sans">Certificate Issued</span></div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Upcoming Door Passes</div>
+          <div class="text-xl font-black text-slate-900 font-mono">1 <span class="text-xs font-normal text-slate-500 font-sans">Active Pass Ready</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance History Table -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Verified Completed Sessions</span>
+        <span class="text-xs text-slate-500 font-mono">1 Completed &bull; 3.0 Hours Accrued</span>
+      </div>
+
+      <table class="w-full text-left text-xs text-slate-700">
+        <thead class="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <tr>
+            <th class="px-4 py-3">Event Session</th>
+            <th class="px-4 py-3">Classification</th>
+            <th class="px-4 py-3">Check-In Timestamp</th>
+            <th class="px-4 py-3">Attendance State</th>
+            <th class="px-4 py-3 text-right">Certificate</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr class="hover:bg-slate-50/50">
+            <td class="px-4 py-3.5">
+              <div class="font-bold text-slate-900 text-sm">AI Architecture &amp; High-Agency Systems</div>
+              <div class="text-[11px] text-slate-500">Main Auditorium &bull; 3.0 Academic Hours</div>
+            </td>
+            <td class="px-4 py-3.5">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                Seminar
+              </span>
+            </td>
+            <td class="px-4 py-3.5 font-mono text-slate-600">
+              Oct 15, 2026 &bull; 08:42 AM
+            </td>
+            <td class="px-4 py-3.5">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Present &amp; Verified
+              </span>
+            </td>
+            <td class="px-4 py-3.5 text-right">
+              <a href="../certificates/view.html?id=101" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all">
+                <span>View &amp; Print Certificate &rarr;</span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-mono">
+    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
+  </footer>
+
+</body>
+</html>

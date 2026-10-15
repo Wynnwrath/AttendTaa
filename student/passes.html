@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa — Student Event Door Pass</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            serif: ['"Cinzel"', 'serif']
+          },
+          colors: {
+            ink: {
+              950: '#090D16',
+              900: '#0F172A',
+              700: '#334155',
+              500: '#64748B'
+            },
+            scholastic: {
+              500: '#D97706',
+              600: '#B45309',
+              50: '#FEF3C7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-ink-950 antialiased font-sans bg-[#F8FAFC]">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200/80 bg-white sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="../index.html" class="flex items-center gap-3 text-ink-950 hover:opacity-90">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
+            <span class="text-[11px] font-semibold text-scholastic-600 uppercase tracking-wider font-mono">Student Portal</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="events.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-ink-950 hover:bg-slate-100 transition-colors">Browse Sessions</a>
+          <a href="passes.html" class="px-3 py-1.5 rounded-lg text-xs font-bold text-ink-950 bg-slate-100 border border-slate-200">
+            My Door Passes
+            <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-600 text-white font-mono">1</span>
+          </a>
+          <a href="history.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-ink-950 hover:bg-slate-100 transition-colors">Records &amp; Vault</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-bold text-ink-950">Maria Clara Santos</div>
+          <div class="text-[11px] font-mono text-slate-500">2023-10482 • BSIT 3-A</div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-ink-950 text-white flex items-center justify-center font-bold text-xs">MS</div>
+        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+
+    <div class="text-center space-y-1">
+      <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-slate-400">Institutional Credential</span>
+      <h1 class="text-2xl font-extrabold tracking-tight text-ink-950">Collegiate Event Door Pass</h1>
+      <p class="text-xs text-slate-500">
+        Present this token at the auditorium door terminal. High-contrast vector encoding for instant optical reading.
+      </p>
+    </div>
+
+    <!-- The Tactical Collegiate PVC Badge Card -->
+    <div class="bg-white border-2 border-ink-950 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 relative overflow-hidden">
+      
+      <!-- Lanyard Notch Styling (Authentic Academic Event Badge) -->
+      <div class="w-16 h-2 mx-auto rounded-full bg-slate-200 border border-slate-300 -mt-2 mb-4"></div>
+
+      <!-- Pass Identity Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">Registration Confirmed</span>
+          <span class="font-extrabold text-base text-ink-950">University Single-Entry Token</span>
+        </div>
+        <span class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          Verified Active
+        </span>
+      </div>
+
+      <!-- High-Contrast Vector QR Display Container -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center space-y-3">
+        <div id="qr-pass-container" class="w-48 h-48 mx-auto bg-white p-3 rounded-xl border border-slate-300 shadow-2xs flex items-center justify-center overflow-hidden">
+          <!-- Fallback Crisp SVG QR Primitive -->
+          <svg class="w-full h-full text-ink-950" viewBox="0 0 100 100" fill="currentColor">
+            <path d="M10 10h30v30H10V10zm5 5v20h20V15H15zm5 5h10v10H20V20zm40-10h30v30H60V10zm5 5v20h20V15H65zm5 5h10v10H70V20zM10 60h30v30H10V60zm5 5v20h20V65H15zm5 5h10v10H20V70zm45-5h10v10H65V65zm15 0h10v10H80V65zm-15 15h10v10H65V80zm15 15h10v10H80V95zm-30-5h10v10H50V90zm10-15h10v10H60V75zm0-20h10v10H60V55zm-15 0h10v10H45V55zm-5 15h10v10H40V70zm15 15h10v10H55V85z"/>
+          </svg>
+        </div>
+        <div id="qr-token-label" class="font-mono text-xs font-bold text-slate-700 tracking-wider">
+          TOKEN: 2023-10482-EVT01-CONFIRMED
+        </div>
+      </div>
+
+      <!-- Attendee & Session Particulars (High-Density Cockpit Grid) -->
+      <div class="space-y-4 pt-1">
+        <div class="grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <span class="text-slate-400 block font-medium">Attendee Name</span>
+            <span class="font-bold text-ink-950 text-sm">Maria Clara C. Santos</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Student Number</span>
+            <span class="font-mono font-bold text-ink-950 text-sm">2023-10482</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Degree Section</span>
+            <span class="font-semibold text-slate-800">BSIT • 3-A</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Auditorium Venue</span>
+            <span class="font-semibold text-slate-800" id="pass-venue">Main Auditorium</span>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100">
+          <span class="text-slate-400 block text-xs font-medium">Academic Session</span>
+          <h2 class="text-sm font-extrabold text-ink-950" id="pass-title">
+            AI Architecture &amp; High-Agency Systems
+          </h2>
+          <span class="text-xs font-mono text-slate-500" id="pass-time">Oct 15, 2026 • 09:00 - 12:00</span>
+        </div>
+      </div>
+
+      <!-- Pass Actions Strip -->
+      <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-100">
+        <button onclick="window.print()" class="btn-tactile px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold">
+          Print Offline Pass
+        </button>
+        <span class="text-slate-400 font-mono text-[11px]">Authorized for single admission</span>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200/80 bg-white py-4 text-center text-xs text-slate-500 font-mono">
+    &copy; 2026 USTP Student Organization Council • AttendTa Event Management Platform
+  </footer>
+
+  <script src="../js/qr-engine.js"></script>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const eventId = params.get('eventId') || '1';
+      
+      const events = {
+        '1': {
+          title: 'AI Architecture & High-Agency Systems',
+          venue: 'Main University Auditorium',
+          time: 'Oct 15, 2026 • 09:00 - 12:00',
+          token: '2023-10482-EVT01-CONFIRMED'
+        },
+        '2': {
+          title: 'C# ASP.NET Core & Entity Framework Bootcamp',
+          venue: 'IT Multimedia Lab 401',
+          time: 'Oct 20, 2026 • 13:00 - 17:00',
+          token: '2023-10482-EVT02-CONFIRMED'
+        },
+        '3': {
+          title: 'Midyear General Assembly & Constitution Review',
+          venue: 'College AV Amphitheater',
+          time: 'Nov 05, 2026 • 10:00 - 15:00',
+          token: '2023-10482-EVT03-CONFIRMED'
+        }
+      };
+
+      const current = events[eventId] || events['1'];
+      document.getElementById('pass-title').textContent = current.title;
+      document.getElementById('pass-venue').textContent = current.venue;
+      document.getElementById('pass-time').textContent = current.time;
+      document.getElementById('qr-token-label').textContent = 'TOKEN: ' + current.token;
+
+      if (typeof QRCode !== 'undefined') {
+        const container = document.getElementById('qr-pass-container');
+        container.innerHTML = '';
+        
+        const wrap = document.createElement('div');
+        wrap.className = 'relative flex items-center justify-center';
+        
+        const qrEl = document.createElement('div');
+        wrap.appendChild(qrEl);
+        
+        const logo = document.createElement('img');
+        logo.src = '../assets/attendTa_logo.jpg';
+        logo.alt = 'Logo';
+        logo.className = 'absolute w-8 h-8 rounded-md bg-white p-0.5 border border-slate-300 shadow-2xs pointer-events-none';
+        wrap.appendChild(logo);
+        
+        container.appendChild(wrap);
+        
+        new QRCode(qrEl, {
+          text: current.token,
+          width: 160,
+          height: 160,
+          colorDark: '#090D16',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      } else if (window.AttendTaQR) {
+        window.AttendTaQR.renderTo('qr-pass-container', current.token, {
+          cellSize: 7,
+          quietZone: 10,
+          moduleColor: '#090D16'
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa &bull; Master Records &bull; Members Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
+
+  <!-- Unified Officer Navigation Header -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="../events/index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo"
+            class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
+            <span class="text-[11px] font-semibold text-amber-600 uppercase tracking-wider">Officer Operations</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="../events/index.html"
+            class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Events
+          </a>
+          <a href="members.html"
+            class="px-3 py-1.5 rounded-md text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200/60">
+            Master Records
+          </a>
+          <a href="../account/approvals.html"
+            class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors inline-flex items-center">
+            <span>Approvals</span>
+            <span
+              class="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500 text-white font-mono font-bold leading-none">3</span>
+          </a>
+          <a href="../reports/participation.html"
+            class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Reports &amp; Analytics
+          </a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-bold text-slate-900">Danica Ysabel Navarro</div>
+          <div class="text-[11px] font-mono text-slate-500">Executive Secretary</div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">DN
+        </div>
+        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign
+          Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Flash Notification Banner -->
+    <div id="flash-banner"
+      class="hidden p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs font-medium flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-3">
+        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span id="flash-message">Member profile updated. Official chapter roll synchronized.</span>
+      </div>
+      <span class="text-[11px] text-emerald-700 font-mono font-bold">Audited</span>
+    </div>
+
+    <!-- Title & Sub-Navigation Header -->
+    <div class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Master Records &amp; Directory</h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Institutional reference records for organization members, campus facilities, and event taxonomy.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="openAddMemberModal()"
+            class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs active:scale-95 transition-all">
+            + Add Member
+          </button>
+        </div>
+      </div>
+
+      <!-- Sub-Navigation Tabs -->
+      <div class="flex border-b border-slate-200 gap-2">
+        <a href="members.html"
+          class="px-4 py-2.5 text-xs font-bold border-b-2 border-blue-600 text-blue-700 bg-blue-50/40 rounded-t-lg">
+          Organization Members (<span id="tab-member-count">5</span>)
+        </a>
+        <a href="venues.html"
+          class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300">
+          Venues &amp; Facilities (8)
+        </a>
+        <a href="eventtypes.html"
+          class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300">
+          Event Classifications (6)
+        </a>
+      </div>
+    </div>
+
+    <!-- Toolbar: Search & Filters -->
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+      <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+
+        <div class="relative flex-1 min-w-[200px]">
+          <input type="search" id="memberSearchInput" oninput="filterMembers()"
+            placeholder="Search by student no, full name, or email..."
+            class="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <select id="courseFilter" onchange="filterMembers()"
+          class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 font-medium focus:ring-2 focus:ring-blue-600">
+          <option value="">All Programs</option>
+          <option value="BSIT">BSIT</option>
+          <option value="BSCS">BSCS</option>
+          <option value="BSIS">BSIS</option>
+        </select>
+
+        <select id="statusFilter" onchange="filterMembers()"
+          class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 font-medium focus:ring-2 focus:ring-blue-600">
+          <option value="">All Statuses</option>
+          <option value="Active">Active Only</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="text-xs text-slate-500 font-mono" id="results-count-text">
+        Active Roster &bull; 5 Members
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead
+            class="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <tr>
+              <th class="px-4 py-3.5">Student Info</th>
+              <th class="px-4 py-3.5">Academic Class</th>
+              <th class="px-4 py-3.5">Contact &amp; Email</th>
+              <th class="px-4 py-3.5">Membership Type</th>
+              <th class="px-4 py-3.5">Status</th>
+              <th class="px-4 py-3.5 text-right w-48">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="members-table-body" class="divide-y divide-slate-100">
+            <!-- Populated dynamically via JS state -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div
+        class="bg-slate-50 px-4 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+        <div>Showing active roster records</div>
+        <div class="text-[11px] font-mono text-slate-400">100% ASP.NET Core Razor Pages Viable</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- EDIT / ADD MEMBER MODAL (Clean Semantic Razor Compatible Form) -->
+  <div id="member-modal"
+    class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white border border-slate-200 rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700 font-mono" id="modal-eyebrow">Master
+            Records</span>
+          <h2 class="text-base font-extrabold text-slate-900 mt-0.5" id="modal-title">Edit Member Profile</h2>
+        </div>
+        <button type="button" onclick="closeMemberModal()"
+          class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 flex items-center justify-center text-lg font-bold">&times;</button>
+      </div>
+
+      <!-- Modal Form Body -->
+      <form id="member-form" method="post" action="members.html" onsubmit="handleMemberFormSubmit(event)"
+        class="p-6 overflow-y-auto space-y-4 text-xs">
+        <input type="hidden" id="form-student-id-orig" name="OriginalStudentNumber">
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Student Number -->
+          <div>
+            <label for="form-student-id" class="block font-bold text-slate-700 mb-1">
+              Student Number <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="form-student-id" name="StudentNumber" required
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-mono focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <!-- Academic Class (Course & Section) -->
+          <div>
+            <label for="form-course-year" class="block font-bold text-slate-700 mb-1">
+              Course &amp; Section <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="form-course-year" name="CourseYear" required placeholder="e.g. BSIT 3-A"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Full Name -->
+        <div>
+          <label for="form-full-name" class="block font-bold text-slate-700 mb-1">
+            Full Name <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="form-full-name" name="FullName" required placeholder="e.g. Juan P. Dela Cruz"
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+        </div>
+
+        <!-- Institutional Email & Contact -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="form-email" class="block font-bold text-slate-700 mb-1">
+              Institutional Email <span class="text-rose-500">*</span>
+            </label>
+            <input type="email" id="form-email" name="Email" required placeholder="user@ustp.edu.ph"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <div>
+            <label for="form-contact" class="block font-bold text-slate-700 mb-1">
+              Contact Number
+            </label>
+            <input type="text" id="form-contact" name="Contact" placeholder="0917-000-0000"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Membership Type & Status -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="form-type" class="block font-bold text-slate-700 mb-1">
+              Membership Type <span class="text-rose-500">*</span>
+            </label>
+            <select id="form-type" name="MembershipType"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+              <option value="Regular Member">Regular Member</option>
+              <option value="Executive Officer">Executive Officer</option>
+              <option value="Honorary Fellow">Honorary Fellow</option>
+              <option value="Associate Member">Associate Member</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="form-status" class="block font-bold text-slate-700 mb-1">
+              Membership Status <span class="text-rose-500">*</span>
+            </label>
+            <select id="form-status" name="Status"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+              <option value="Active">Active (Good Standing)</option>
+              <option value="Inactive">Inactive (Suspended)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="closeMemberModal()"
+            class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 font-semibold">
+            Cancel
+          </button>
+          <button type="submit"
+            class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-xs active:scale-95 transition-all">
+            Save Member Record
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Page Footer -->
+  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-medium">
+    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All
+    rights reserved.
+  </footer>
+
+  <script>
+    const DEFAULT_MEMBERS = [
+      {
+        studentId: '2023-10482',
+        fullName: 'Maria Clara C. Santos',
+        courseYear: 'BSIT 3-A',
+        email: 'msantos@ustp.edu.ph',
+        contact: '0917-889-1204',
+        membershipType: 'Regular Member',
+        status: 'Active'
+      },
+      {
+        studentId: '2023-09821',
+        fullName: 'Adrian Jose V. Ramirez',
+        courseYear: 'BSIT 3-B',
+        email: 'aramirez@ustp.edu.ph',
+        contact: '0919-441-2890',
+        membershipType: 'Regular Member',
+        status: 'Active'
+      },
+      {
+        studentId: '2022-01948',
+        fullName: 'Kathryn Joy D. Lim',
+        courseYear: 'BSCS 4-A',
+        email: 'klim@ustp.edu.ph',
+        contact: '0922-771-3341',
+        membershipType: 'Honorary Fellow',
+        status: 'Inactive'
+      },
+      {
+        studentId: '2023-01824',
+        fullName: 'Danica Ysabel Navarro',
+        courseYear: 'BSIT 3-A',
+        email: 'dnavarro@ustp.edu.ph',
+        contact: '0918-204-5512',
+        membershipType: 'Executive Officer',
+        status: 'Active'
+      },
+      {
+        studentId: '2022-09412',
+        fullName: 'Carl Vincent D. Ocampo',
+        courseYear: 'BSCS 3-B',
+        email: 'cocampo@ustp.edu.ph',
+        contact: '0927-113-9021',
+        membershipType: 'Executive Officer',
+        status: 'Inactive'
+      }
+    ];
+
+    let members = [];
+    let isEditing = false;
+
+    function initMembers() {
+      const stored = localStorage.getItem('attendta_master_members_v2');
+      if (stored) {
+        try {
+          members = JSON.parse(stored);
+        } catch (e) {
+          members = DEFAULT_MEMBERS;
+        }
+      } else {
+        members = DEFAULT_MEMBERS;
+        saveMembers();
+      }
+      renderMembersTable();
+    }
+
+    function saveMembers() {
+      localStorage.setItem('attendta_master_members_v2', JSON.stringify(members));
+      document.getElementById('tab-member-count').textContent = members.length;
+    }
+
+    function renderMembersTable(filteredList = null) {
+      const tbody = document.getElementById('members-table-body');
+      tbody.innerHTML = '';
+      const list = filteredList || members;
+
+      document.getElementById('results-count-text').textContent = `Showing ${list.length} Members`;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400">No members match your filter criteria.</td></tr>`;
+        return;
+      }
+
+      list.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/50 transition-colors member-row';
+        tr.setAttribute('data-id', m.studentId);
+        tr.setAttribute('data-status', m.status);
+        tr.setAttribute('data-course', m.courseYear);
+
+        tr.innerHTML = `
+          <td class="px-4 py-3.5">
+            <div class="font-bold text-slate-900 text-sm">${m.fullName}</div>
+            <div class="font-mono text-slate-500 text-[11px]">${m.studentId}</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <div class="font-semibold text-slate-800">${m.courseYear}</div>
+            <div class="text-[11px] text-slate-400">Enrolled 1st Sem 2026</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <div class="text-slate-800">${m.email}</div>
+            <div class="font-mono text-slate-400 text-[11px]">${m.contact || 'N/A'}</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold ${m.membershipType.includes('Officer') ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-blue-50 text-blue-800 border border-blue-200/70'}">
+              ${m.membershipType}
+            </span>
+          </td>
+          <td class="px-4 py-3.5">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${m.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
+              <span class="w-1.5 h-1.5 rounded-full ${m.status === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+              ${m.status}
+            </span>
+          </td>
+          <td class="px-4 py-3.5 text-right whitespace-nowrap">
+            <div class="inline-flex items-center justify-end gap-2">
+              <button type="button" onclick="openEditMemberModal('${m.studentId}')" class="w-20 inline-flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 font-semibold text-xs text-slate-700 active:scale-95 transition-all shadow-2xs">
+                <svg class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <span>Edit</span>
+              </button>
+              <button type="button" onclick="toggleMemberStatus('${m.studentId}')" class="w-24 inline-flex items-center justify-center py-1.5 rounded-lg border font-semibold text-xs active:scale-95 transition-all shadow-2xs ${m.status === 'Active' ? 'border-rose-200 hover:bg-rose-50 text-rose-700' : 'border-emerald-200 hover:bg-emerald-50 text-emerald-700'}">
+                <span>${m.status === 'Active' ? 'Deactivate' : 'Activate'}</span>
+              </button>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterMembers() {
+      const q = (document.getElementById('memberSearchInput').value || '').toLowerCase().trim();
+      const course = document.getElementById('courseFilter').value;
+      const status = document.getElementById('statusFilter').value;
+
+      const filtered = members.filter(m => {
+        const matchesQuery = !q || m.fullName.toLowerCase().includes(q) || m.studentId.toLowerCase().includes(q) || m.email.toLowerCase().includes(q);
+        const matchesCourse = !course || m.courseYear.includes(course);
+        const matchesStatus = !status || m.status === status;
+        return matchesQuery && matchesCourse && matchesStatus;
+      });
+
+      renderMembersTable(filtered);
+    }
+
+    function toggleMemberStatus(studentId) {
+      const m = members.find(mem => mem.studentId === studentId);
+      if (!m) return;
+
+      m.status = (m.status === 'Active') ? 'Inactive' : 'Active';
+      saveMembers();
+      renderMembersTable();
+      showFlashBanner(`Status for ${m.fullName} updated to ${m.status}.`);
+    }
+
+    function openEditMemberModal(studentId) {
+      isEditing = true;
+      const m = members.find(mem => mem.studentId === studentId);
+      if (!m) return;
+
+      document.getElementById('modal-title').textContent = 'Edit Member Profile';
+      document.getElementById('modal-eyebrow').textContent = 'Update Member Record';
+      document.getElementById('form-student-id-orig').value = m.studentId;
+      document.getElementById('form-student-id').value = m.studentId;
+      document.getElementById('form-full-name').value = m.fullName;
+      document.getElementById('form-course-year').value = m.courseYear;
+      document.getElementById('form-email').value = m.email;
+      document.getElementById('form-contact').value = m.contact || '';
+      document.getElementById('form-type').value = m.membershipType || 'Regular Member';
+      document.getElementById('form-status').value = m.status || 'Active';
+
+      document.getElementById('member-modal').classList.remove('hidden');
+    }
+
+    function openAddMemberModal() {
+      isEditing = false;
+      document.getElementById('modal-title').textContent = 'Add Organization Member';
+      document.getElementById('modal-eyebrow').textContent = 'New Member Entry';
+      document.getElementById('form-student-id-orig').value = '';
+      document.getElementById('form-student-id').value = '';
+      document.getElementById('form-full-name').value = '';
+      document.getElementById('form-course-year').value = 'BSIT 1-A';
+      document.getElementById('form-email').value = '';
+      document.getElementById('form-contact').value = '';
+      document.getElementById('form-type').value = 'Regular Member';
+      document.getElementById('form-status').value = 'Active';
+
+      document.getElementById('member-modal').classList.remove('hidden');
+    }
+
+    function closeMemberModal() {
+      document.getElementById('member-modal').classList.add('hidden');
+    }
+
+    function handleMemberFormSubmit(e) {
+      e.preventDefault();
+      const origId = document.getElementById('form-student-id-orig').value;
+      const studentId = document.getElementById('form-student-id').value.trim();
+      const fullName = document.getElementById('form-full-name').value.trim();
+      const courseYear = document.getElementById('form-course-year').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+      const contact = document.getElementById('form-contact').value.trim();
+      const membershipType = document.getElementById('form-type').value;
+      const status = document.getElementById('form-status').value;
+
+      if (isEditing && origId) {
+        const mem = members.find(m => m.studentId === origId);
+        if (mem) {
+          mem.studentId = studentId;
+          mem.fullName = fullName;
+          mem.courseYear = courseYear;
+          mem.email = email;
+          mem.contact = contact;
+          mem.membershipType = membershipType;
+          mem.status = status;
+          showFlashBanner(`Successfully updated profile for ${fullName}.`);
+        }
+      } else {
+        // Add new member
+        members.unshift({
+          studentId,
+          fullName,
+          courseYear,
+          email,
+          contact,
+          membershipType,
+          status
+        });
+        showFlashBanner(`Added new member ${fullName} (${studentId}) to active directory.`);
+      }
+
+      saveMembers();
+      renderMembersTable();
+      closeMemberModal();
+    }
+
+    function showFlashBanner(msg) {
+      const banner = document.getElementById('flash-banner');
+      const text = document.getElementById('flash-message');
+      text.textContent = msg;
+      banner.classList.remove('hidden');
+      setTimeout(() => banner.classList.add('hidden'), 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', initMembers);
+  </script>
+
+</body>
+
+</html>

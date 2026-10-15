@@ -1,0 +1,103 @@
+/* ==========================================================================
+   AttendTa v2 • Anti-AI-Slop Institutional Design Tokens
+   Scholastic Collegiate Palette • High-Density Cockpit • Tactile Physics
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Typography Roles */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-ceremonial: 'Cinzel', Georgia, serif;
+
+  /* Ink Hierarchy (High-contrast, zero washed-out grey) */
+  --ink-primary: #090D16;
+  --ink-secondary: #334155;
+  --ink-muted: #64748B;
+  --ink-faint: #94A3B8;
+  --ink-inverse: #FFFFFF;
+
+  /* Canvas & Surface Layers */
+  --canvas-ground: #F8FAFC;
+  --canvas-surface: #FFFFFF;
+  --canvas-subtle: #F1F5F9;
+  --canvas-elevated: #FFFFFF;
+  --canvas-dark: #0B1120;
+
+  /* Scholastic Accent Palette (Rich Amber Gold • Desaturated, Calibrated) */
+  --accent-amber: #D97706;
+  --accent-amber-hover: #B45309;
+  --accent-amber-subtle: #FEF3C7;
+  --accent-amber-glow: rgba(217, 119, 6, 0.12);
+
+  /* Deep Institutional Navy Support */
+  --navy-solid: #0F172A;
+  --navy-hover: #1E293B;
+  --navy-border: #1E3A8A;
+
+  /* Functional Status */
+  --status-emerald: #059669;
+  --status-emerald-subtle: #ECFDF5;
+  --status-amber: #D97706;
+  --status-amber-subtle: #FFFBEB;
+  --status-rose: #DC2626;
+  --status-rose-subtle: #FEF2F2;
+
+  /* Hairline Structural Dividers (1px crisp boundaries, not muddy card boxes) */
+  --hairline-light: 1px solid rgba(226, 232, 240, 0.9);
+  --hairline-medium: 1px solid rgba(203, 213, 225, 0.85);
+  --hairline-dark: 1px solid rgba(15, 23, 42, 0.12);
+
+  /* Diffusion Shadows (subtle optical depth without generic grey card halos) */
+  --shadow-tactile: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-subtle: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  --shadow-modal: 0 20px 40px -15px rgba(15, 23, 42, 0.14);
+}
+
+/* Global Anti-Aliasing & Body */
+html {
+  font-family: var(--font-body);
+  color: var(--ink-primary);
+  background-color: var(--canvas-ground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular Numerals for Cockpit Precision */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tactile Physics for Interactive Controls */
+.btn-tactile {
+  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.btn-tactile:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+/* Hairline Container Structure (Anti-Card Overuse) */
+.divide-hairline>*+* {
+  border-top: var(--hairline-light);
+}
+
+/* Kbd Shortcut Pill */
+kbd.key-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-secondary);
+  background-color: var(--canvas-subtle);
+  border: 1px solid var(--ink-faint);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}

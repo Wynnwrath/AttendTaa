@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50 print:bg-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa &bull; Event Participation &amp; Turnout Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50 print:bg-white">
+
+  <!-- Header (Hidden on Print) -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-30 print:hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="../events/index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
+            <span class="text-[11px] font-semibold text-amber-600 uppercase tracking-wider">Officer Operations</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="../events/index.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">Events</a>
+          <a href="../masterdata/members.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">Master Records</a>
+          <a href="../account/approvals.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            Approvals
+            <span class="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500 text-white font-mono font-bold leading-none">3</span>
+          </a>
+          <a href="participation.html" class="px-3 py-1.5 rounded-md text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200/60">Reports &amp; Analytics</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <button 
+          onclick="window.print()" 
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          <span>Print Report</span>
+        </button>
+        <div class="text-right hidden sm:block ml-2">
+          <div class="text-xs font-bold text-slate-900">Danica Navarro</div>
+          <div class="text-[11px] font-mono text-slate-500">Activities Officer</div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs">DN</div>
+        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Report Body -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Report Scope & Filter Toolbar (Print Hidden) -->
+    <div class="print:hidden p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <label for="report-scope-select" class="text-xs font-bold text-slate-700 uppercase tracking-wider shrink-0">
+          Report Scope:
+        </label>
+        <select id="report-scope-select" onchange="switchReportScope(this.value)" class="text-xs font-semibold px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500">
+          <option value="all">All Events (1st Semester SY 2026-2027 Cumulative Summary)</option>
+          <option value="1" selected>Event 01: AI Architecture &amp; High-Agency Systems (Oct 15)</option>
+          <option value="2">Event 02: C# ASP.NET Core &amp; EF Bootcamp (Oct 20)</option>
+          <option value="3">Event 03: Midyear General Assembly (Nov 05)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-slate-400 font-mono">Institutional Format &bull; A4 Letter</span>
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Export Official PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Report Title Block (Dean / Adviser Formal Header) -->
+    <div class="border-b-2 border-slate-900 pb-5 space-y-3">
+      <div class="flex items-center justify-between text-xs text-slate-500 font-mono">
+        <span id="rep-doc-num">AttendTa Institutional Document #REP-2026-EVT01</span>
+        <span>Generated: October 09, 2026 &bull; 08:50 AM</span>
+      </div>
+      <div class="flex items-start justify-between gap-4">
+        <div class="space-y-1">
+          <h1 class="text-3xl font-black text-slate-900 tracking-tight" id="rep-doc-title">
+            Event Participation &amp; Turnout Evaluation
+          </h1>
+          <p class="text-sm text-slate-600 font-medium">
+            Executive analysis for: <strong class="text-slate-900" id="rep-event-name">AI Architecture &amp; High-Agency Systems (EVT-2026-001)</strong>
+          </p>
+        </div>
+        <img src="../assets/attendTa_logo.jpg" alt="AttendTa Official Logo" class="w-14 h-14 rounded-xl object-contain bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+      </div>
+    </div>
+
+    <!-- Executive Metrics Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="rep-metrics-grid">
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block" id="m1-label">Total Registered</span>
+        <span class="text-3xl font-black text-slate-900 font-mono" id="m1-val">84</span>
+        <span class="text-[11px] text-slate-400 block mt-1" id="m1-sub">Capacity: 150 (56% Filled)</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block" id="m2-label">Actual Attended</span>
+        <span class="text-3xl font-black text-emerald-600 font-mono" id="m2-val">81</span>
+        <span class="text-[11px] text-slate-400 block mt-1" id="m2-sub">Door Scans Recorded</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block" id="m3-label">Turnout Rate</span>
+        <span class="text-3xl font-black text-blue-600 font-mono" id="m3-val">96.4%</span>
+        <span class="text-[11px] text-emerald-600 font-semibold block mt-1" id="m3-sub">Exceeds 85% Target</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block" id="m4-label">No-Shows (Absent)</span>
+        <span class="text-3xl font-black text-rose-600 font-mono" id="m4-val">3</span>
+        <span class="text-[11px] text-slate-400 block mt-1" id="m4-sub">3.6% No-Show Rate</span>
+      </div>
+    </div>
+
+    <!-- Academic Breakdown Table: Course & Year Distribution -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Course &amp; Academic Year Demographics</span>
+        <span class="text-xs text-slate-500 font-mono">Academic Affairs &bull; Evaluation Breakdown</span>
+      </div>
+
+      <table class="w-full text-left text-xs text-slate-700">
+        <thead class="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <tr>
+            <th class="px-4 py-3">Degree Program</th>
+            <th class="px-4 py-3">Academic Year</th>
+            <th class="px-4 py-3 font-mono">Registered Count</th>
+            <th class="px-4 py-3 font-mono">Verified Attended</th>
+            <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 font-mono">
+          <tr>
+            <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Technology (BSIT)</td>
+            <td class="px-4 py-3 font-sans">3rd Year</td>
+            <td class="px-4 py-3">48</td>
+            <td class="px-4 py-3 text-emerald-600 font-bold">47</td>
+            <td class="px-4 py-3 text-right font-bold text-blue-600">97.9%</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Computer Science (BSCS)</td>
+            <td class="px-4 py-3 font-sans">2nd Year</td>
+            <td class="px-4 py-3">22</td>
+            <td class="px-4 py-3 text-emerald-600 font-bold">21</td>
+            <td class="px-4 py-3 text-right font-bold text-blue-600">95.5%</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Systems (BSIS)</td>
+            <td class="px-4 py-3 font-sans">4th Year</td>
+            <td class="px-4 py-3">14</td>
+            <td class="px-4 py-3 text-emerald-600 font-bold">13</td>
+            <td class="px-4 py-3 text-right font-bold text-blue-600">92.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Container for Single-Event Demographics / Semester Summary -->
+    <div id="rep-tables-container" class="space-y-8">
+      <!-- Academic Breakdown Table: Course & Year Distribution -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden" id="rep-demo-card">
+        <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-700" id="rep-table-title">Course &amp; Academic Year Demographics</span>
+          <span class="text-xs text-slate-500 font-mono" id="rep-table-sub">Academic Affairs &bull; Evaluation Breakdown</span>
+        </div>
+
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500" id="rep-thead">
+            <tr>
+              <th class="px-4 py-3">Degree Program</th>
+              <th class="px-4 py-3">Academic Year</th>
+              <th class="px-4 py-3 font-mono">Registered Count</th>
+              <th class="px-4 py-3 font-mono">Verified Attended</th>
+              <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-mono" id="rep-tbody">
+            <tr>
+              <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Technology (BSIT)</td>
+              <td class="px-4 py-3 font-sans">3rd Year</td>
+              <td class="px-4 py-3">48</td>
+              <td class="px-4 py-3 text-emerald-600 font-bold">47</td>
+              <td class="px-4 py-3 text-right font-bold text-blue-600">97.9%</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Computer Science (BSCS)</td>
+              <td class="px-4 py-3 font-sans">2nd Year</td>
+              <td class="px-4 py-3">22</td>
+              <td class="px-4 py-3 text-emerald-600 font-bold">21</td>
+              <td class="px-4 py-3 text-right font-bold text-blue-600">95.5%</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Systems (BSIS)</td>
+              <td class="px-4 py-3 font-sans">4th Year</td>
+              <td class="px-4 py-3">14</td>
+              <td class="px-4 py-3 text-emerald-600 font-bold">13</td>
+              <td class="px-4 py-3 text-right font-bold text-blue-600">92.8%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Official No-Show List Table (Shown for single events) -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden" id="rep-noshow-card">
+        <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-800">Confirmed No-Show Participant List</span>
+          <span class="text-xs text-rose-600 font-mono font-bold" id="rep-noshow-count">3 Records Identified</span>
+        </div>
+
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <tr>
+              <th class="px-4 py-3">Student Name</th>
+              <th class="px-4 py-3">Student Number</th>
+              <th class="px-4 py-3">Degree &amp; Section</th>
+              <th class="px-4 py-3">Registration Status</th>
+              <th class="px-4 py-3 text-right">Remarks</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100" id="rep-noshow-tbody">
+            <tr class="hover:bg-slate-50/50">
+              <td class="px-4 py-3 font-bold text-slate-900">Paolo Angelo Dimaculangan</td>
+              <td class="px-4 py-3 font-mono text-slate-600">2023-11902</td>
+              <td class="px-4 py-3">BSIT &bull; 3-A</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+              <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+            </tr>
+            <tr class="hover:bg-slate-50/50">
+              <td class="px-4 py-3 font-bold text-slate-900">Gwen Stacey Dela Cruz</td>
+              <td class="px-4 py-3 font-mono text-slate-600">2024-00192</td>
+              <td class="px-4 py-3">BSCS &bull; 2-B</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+              <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+            </tr>
+            <tr class="hover:bg-slate-50/50">
+              <td class="px-4 py-3 font-bold text-slate-900">Marc Joseph Bernardo</td>
+              <td class="px-4 py-3 font-mono text-slate-600">2022-18491</td>
+              <td class="px-4 py-3">BSIS &bull; 4-A</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+              <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sign-off Signatures Block -->
+    <div class="relative grid grid-cols-2 gap-8 pt-8 border-t-2 border-slate-900 text-xs">
+      
+      <!-- Official Certification Stamp Badge -->
+      <div class="absolute right-12 top-4 w-32 h-32 rounded-full border-4 border-emerald-600/40 border-dashed flex flex-col items-center justify-center text-center rotate-[-12deg] pointer-events-none p-2">
+        <span class="text-[9px] font-black uppercase tracking-widest text-emerald-700 font-mono">USTP DSA CERTIFIED</span>
+        <span class="text-[14px] font-black text-emerald-800">AUDITED</span>
+        <span class="text-[8px] font-mono text-emerald-700" id="rep-stamp-token">REP-2026-VERIFIED</span>
+      </div>
+
+      <div>
+        <div class="font-bold text-slate-900">Prepared By:</div>
+        <div class="mt-8 font-bold text-slate-900">Danica Navarro</div>
+        <div class="text-[11px] text-slate-500">Student Organization Committee on Evaluation</div>
+      </div>
+      <div>
+        <div class="font-bold text-slate-900">Noted By:</div>
+        <div class="mt-8 font-bold text-slate-900">Prof. Jonathan G. Santos, MSIT</div>
+        <div class="text-[11px] text-slate-500">Faculty Organization Adviser &bull; Dean of Student Affairs</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-mono print:hidden">
+    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
+  </footer>
+
+  <script>
+    const reportData = {
+      'all': {
+        docNum: 'AttendTa Institutional Document #REP-2026-SEMESTER-01',
+        docTitle: 'Semester Turnout & Organizational Engagement Evaluation',
+        eventName: '1st Semester SY 2026-2027 • Cumulative Portfolio (All Events)',
+        m1: { label: 'Total Enrolled', val: '256', sub: 'Across 3 Campus Sessions' },
+        m2: { label: 'Total Verified Attended', val: '247', sub: '96.5% Cumulative Turnout' },
+        m3: { label: 'Average Turnout Rate', val: '96.5%', sub: 'Exceeds 85% Target by +11.5%' },
+        m4: { label: 'Total No-Shows', val: '9', sub: '3.5% Overall Absence Rate' },
+        tableTitle: 'Cross-Event Comparative Turnout & Venue Efficiency',
+        tableSub: 'Comparative Portfolio Analysis • All Conducted Events',
+        thead: `<tr>
+          <th class="px-4 py-3">Event Title</th>
+          <th class="px-4 py-3">Event Type</th>
+          <th class="px-4 py-3">Host Venue</th>
+          <th class="px-4 py-3 font-mono">Enrolled</th>
+          <th class="px-4 py-3 font-mono">Attended</th>
+          <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+        </tr>`,
+        tbody: `<tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">AI Architecture &amp; High-Agency Systems</td>
+          <td class="px-4 py-3 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Seminar</span></td>
+          <td class="px-4 py-3 font-sans text-slate-600">Main Auditorium</td>
+          <td class="px-4 py-3">84</td>
+          <td class="px-4 py-3 font-bold text-emerald-600">81</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">96.4%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">C# ASP.NET Core &amp; EF Bootcamp</td>
+          <td class="px-4 py-3 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Workshop</span></td>
+          <td class="px-4 py-3 font-sans text-slate-600">IT Multimedia Lab 401</td>
+          <td class="px-4 py-3">60</td>
+          <td class="px-4 py-3 font-bold text-emerald-600">60</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">100.0%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">Midyear General Assembly &amp; Constitution Review</td>
+          <td class="px-4 py-3 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Assembly</span></td>
+          <td class="px-4 py-3 font-sans text-slate-600">College AV Amphitheater</td>
+          <td class="px-4 py-3">112</td>
+          <td class="px-4 py-3 font-bold text-emerald-600">106</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">94.6%</td>
+        </tr>`,
+        hideNoShow: true
+      },
+      '1': {
+        docNum: 'AttendTa Institutional Document #REP-2026-EVT01',
+        docTitle: 'Event Participation & Turnout Evaluation',
+        eventName: 'AI Architecture & High-Agency Systems (EVT-2026-001)',
+        m1: { label: 'Total Registered', val: '84', sub: 'Capacity: 150 (56% Filled)' },
+        m2: { label: 'Actual Attended', val: '81', sub: 'Door Scans Recorded' },
+        m3: { label: 'Turnout Rate', val: '96.4%', sub: 'Exceeds 85% Target' },
+        m4: { label: 'No-Shows (Absent)', val: '3', sub: '3.6% No-Show Rate' },
+        tableTitle: 'Course & Academic Year Demographics',
+        tableSub: 'Academic Affairs • Evaluation Breakdown',
+        thead: `<tr>
+          <th class="px-4 py-3">Degree Program</th>
+          <th class="px-4 py-3">Academic Year</th>
+          <th class="px-4 py-3 font-mono">Registered Count</th>
+          <th class="px-4 py-3 font-mono">Verified Attended</th>
+          <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+        </tr>`,
+        tbody: `<tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Technology (BSIT)</td>
+          <td class="px-4 py-3 font-sans">3rd Year</td>
+          <td class="px-4 py-3">48</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">47</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">97.9%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Computer Science (BSCS)</td>
+          <td class="px-4 py-3 font-sans">2nd Year</td>
+          <td class="px-4 py-3">22</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">21</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">95.5%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Systems (BSIS)</td>
+          <td class="px-4 py-3 font-sans">4th Year</td>
+          <td class="px-4 py-3">14</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">13</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">92.8%</td>
+        </tr>`,
+        hideNoShow: false,
+        noShowCount: '3 Records Identified',
+        noShowTbody: `<tr class="hover:bg-slate-50/50">
+          <td class="px-4 py-3 font-bold text-slate-900">Paolo Angelo Dimaculangan</td>
+          <td class="px-4 py-3 font-mono text-slate-600">2023-11902</td>
+          <td class="px-4 py-3">BSIT &bull; 3-A</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+          <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+        </tr>
+        <tr class="hover:bg-slate-50/50">
+          <td class="px-4 py-3 font-bold text-slate-900">Gwen Stacey Dela Cruz</td>
+          <td class="px-4 py-3 font-mono text-slate-600">2024-00192</td>
+          <td class="px-4 py-3">BSCS &bull; 2-B</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+          <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+        </tr>
+        <tr class="hover:bg-slate-50/50">
+          <td class="px-4 py-3 font-bold text-slate-900">Marc Joseph Bernardo</td>
+          <td class="px-4 py-3 font-mono text-slate-600">2022-18491</td>
+          <td class="px-4 py-3">BSIS &bull; 4-A</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+          <td class="px-4 py-3 text-right text-slate-400">Door badge unclaimed</td>
+        </tr>`
+      },
+      '2': {
+        docNum: 'AttendTa Institutional Document #REP-2026-EVT02',
+        docTitle: 'Event Participation & Turnout Evaluation',
+        eventName: 'C# ASP.NET Core & EF Bootcamp (EVT-2026-002)',
+        m1: { label: 'Total Registered', val: '60', sub: 'Capacity: 60 (100% Full)' },
+        m2: { label: 'Actual Attended', val: '60', sub: '100% Workstation Verification' },
+        m3: { label: 'Turnout Rate', val: '100.0%', sub: 'Zero No-Show Perfect Turnout' },
+        m4: { label: 'No-Shows (Absent)', val: '0', sub: '0.0% Absentee Rate' },
+        tableTitle: 'Course & Academic Year Demographics',
+        tableSub: 'Hands-on Coding Lab Verification',
+        thead: `<tr>
+          <th class="px-4 py-3">Degree Program</th>
+          <th class="px-4 py-3">Academic Year</th>
+          <th class="px-4 py-3 font-mono">Registered Count</th>
+          <th class="px-4 py-3 font-mono">Verified Attended</th>
+          <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+        </tr>`,
+        tbody: `<tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Technology (BSIT)</td>
+          <td class="px-4 py-3 font-sans">3rd &amp; 4th Year</td>
+          <td class="px-4 py-3">40</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">40</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">100.0%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Computer Science (BSCS)</td>
+          <td class="px-4 py-3 font-sans">3rd Year</td>
+          <td class="px-4 py-3">20</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">20</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">100.0%</td>
+        </tr>`,
+        hideNoShow: false,
+        noShowCount: '0 Records (Perfect Attendance)',
+        noShowTbody: `<tr>
+          <td colspan="5" class="px-4 py-6 text-center text-slate-400 font-medium">All 60 registered attendees attended and logged workstation check-in.</td>
+        </tr>`
+      },
+      '3': {
+        docNum: 'AttendTa Institutional Document #REP-2026-EVT03',
+        docTitle: 'Event Participation & Turnout Evaluation',
+        eventName: 'Midyear General Assembly & Constitution Review (EVT-2026-003)',
+        m1: { label: 'Total Registered', val: '112', sub: 'Capacity: 180 (62% Filled)' },
+        m2: { label: 'Actual Attended', val: '106', sub: 'Amphitheater RFID / Scanner Logs' },
+        m3: { label: 'Turnout Rate', val: '94.6%', sub: 'Quorum Achieved (>75%)' },
+        m4: { label: 'No-Shows (Absent)', val: '6', sub: '5.4% Absence Rate' },
+        tableTitle: 'Chapter Year-Level Representation',
+        tableSub: 'Constitutional Assembly Quorum Audit',
+        thead: `<tr>
+          <th class="px-4 py-3">Degree Program</th>
+          <th class="px-4 py-3">Academic Year</th>
+          <th class="px-4 py-3 font-mono">Registered Count</th>
+          <th class="px-4 py-3 font-mono">Verified Attended</th>
+          <th class="px-4 py-3 font-mono text-right">Turnout %</th>
+        </tr>`,
+        tbody: `<tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Information Technology (BSIT)</td>
+          <td class="px-4 py-3 font-sans">1st - 4th Year</td>
+          <td class="px-4 py-3">68</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">65</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">95.6%</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-sans font-bold text-slate-900">BS Computer Science (BSCS)</td>
+          <td class="px-4 py-3 font-sans">1st - 4th Year</td>
+          <td class="px-4 py-3">44</td>
+          <td class="px-4 py-3 text-emerald-600 font-bold">41</td>
+          <td class="px-4 py-3 text-right font-bold text-blue-600">93.2%</td>
+        </tr>`,
+        hideNoShow: false,
+        noShowCount: '6 Records Identified',
+        noShowTbody: `<tr class="hover:bg-slate-50/50">
+          <td class="px-4 py-3 font-bold text-slate-900">Christian Dale Soriano</td>
+          <td class="px-4 py-3 font-mono text-slate-600">2024-11881</td>
+          <td class="px-4 py-3">BSIT &bull; 1-C</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">No-Show</span></td>
+          <td class="px-4 py-3 text-right text-slate-400">Excused: Conflicting Exam</td>
+        </tr>`
+      }
+    };
+
+    function switchReportScope(val) {
+      const data = reportData[val] || reportData['all'];
+      document.getElementById('rep-doc-num').textContent = data.docNum;
+      document.getElementById('rep-doc-title').textContent = data.docTitle;
+      document.getElementById('rep-event-name').textContent = data.eventName;
+
+      document.getElementById('m1-label').textContent = data.m1.label;
+      document.getElementById('m1-val').textContent = data.m1.val;
+      document.getElementById('m1-sub').textContent = data.m1.sub;
+
+      document.getElementById('m2-label').textContent = data.m2.label;
+      document.getElementById('m2-val').textContent = data.m2.val;
+      document.getElementById('m2-sub').textContent = data.m2.sub;
+
+      document.getElementById('m3-label').textContent = data.m3.label;
+      document.getElementById('m3-val').textContent = data.m3.val;
+      document.getElementById('m3-sub').textContent = data.m3.sub;
+
+      document.getElementById('m4-label').textContent = data.m4.label;
+      document.getElementById('m4-val').textContent = data.m4.val;
+      document.getElementById('m4-sub').textContent = data.m4.sub;
+
+      document.getElementById('rep-table-title').textContent = data.tableTitle;
+      document.getElementById('rep-table-sub').textContent = data.tableSub;
+      document.getElementById('rep-thead').innerHTML = data.thead;
+      document.getElementById('rep-tbody').innerHTML = data.tbody;
+
+      const noShowCard = document.getElementById('rep-noshow-card');
+      if (data.hideNoShow) {
+        noShowCard.classList.add('hidden');
+      } else {
+        noShowCard.classList.remove('hidden');
+        document.getElementById('rep-noshow-count').textContent = data.noShowCount;
+        document.getElementById('rep-noshow-tbody').innerHTML = data.noShowTbody;
+      }
+    }
+
+    // Initialize based on URL query param (?eventId=all or ?eventId=1, etc.)
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const initialScope = params.get('eventId') || 'all';
+      const selectEl = document.getElementById('report-scope-select');
+      if (selectEl) {
+        selectEl.value = initialScope;
+        switchReportScope(initialScope);
+      }
+    })();
+  </script>
+</body>
+</html>

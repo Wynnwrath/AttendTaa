@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa — Door Attendance Kiosk &amp; Verification Desk</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jsQR for real-time camera QR decoding -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            serif: ['"Cinzel"', 'serif']
+          },
+          colors: {
+            ink: {
+              950: '#090D16',
+              900: '#0F172A',
+              700: '#334155',
+              500: '#64748B'
+            },
+            scholastic: {
+              500: '#D97706',
+              600: '#B45309',
+              50: '#FEF3C7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-ink-950 antialiased font-sans bg-[#F8FAFC]">
+
+  <!-- Kiosk Navigation Header -->
+  <header class="border-b border-slate-200/80 bg-white sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="../events/index.html" class="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-ink-950">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span class="hidden sm:inline">Events Hub</span>
+        </a>
+        <div class="h-4 w-px bg-slate-200"></div>
+        <div class="flex items-center gap-2.5">
+          <img src="../assets/attendTa_logo.jpg" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-sm tracking-tight leading-tight">AttendTa Terminal</span>
+            <span class="text-[10px] font-mono font-semibold text-scholastic-600 uppercase tracking-wider">Door Verification Desk</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="scanner-health-label">Camera Standby</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Kiosk Body -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <!-- Active Event Selector Banner -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-mono flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">
+          EVT
+        </div>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">Current Active Session</span>
+          <h2 class="text-sm sm:text-base font-extrabold text-ink-950 leading-tight" id="active-event-title">AI Architecture &amp; High-Agency Systems</h2>
+        </div>
+      </div>
+
+      <!-- Quick Session Switcher -->
+      <form method="get" action="index.html" class="flex items-center gap-2">
+        <select id="event-select" name="eventId" onchange="onSessionChange(this.value)" class="w-full sm:w-auto px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-ink-950">
+          <option value="1" selected>AI Architecture • Main Auditorium</option>
+          <option value="2">C# ASP.NET Bootcamp • IT Lab 401</option>
+          <option value="3">General Assembly • AV Amphitheater</option>
+        </select>
+      </form>
+    </div>
+
+    <!-- Verified Check-In Banner (Optical Recognition Toast) -->
+    <div id="checkin-banner" class="hidden p-4 rounded-2xl border-2 border-emerald-500 bg-white text-ink-950 flex items-start gap-4 shadow-sm transition-all">
+      <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shrink-0 mt-0.5">
+        ✓
+      </div>
+      <div class="flex-1 space-y-0.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700">Check-In Confirmed &amp; Logged</span>
+          <span id="banner-timestamp" class="text-xs font-mono text-slate-500 font-bold">08:45:12 AM</span>
+        </div>
+        <div id="banner-student-name" class="font-extrabold text-base text-ink-950">Maria Clara C. Santos</div>
+        <div id="banner-student-sub" class="text-xs text-slate-600 font-mono">2023-10482 • BSIT 3-A • Seat Verified</div>
+      </div>
+      <button type="button" onclick="hideBanner()" class="text-slate-400 hover:text-slate-600 text-lg font-bold px-2 py-1">
+        &times;
+      </button>
+    </div>
+
+    <!-- Mode Selector Tabs (Phone Camera Scanner vs. Manual / USB Gun) -->
+    <div class="bg-slate-200/60 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
+      <button 
+        type="button" 
+        id="tab-camera" 
+        onclick="switchScannerMode('camera')" 
+        class="flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all"
+      >
+        <svg class="w-4 h-4 text-scholastic-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Optical Camera Scanner</span>
+        <kbd class="key-pill hidden sm:inline-flex">Space</kbd>
+      </button>
+
+      <button 
+        type="button" 
+        id="tab-manual" 
+        onclick="switchScannerMode('manual')" 
+        class="flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        <span>Manual ID / USB Gun</span>
+        <kbd class="key-pill hidden sm:inline-flex">Enter</kbd>
+      </button>
+    </div>
+
+    <!-- VIEW 1: LIVE PHONE CAMERA SCANNER -->
+    <div id="mode-camera-view" class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-2xs space-y-4">
+      
+      <!-- Viewfinder Optical Reticle -->
+      <div class="relative max-w-md mx-auto aspect-square bg-ink-950 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
+        <!-- Live Video Element -->
+        <video id="camera-video" playsinline muted class="w-full h-full object-cover"></video>
+        <canvas id="camera-canvas" class="hidden"></canvas>
+
+        <!-- Precision Optical Reticle -->
+        <div id="viewfinder-overlay" class="absolute inset-0 pointer-events-none flex items-center justify-center p-8">
+          <div class="w-64 h-64 border border-white/30 rounded-2xl relative flex items-center justify-center">
+            
+            <!-- Corner Precision Brackets -->
+            <div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-emerald-400"></div>
+            <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-emerald-400"></div>
+            <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-emerald-400"></div>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-emerald-400"></div>
+
+            <!-- Optical Center Dot -->
+            <div class="w-2 h-2 rounded-full bg-emerald-400/80"></div>
+
+            <span class="absolute bottom-4 text-[10px] font-mono font-bold text-white/90 bg-ink-950/80 px-2.5 py-1 rounded-md">
+              Align AttendTa QR Pass
+            </span>
+          </div>
+        </div>
+
+        <!-- Camera Standby Overlay -->
+        <div id="camera-idle-screen" class="absolute inset-0 bg-ink-950 text-white flex flex-col items-center justify-center p-6 text-center space-y-4">
+          <div class="w-14 h-14 rounded-2xl bg-slate-900 text-scholastic-500 flex items-center justify-center border border-slate-800">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base">Terminal Scanner Ready</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-xs">
+              Activate camera feed to start scanning student door passes. Press <kbd class="key-pill">Space</kbd> anytime.
+            </p>
+          </div>
+          <button 
+            type="button" 
+            onclick="startCameraScanner()" 
+            class="btn-tactile px-5 py-2.5 rounded-xl bg-scholastic-500 hover:bg-scholastic-600 text-white font-extrabold text-xs shadow-sm flex items-center gap-2"
+          >
+            <span>Activate Optical Camera</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Optical Controls Toolbar -->
+      <div class="max-w-md mx-auto flex items-center justify-between text-xs text-slate-600 pt-1">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="switchCameraFacing()" id="flip-camera-btn" class="btn-tactile px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Flip Facing</span>
+          </button>
+          <button type="button" onclick="stopCameraScanner()" id="stop-camera-btn" class="btn-tactile hidden px-3 py-1.5 rounded-lg border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold">
+            Pause Feed
+          </button>
+        </div>
+        <span class="text-[11px] font-mono text-slate-400" id="scan-status-text">Standby</span>
+      </div>
+
+    </div>
+
+    <!-- VIEW 2: MANUAL ID ENTRY & USB BARCODE GUN FORM -->
+    <div id="mode-manual-view" class="hidden bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xs space-y-5 text-center">
+      <div class="max-w-md mx-auto space-y-1">
+        <h2 class="text-lg font-extrabold text-ink-950">Manual Student Number or Barcode Gun</h2>
+        <p class="text-xs text-slate-500">
+          For attendee walk-ins or physical USB barcode laser readers.
+        </p>
+      </div>
+
+      <form id="manual-scan-form" method="post" action="index.html" onsubmit="handleManualSubmit(event)" class="max-w-md mx-auto space-y-4">
+        <input type="hidden" name="EventId" value="1">
+
+        <div class="relative">
+          <input 
+            type="text" 
+            id="manualStudentInput" 
+            name="StudentNumber" 
+            autocomplete="off" 
+            required
+            placeholder="e.g. 2023-10482" 
+            class="w-full text-center px-4 py-3.5 text-xl font-bold font-mono tracking-wider bg-slate-50 border-2 border-slate-300 rounded-2xl focus:outline-none focus:border-ink-950 focus:bg-white transition-all shadow-inner placeholder:text-slate-400 placeholder:text-sm placeholder:font-sans"
+          >
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-tactile w-full py-3 px-6 rounded-xl bg-ink-950 hover:bg-ink-900 text-white font-extrabold text-xs tracking-wide shadow-sm"
+        >
+          Verify &amp; Log Attendance &crarr;
+        </button>
+      </form>
+
+      <!-- Quick Fill Test Persona Buttons -->
+      <div class="pt-4 border-t border-slate-100 max-w-md mx-auto">
+        <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">Instant Validation Credentials</span>
+        <div class="flex flex-wrap items-center justify-center gap-1.5">
+          <button type="button" onclick="testCheckIn('2023-10482', 'Maria Clara C. Santos')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
+            Maria Clara (2023-10482)
+          </button>
+          <button type="button" onclick="testCheckIn('2023-09821', 'Adrian Jose V. Ramirez')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
+            Adrian Jose (2023-09821)
+          </button>
+          <button type="button" onclick="testCheckIn('2022-01948', 'Kathryn Joy Lim')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
+            Kathryn Joy (2022-01948)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Turnout Stream (High-Density Cockpit Log) -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xs overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-ink-950 flex items-center gap-2">
+          <span>Real-Time Door Feed</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        </span>
+        <span id="turnout-counter" class="text-xs font-mono font-bold text-slate-700">1 Logged Admission</span>
+      </div>
+
+      <div id="checkins-stream" class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
+        <!-- Initial Verified Attendee -->
+        <div class="px-5 py-3 flex items-center justify-between hover:bg-slate-50 text-xs">
+          <div class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <div>
+              <span class="font-bold text-ink-950">Maria Clara C. Santos (BSIT 3-A)</span>
+              <span class="text-slate-400 font-mono ml-1.5">(2023-10482)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-slate-500 text-[11px]">08:30:15 AM</span>
+            <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-mono">Admitted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Grounded Footer -->
+  <footer class="border-t border-slate-200/80 bg-white py-4 text-center text-xs text-slate-500 font-mono">
+    &copy; 2026 USTP Student Organization Council • AttendTa Attendance Terminal
+  </footer>
+
+  <!-- Scanner Logic & Keyboard Accelerators -->
+  <script>
+    let isScanningActive = false;
+    let scanAnimationId = null;
+    let videoStream = null;
+    let currentFacingMode = 'environment';
+    let checkInCount = 1;
+
+    // Keyboard Accelerators (Fitts & Transit Time Optimization)
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+        if (e.key === 'Escape') {
+          hideBanner();
+          e.target.blur();
+        }
+        return;
+      }
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (isScanningActive) {
+          stopCameraScanner();
+        } else {
+          switchScannerMode('camera');
+          startCameraScanner();
+        }
+      } else if (e.code === 'Enter') {
+        e.preventDefault();
+        switchScannerMode('manual');
+        const inp = document.getElementById('manualStudentInput');
+        if (inp) inp.focus();
+      } else if (e.key === 'Escape') {
+        hideBanner();
+      }
+    });
+
+    function switchScannerMode(mode) {
+      const cameraView = document.getElementById('mode-camera-view');
+      const manualView = document.getElementById('mode-manual-view');
+      const tabCamera = document.getElementById('tab-camera');
+      const tabManual = document.getElementById('tab-manual');
+
+      if (mode === 'camera') {
+        cameraView.classList.remove('hidden');
+        manualView.classList.add('hidden');
+        tabCamera.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all";
+        tabManual.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all";
+      } else {
+        cameraView.classList.add('hidden');
+        manualView.classList.remove('hidden');
+        tabManual.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all";
+        tabCamera.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all";
+        stopCameraScanner();
+        setTimeout(() => {
+          const inp = document.getElementById('manualStudentInput');
+          if (inp) inp.focus();
+        }, 100);
+      }
+    }
+
+    async function startCameraScanner() {
+      const idleScreen = document.getElementById('camera-idle-screen');
+      const stopBtn = document.getElementById('stop-camera-btn');
+      const statusText = document.getElementById('scan-status-text');
+      const healthLabel = document.getElementById('scanner-health-label');
+      const video = document.getElementById('camera-video');
+
+      try {
+        statusText.textContent = "Requesting optical stream...";
+        const constraints = {
+          video: {
+            facingMode: currentFacingMode,
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        };
+
+        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = videoStream;
+        await video.play();
+
+        isScanningActive = true;
+        idleScreen.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        statusText.textContent = "Optical feed active";
+        healthLabel.textContent = "Live Feed (30 FPS)";
+
+        requestAnimationFrame(tickScan);
+      } catch (err) {
+        console.warn("Camera access fallback:", err);
+        statusText.textContent = "Hardware fallback active";
+        healthLabel.textContent = "Manual Fallback";
+        idleScreen.classList.remove('hidden');
+      }
+    }
+
+    function stopCameraScanner() {
+      isScanningActive = false;
+      if (scanAnimationId) cancelAnimationFrame(scanAnimationId);
+      if (videoStream) {
+        videoStream.getTracks().forEach(t => t.stop());
+        videoStream = null;
+      }
+      const idleScreen = document.getElementById('camera-idle-screen');
+      const stopBtn = document.getElementById('stop-camera-btn');
+      const statusText = document.getElementById('scan-status-text');
+      const healthLabel = document.getElementById('scanner-health-label');
+
+      idleScreen.classList.remove('hidden');
+      stopBtn.classList.add('hidden');
+      statusText.textContent = "Feed paused";
+      healthLabel.textContent = "Standby";
+    }
+
+    function switchCameraFacing() {
+      currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+      if (isScanningActive) {
+        stopCameraScanner();
+        startCameraScanner();
+      }
+    }
+
+    function tickScan() {
+      if (!isScanningActive) return;
+
+      const video = document.getElementById('camera-video');
+      const canvas = document.getElementById('camera-canvas');
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        if (typeof jsQR !== 'undefined') {
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert'
+          });
+
+          if (code && code.data) {
+            handleDecodedPayload(code.data);
+            return;
+          }
+        }
+      }
+
+      scanAnimationId = requestAnimationFrame(tickScan);
+    }
+
+    function handleDecodedPayload(payload) {
+      let studentNum = payload;
+      const match = payload.match(/(\d{4}-\d{5})/);
+      if (match) {
+        studentNum = match[1];
+      }
+
+      processCheckIn(studentNum);
+
+      setTimeout(() => {
+        if (isScanningActive) {
+          requestAnimationFrame(tickScan);
+        }
+      }, 2000);
+    }
+
+    function processCheckIn(studentNumber, studentName = null) {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      const names = {
+        '2023-10482': 'Maria Clara C. Santos (BSIT 3-A)',
+        '2023-09821': 'Adrian Jose V. Ramirez (BSIT 3-B)',
+        '2022-01948': 'Kathryn Joy Lim (BSCS 4-A)',
+        '2022-09412': 'Carl Vincent D. Ocampo (BSCS 3-B)',
+        '2023-01824': 'Danica Ysabel Navarro (BSIT 3-A)'
+      };
+
+      const resolvedName = studentName || names[studentNumber] || `Member (${studentNumber})`;
+
+      const banner = document.getElementById('checkin-banner');
+      document.getElementById('banner-student-name').textContent = resolvedName;
+      document.getElementById('banner-student-sub').textContent = `${studentNumber} • Seat Verified • Gate Pass A`;
+      document.getElementById('banner-timestamp').textContent = timeStr;
+      banner.classList.remove('hidden');
+
+      const stream = document.getElementById('checkins-stream');
+      const item = document.createElement('div');
+      item.className = 'px-5 py-3 flex items-center justify-between hover:bg-slate-50 text-xs transition-colors bg-emerald-50/50';
+      item.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <div>
+            <span class="font-bold text-ink-950">${resolvedName}</span>
+            <span class="text-slate-400 font-mono ml-1.5">(${studentNumber})</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-slate-500 text-[11px]">${timeStr}</span>
+          <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-mono">Admitted</span>
+        </div>
+      `;
+      stream.insertBefore(item, stream.firstChild);
+
+      checkInCount++;
+      document.getElementById('turnout-counter').textContent = `${checkInCount} Logged Admissions`;
+    }
+
+    function hideBanner() {
+      document.getElementById('checkin-banner').classList.add('hidden');
+    }
+
+    function handleManualSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('manualStudentInput');
+      const studentNum = input.value.trim();
+      if (studentNum) {
+        processCheckIn(studentNum);
+        input.value = '';
+      }
+    }
+
+    function testCheckIn(num, name) {
+      processCheckIn(num, name);
+    }
+
+    function onSessionChange(eventId) {
+      const titles = {
+        '1': 'AI Architecture & High-Agency Systems',
+        '2': 'C# ASP.NET Core Bootcamp',
+        '3': 'Midyear General Assembly'
+      };
+      document.getElementById('active-event-title').textContent = titles[eventId] || 'Active Event';
+    }
+
+    window.addEventListener('beforeunload', stopCameraScanner);
+  </script>
+</body>
+</html>

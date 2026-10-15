@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa &bull; Events &bull; Create Event</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
+
+  <!-- Unified Officer Navigation Header -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
+            <span class="text-[11px] font-semibold text-amber-600 uppercase tracking-wider">Officer Operations</span>
+          </div>
+        </a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">&larr; Back to Events List</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+      <a href="index.html" class="hover:text-slate-900">Events Operations</a>
+      <span>/</span>
+      <span class="text-slate-900 font-bold">Create New Event</span>
+    </nav>
+
+    <!-- Page Title -->
+    <div>
+      <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Create &amp; Post Organization Event</h1>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        Configure session title, classification, campus venue, capacity limits, and registration timeline.
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-sm">
+      <form method="post" action="index.html" class="space-y-8">
+
+        <!-- Group 1: General Details -->
+        <div class="space-y-4">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
+            1. Core Information
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="sm:col-span-2">
+              <label for="eventTitle" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Event Title <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="eventTitle" 
+                name="Title" 
+                required
+                placeholder="e.g. Next-Gen Web Architecture Seminar 2026"
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+
+            <div>
+              <label for="classification" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Classification Type <span class="text-rose-500">*</span>
+              </label>
+              <select 
+                id="classification" 
+                name="ClassificationId" 
+                required
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+                <option value="">Select Type...</option>
+                <option value="1" selected>Technical Seminar</option>
+                <option value="2">General Assembly</option>
+                <option value="3">Hands-on Workshop</option>
+                <option value="4">Community Outreach</option>
+                <option value="5">Collegiate Competition</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="description" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Event Description &amp; Objectives
+              </label>
+              <textarea 
+                id="description" 
+                name="Description" 
+                rows="3"
+                placeholder="Describe key learning outcomes, prerequisites, guest speaker background, and what participants must bring..."
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Venue & Capacity -->
+        <div class="space-y-4">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
+            2. Facility &amp; Capacity Bounds
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="venue" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Assigned Campus Venue <span class="text-rose-500">*</span>
+              </label>
+              <select 
+                id="venue" 
+                name="VenueId" 
+                required
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+                <option value="">Select Venue...</option>
+                <option value="1" selected>Main University Auditorium (Max 500)</option>
+                <option value="2">IT Multimedia Lab 401 (Max 60)</option>
+                <option value="3">College AV Amphitheater (Max 180)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="participantLimit" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Participant Limit <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="number" 
+                id="participantLimit" 
+                name="ParticipantLimit" 
+                required
+                min="1"
+                max="500"
+                value="150"
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 3: Schedule & Deadlines -->
+        <div class="space-y-4">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
+            3. Schedule &amp; Registration Deadline
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div>
+              <label for="eventDate" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Event Date <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="eventDate" 
+                name="EventDate" 
+                required
+                value="2026-10-25"
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+
+            <div>
+              <label for="startTime" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Start Time <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="time" 
+                id="startTime" 
+                name="StartTime" 
+                required
+                value="09:00"
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+
+            <div>
+              <label for="deadline" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Registration Deadline <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="deadline" 
+                name="RegistrationDeadline" 
+                required
+                value="2026-10-24"
+                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions Bar -->
+        <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">
+            &larr; Cancel and Return to Events
+          </a>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button 
+              type="submit" 
+              name="SubmitType" 
+              value="Draft"
+              class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs active:scale-95 transition-all"
+            >
+              Save as Draft
+            </button>
+            <button 
+              type="submit" 
+              name="SubmitType" 
+              value="Publish"
+              class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
+            >
+              Publish &amp; Open Registration
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-medium">
+    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
+  </footer>
+
+</body>
+</html>

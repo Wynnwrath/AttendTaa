@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100 print:bg-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendTa &bull; Certificate of Participation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Cinzel"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-100 print:bg-white p-4 sm:p-8">
+
+  <!-- Top Action Toolbar (Hidden during Print) -->
+  <div class="max-w-4xl w-full mx-auto mb-6 flex items-center justify-between print:hidden">
+    <a href="index.html" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1">
+      &larr; Back to Certificates Roster
+    </a>
+    <button 
+      onclick="window.print()" 
+      class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
+    >
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+      </svg>
+      <span>Print Official Certificate (PDF)</span>
+    </button>
+  </div>
+
+  <!-- The Official Academic Certificate (Print-Optimized) -->
+  <main class="max-w-4xl w-full mx-auto bg-white border-8 border-double border-amber-600/70 rounded-3xl p-8 sm:p-14 shadow-xl text-center space-y-8 relative overflow-hidden print:shadow-none print:border-4 print:p-8">
+    
+    <!-- Gold Medallion Background Watermark -->
+    <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+      <svg class="w-96 h-96 text-amber-700" viewBox="0 0 100 100" fill="currentColor">
+        <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" />
+      </svg>
+    </div>
+
+    <!-- Institutional Eyebrow & Seal -->
+    <div class="space-y-2 relative z-10">
+      <div class="w-20 h-20 mx-auto rounded-full bg-white p-1 border-4 border-amber-300 shadow-md flex items-center justify-center">
+        <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-full h-full rounded-full object-contain">
+      </div>
+      <div class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 font-mono">
+        University of Science and Technology &bull; Student Organization Council
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold uppercase tracking-wider text-slate-900 font-serif">
+        Certificate of Participation
+      </h1>
+      <p class="text-xs text-slate-400 font-serif tracking-widest uppercase">This official credential certifies that</p>
+    </div>
+
+    <!-- Student Name -->
+    <div class="border-b-2 border-slate-900/80 pb-3 max-w-xl mx-auto">
+      <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        Maria Clara C. Santos
+      </div>
+      <div class="text-xs font-mono font-bold text-slate-500 mt-1">
+        Student ID: 2023-10482 &bull; BSIT 3-A
+      </div>
+    </div>
+
+    <!-- Description & Learning Context -->
+    <div class="max-w-xl mx-auto space-y-2 text-xs text-slate-600 leading-relaxed">
+      <p>
+        has successfully completed attendance verification and actively participated in the academic conference entitled:
+      </p>
+      <div class="text-lg font-extrabold text-slate-900">
+        &ldquo;AI Architecture &amp; High-Agency Systems&rdquo;
+      </div>
+      <p class="font-mono text-[11px] text-slate-500">
+        Held on October 15, 2026 at the Main University Auditorium (3.0 Continuing Academic Hours)
+      </p>
+    </div>
+
+    <!-- Signatures -->
+    <div class="grid grid-cols-2 gap-8 pt-8 max-w-lg mx-auto border-t border-slate-100 text-xs">
+      <div class="space-y-1">
+        <div class="font-serif italic font-bold text-slate-800 text-sm">Danica Navarro</div>
+        <div class="h-0.5 bg-slate-400 w-32 mx-auto"></div>
+        <div class="font-bold text-slate-900">Danica Ysabel Navarro</div>
+        <div class="text-[11px] text-slate-400">Chapter Secretary</div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="font-serif italic font-bold text-slate-800 text-sm">Dr. Julian Ramos</div>
+        <div class="h-0.5 bg-slate-400 w-32 mx-auto"></div>
+        <div class="font-bold text-slate-900">Dr. Julian V. Ramos</div>
+        <div class="text-[11px] text-slate-400">Guest Keynote Speaker</div>
+      </div>
+    </div>
+
+    <!-- Verification Token Footer -->
+    <div class="pt-4 text-[10px] font-mono text-slate-400 flex items-center justify-between border-t border-slate-100">
+      <span>AttendTa Verification Code: <strong class="text-slate-700">CERT-2026-EVT01-0842</strong></span>
+      <span>Timestamp: 2026-10-15 08:42:15 UTC+8</span>
+    </div>
+
+  </main>
+
+  <footer class="mt-6 text-center text-xs text-slate-400 font-mono print:hidden">
+    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
+  </footer>
+
+</body>
+</html>
