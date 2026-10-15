@@ -202,10 +202,16 @@ kbd.key-pill {
 .font-gate {
   opacity: 0;
   transition: opacity var(--motion-slow) var(--ease-standard);
+  animation: font-gate-reveal var(--motion-slow) var(--ease-standard) 1500ms forwards;
 }
 
 html.fonts-ready .font-gate {
   opacity: 1;
+  animation: none;
+}
+
+@keyframes font-gate-reveal {
+  to { opacity: 1; }
 }
 
 /* ---- Accent scoping ---- */

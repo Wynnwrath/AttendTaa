@@ -1,184 +1,268 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa &bull; University Student Organization Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
+  <title>Sign in — AttendTa</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <link rel="stylesheet" href="../assets/ink-seam.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../assets/tailwind.config.js"></script>
 </head>
+<body class="min-h-[100dvh] flex flex-col justify-between bg-canvas-ground text-ink-primary font-sans antialiased">
 
-<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Top Institutional Bar -->
-  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="../index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90 transition-opacity">
-        <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo"
-          class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
-        <div class="flex flex-col">
-          <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
-          <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Student Org Portal</span>
+  <main id="main" class="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md">
+
+      <div class="font-gate text-center">
+        <div class="flex justify-center">
+          <a href="../index.html" class="inline-flex items-center gap-3 text-ink-primary">
+            <img src="../assets/attendTa_logo.jpg" alt="AttendTa" width="40" height="40"
+              class="rounded-md border border-ink-faint bg-canvas-surface p-1 object-contain">
+            <span class="text-[18px] font-extrabold tracking-tight">AttendTa</span>
+          </a>
         </div>
-      </a>
-      <div class="flex items-center gap-3">
-        <span class="text-xs text-slate-500">Need membership access?</span>
-        <a href="register.html" class="text-xs font-bold text-blue-600 hover:text-blue-800 underline">Request Membership
-          &rarr;</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Card Container -->
-  <main class="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-    <div class="w-full max-w-md space-y-6">
-
-      <!-- Context Header -->
-      <div class="text-center space-y-2">
-        <div class="w-12 h-12 mx-auto rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-          </svg>
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Sign in to AttendTa</h1>
-        <p class="text-xs sm:text-sm text-slate-600">Access registered sessions, chapter rosters, or administrative
-          consoles.</p>
+        <h1 class="mt-4 text-2xl font-extrabold tracking-tight text-ink-primary">Sign in to AttendTa</h1>
+        <p class="mt-2 text-[14px] text-ink-secondary">Access your sessions, event passes, and organization consoles.</p>
       </div>
 
-      <!-- Submission Flash Banner -->
-      <div id="reg-success-banner"
-        class="hidden rounded-xl border border-emerald-200 bg-emerald-50/90 p-4 text-xs text-emerald-900 flex items-start gap-3 shadow-xs">
-        <svg class="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <div class="space-y-0.5">
-          <span class="font-bold text-slate-900 block">Registration Request Submitted!</span>
-          <span>Your student account application has been routed to organization officers for verification. Once
-            approved, you can sign in with your student credentials.</span>
-        </div>
-      </div>
-
-      <!-- Authentication Container Card -->
-      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-
-        <!-- Form POST -->
-        <form method="post" action="login.html" class="space-y-5">
-
-          <!-- Identifier Input -->
+      <div id="reg-success-banner" role="status" hidden
+        class="mt-6 rounded-md border border-status-emerald bg-status-emerald-subtle p-4 text-[13px] text-status-emerald-text">
+        <div class="flex items-start gap-3">
+          <svg class="icon text-[20px] text-status-emerald" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
           <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label for="username" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                Student Number or Email
-              </label>
-              <span class="text-[11px] font-mono text-slate-400">e.g. 2023-10482</span>
-            </div>
-            <input type="text" id="username" name="Username" required
-              placeholder="e.g. 2023-10482 or dnavarro@ustp.edu.ph" value="2023-10482"
-              class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors">
-            <p class="mt-1.5 text-xs text-slate-500">Students enter student ID; officers &amp; admins enter
-              institutional email.</p>
+            <span class="block font-semibold text-ink-primary">Registration request submitted</span>
+            <span>Your request is queued for officer review. Once approved, a member profile is provisioned and you can sign in.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-elevated mt-6 p-6 sm:p-8">
+
+        <div class="rounded-md border border-status-rose bg-status-rose-subtle p-3 text-[13px] text-status-rose"
+          id="login-error" role="alert" hidden>
+          <div class="flex items-start gap-2">
+            <svg class="icon text-[18px]" aria-hidden="true"><use href="../assets/icons.svg#i-alert-circle"></use></svg>
+            <span id="login-error-text"></span>
+          </div>
+        </div>
+
+        <p class="field-help">Demo personas — tap to fill the identifier</p>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <button type="button" class="btn btn--secondary btn--sm" data-persona="student" data-fill="2023-10482">Student 2023-10482</button>
+          <button type="button" class="btn btn--secondary btn--sm" data-persona="officer" data-fill="danica.navarro@ustp.edu.ph">Officer</button>
+          <button type="button" class="btn btn--secondary btn--sm" data-persona="admin" data-fill="marcus.vance@ustp.edu.ph">Admin</button>
+        </div>
+
+        <form id="login-form" method="post" action="login.html" data-action="account.login" data-validate novalidate
+          class="mt-6 space-y-4" autocomplete="on">
+
+          <div class="field">
+            <label class="field-label field-required" for="username">Student number or email</label>
+            <input class="input" id="username" name="Username" type="text" autocomplete="username" required
+              placeholder="2023-10482 or name@ustp.edu.ph">
+            <p class="field-help">Students use their student number; officers and admins use their institutional email.</p>
+            <div class="field-error"></div>
           </div>
 
-          <!-- Password Input -->
-          <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label for="password" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                Password
-              </label>
-              <a href="#" class="text-xs font-semibold text-blue-600 hover:text-blue-800">Forgot password?</a>
+          <div class="field">
+            <label class="field-label field-required" for="password">Password</label>
+            <div class="flex items-center gap-2">
+              <input class="input" id="password" name="Password" type="password" autocomplete="current-password" required>
+              <button type="button" class="icon-btn" data-password-toggle="password" aria-pressed="false"
+                aria-label="Toggle password visibility">
+                <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-eye"></use></svg>
+              </button>
             </div>
-            <input type="password" id="password" name="Password" required placeholder="••••••••••••" value="password123"
-              class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors">
+            <div class="field-error"></div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="pt-1">
-            <button type="submit"
-              class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-bold text-sm tracking-wide shadow-sm transition-all">
-              <span>Sign In</span>
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-          </div>
+          <button type="submit" class="btn btn--primary btn--lg btn--block">Sign in</button>
         </form>
 
-        <div class="relative flex py-1 items-center">
-          <div class="flex-grow border-t border-slate-200"></div>
-          <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Access
-            Portals</span>
-          <div class="flex-grow border-t border-slate-200"></div>
-        </div>
-
-        <!-- Role Entry Gateways -->
-        <div class="grid grid-cols-3 gap-2 text-center text-xs">
-          <a href="../student/events.html"
-            class="py-2.5 px-2 rounded-lg border border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-white font-semibold text-slate-700 transition-all flex flex-col items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>Student</span>
-          </a>
-          <a href="../events/index.html"
-            class="py-2.5 px-2 rounded-lg border border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-white font-semibold text-slate-700 transition-all flex flex-col items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-            <span>Officer</span>
-          </a>
-          <a href="../admin/users.html"
-            class="py-2.5 px-2 rounded-lg border border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-white font-semibold text-slate-700 transition-all flex flex-col items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-            <span>Admin</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Registration Callout Footer -->
-      <div class="text-center text-xs text-slate-600">
-        New student organization member?
-        <a href="register.html" class="font-bold text-blue-600 hover:text-blue-800 underline underline-offset-2">
-          Submit an account membership request &rarr;
-        </a>
+        <p class="mt-6 border-t border-ink-faint pt-4 text-center text-[13px] text-ink-secondary">
+          New to the organization?
+          <a href="register.html" class="font-semibold text-scholastic-deep">Request membership</a>
+        </p>
       </div>
 
     </div>
   </main>
 
-  <!-- The Ink Seam -->
   <div class="ink-seam" data-ink-seam aria-hidden="true"></div>
 
-  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-medium">
-    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All
-    rights reserved.
+  <footer class="border-t border-ink-faint px-4 py-4 text-center text-[12px] text-ink-muted">
+    &copy; 2026 USTP Student Organization Council. AttendTa event and attendance management.
   </footer>
 
-  <script>
-      (function () {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('submitted') === 'true') {
-          const banner = document.getElementById('reg-success-banner');
-          if (banner) banner.classList.remove('hidden');
-        }
-      })();
-  </script>
   <script src="../assets/ink-seam.js" defer></script>
-</body>
+  <script src="../assets/app.js" defer></script>
+  <script>
+    (function () {
+      'use strict';
 
+      var banner = document.getElementById('reg-success-banner');
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('submitted') === 'true' && banner) banner.hidden = false;
+      } catch (e) { /* keep hidden */ }
+
+      document.addEventListener('ta:ready', function () {
+        var form = document.getElementById('login-form');
+        if (!form) return;
+
+        var identifier = document.getElementById('username');
+        var errorBox = document.getElementById('login-error');
+        var errorText = document.getElementById('login-error-text');
+        var submitBtn = form.querySelector('button[type="submit"]');
+
+        function hideError() {
+          if (errorBox) errorBox.hidden = true;
+        }
+
+        function showError(message) {
+          if (errorText) errorText.textContent = message;
+          else if (errorBox) errorBox.textContent = message;
+          if (errorBox) errorBox.hidden = false;
+        }
+
+        function clearFieldErrors() {
+          Array.prototype.forEach.call(form.querySelectorAll('.field[data-invalid]'), function (field) {
+            field.removeAttribute('data-invalid');
+          });
+          Array.prototype.forEach.call(form.querySelectorAll('.field-error'), function (el) {
+            el.textContent = '';
+          });
+          Array.prototype.forEach.call(form.querySelectorAll('[aria-invalid="true"]'), function (control) {
+            control.removeAttribute('aria-invalid');
+          });
+        }
+
+        function setBusy(busy) {
+          if (!submitBtn) return;
+          submitBtn.disabled = busy;
+          if (busy) submitBtn.setAttribute('aria-busy', 'true');
+          else submitBtn.removeAttribute('aria-busy');
+        }
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-persona]'), function (chip) {
+          chip.addEventListener('click', function () {
+            if (identifier) identifier.value = chip.getAttribute('data-fill') || '';
+            clearFieldErrors();
+            hideError();
+            if (identifier) identifier.focus();
+          });
+        });
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          hideError();
+
+          if (!window.Ta || !Ta.form || !Ta.form.validate(form)) {
+            if (window.Ta && Ta.toast) {
+              Ta.toast('Please correct the highlighted fields.', { type: 'warning', title: 'Check the form' });
+            }
+            return;
+          }
+
+          var id = identifier ? identifier.value.trim() : '';
+          if (!id) return;
+
+          setBusy(true);
+
+          var members = Ta.store.get('members') || [];
+          var users = Ta.store.get('users') || [];
+          var matchedUser = null;
+          var matchedMember = null;
+          var i;
+
+          matchedMember = Ta.store.find('members', id);
+          if (!matchedMember) {
+            for (i = 0; i < members.length; i++) {
+              if (String(members[i].studentId) === id || String(members[i].id) === id) {
+                matchedMember = members[i];
+                break;
+              }
+            }
+          }
+
+          if (!matchedMember) {
+            var lower = id.toLowerCase();
+            for (i = 0; i < users.length; i++) {
+              if (String(users[i].email || '').toLowerCase() === lower) {
+                matchedUser = users[i];
+                break;
+              }
+            }
+            if (!matchedUser) {
+              for (i = 0; i < members.length; i++) {
+                if (String(members[i].email || '').toLowerCase() === lower) {
+                  matchedMember = members[i];
+                  break;
+                }
+              }
+            }
+          }
+
+          if (!matchedUser && !matchedMember) {
+            showError('No account found for \u201C' + id + '\u201D. Check your student number or email.');
+            if (Ta.toast) {
+              Ta.toast('No account found. Check your student number or email.', { type: 'error', title: 'Sign in failed' });
+            }
+            setBusy(false);
+            if (identifier) identifier.focus();
+            return;
+          }
+
+          if (matchedUser && (matchedUser.deactivated || matchedUser.active === false)) {
+            showError('This account has been deactivated. Contact an organization officer.');
+            if (Ta.toast) {
+              Ta.toast('This account has been deactivated.', { type: 'warning', title: 'Account inactive' });
+            }
+            setBusy(false);
+            return;
+          }
+
+          var session;
+          if (matchedUser) {
+            session = {
+              id: matchedUser.id,
+              name: matchedUser.name,
+              email: matchedUser.email,
+              role: matchedUser.role,
+              at: new Date().toISOString()
+            };
+            Ta.store.update('users', function (list) {
+              list = list || [];
+              for (var u = 0; u < list.length; u++) {
+                if (list[u].id === matchedUser.id) list[u].lastLogin = new Date().toISOString();
+              }
+              return list;
+            });
+          } else {
+            session = {
+              id: matchedMember.studentId || matchedMember.id,
+              name: matchedMember.name,
+              email: matchedMember.email,
+              role: 'student',
+              studentId: matchedMember.studentId,
+              at: new Date().toISOString()
+            };
+          }
+
+          Ta.store.set('session', session);
+
+          var dest = session.role === 'admin'
+            ? '../admin/users.html'
+            : (session.role === 'student' ? '../student/events.html' : '../events/index.html');
+          window.location.assign(dest);
+        });
+      });
+    })();
+  </script>
+</body>
 </html>

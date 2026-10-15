@@ -276,8 +276,9 @@ def check_P1(page, txt):
     for asset in ("assets/tokens.css", "assets/components.css", "assets/app.js"):
         if asset not in txt:
             add("P1", page, 0, f"missing link/ref: {asset}")
-    if "tailwind.config" in txt:
-        add("P1", page, line_of(txt, "tailwind.config"), "inline tailwind.config present")
+    m = re.search(r"tailwind\.config\s*=", txt)
+    if m:
+        add("P1", page, line_of(txt, m.group(0)), "inline tailwind.config present")
 
 
 def check_P2(page, txt):
@@ -288,10 +289,10 @@ def check_P2(page, txt):
 
 
 def check_P3(page, txt):
+    native = re.compile(r"(?<![\w.$])(?:alert|confirm)\s*\(")
     for i, line in enumerate(txt.splitlines(), 1):
-        for bad in ("alert(", "confirm("):
-            if bad in line:
-                add("P3", page, i, f"forbidden '{bad}'")
+        for m in native.finditer(line):
+            add("P3", page, i, f"forbidden native call '{m.group(0).strip()}'")
 
 
 def check_P4(page, txt):
