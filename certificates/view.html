@@ -21,6 +21,7 @@
       }
     }
   </script>
+  <link rel="stylesheet" href="../assets/ink-seam.css">
 </head>
 <body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-100 print:bg-white p-4 sm:p-8">
 
@@ -112,9 +113,14 @@
 
   </main>
 
+  <!-- The Ink Seam (full-bleed; hidden in print) -->
+  <div class="ink-seam -mx-4 sm:-mx-8" data-ink-seam aria-hidden="true"></div>
+
   <footer class="mt-6 text-center text-xs text-slate-400 font-mono print:hidden">
     &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
   </footer>
+
+  <script src="../assets/ink-seam.js" defer></script>
 
 </body>
 </html>
