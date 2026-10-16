@@ -1,522 +1,339 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa — Door Attendance Kiosk &amp; Verification Desk</title>
+  <title>Door Scanner &middot; AttendTa</title>
   <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- jsQR for real-time camera QR decoding -->
+  <script src="../assets/tailwind.config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Outfit"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-            serif: ['"Cinzel"', 'serif']
-          },
-          colors: {
-            ink: {
-              950: '#090D16',
-              900: '#0F172A',
-              700: '#334155',
-              500: '#64748B'
-            },
-            scholastic: {
-              500: '#D97706',
-              600: '#B45309',
-              50: '#FEF3C7'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col justify-between text-ink-950 antialiased font-sans bg-[#F8FAFC]">
+<body class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
 
-  <!-- Kiosk Navigation Header -->
-  <header class="border-b border-slate-200/80 bg-white sticky top-0 z-30">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <a href="../events/index.html" class="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-ink-950">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-          <span class="hidden sm:inline">Events Hub</span>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main id="main" data-kiosk class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- ===================================================================
+         Header: title + clock + quiet exit
+         =================================================================== -->
+    <header class="space-y-4">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="inline-flex h-11 w-11 flex-none items-center justify-center rounded-md bg-ink text-ink-inverse" aria-hidden="true">
+            <svg class="icon text-xl" aria-hidden="true"><use href="../assets/icons.svg#i-scan"></use></svg>
+          </span>
+          <div class="min-w-0">
+            <h1 class="font-gate text-2xl font-extrabold tracking-tight text-ink">Door Scanner</h1>
+            <div class="mt-0.5 font-mono text-sm text-ink-muted" data-kiosk-clock>&mdash;</div>
+          </div>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="../index.html">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-arrow-left"></use></svg>
+          Exit terminal
         </a>
-        <div class="h-4 w-px bg-slate-200"></div>
-        <div class="flex items-center gap-2.5">
-          <img src="../assets/attendTa_logo.jpg" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs shrink-0">
-          <div class="flex flex-col">
-            <span class="font-extrabold text-sm tracking-tight leading-tight">AttendTa Terminal</span>
-            <span class="text-[10px] font-mono font-semibold text-scholastic-600 uppercase tracking-wider">Door Verification Desk</span>
+      </div>
+
+      <!-- Session chip (event accent) -->
+      <div class="w-full">
+        <div class="live-band" data-ksession data-accent="indigo">
+          <span class="live-band__dot" aria-hidden="true"></span>
+          <div class="min-w-0">
+            <div class="live-band__label">Live session</div>
+            <div class="live-band__title">AI Architecture &amp; High-Agency Systems</div>
+          </div>
+          <div class="live-band__meta">84 / 150 registered</div>
+        </div>
+        <div class="card-hairline" data-ksession-none hidden>
+          <div class="card-hairline__body flex items-center gap-3">
+            <svg class="icon text-ink-muted" aria-hidden="true"><use href="../assets/icons.svg#i-info"></use></svg>
+            <p class="text-sm text-ink-muted">No live session right now &mdash; check-ins are paused.</p>
           </div>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span id="scanner-health-label">Camera Standby</span>
-        </span>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Main Kiosk Body -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+    <!-- ===================================================================
+         Stage: three input modes
+         =================================================================== -->
+    <section class="card-hairline" aria-label="Check-in scanner">
+      <div class="card-hairline__body p-4 sm:p-6 space-y-5">
 
-    <!-- Active Event Selector Banner -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-mono flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">
-          EVT
-        </div>
-        <div>
-          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">Current Active Session</span>
-          <h2 class="text-sm sm:text-base font-extrabold text-ink-950 leading-tight" id="active-event-title">AI Architecture &amp; High-Agency Systems</h2>
-        </div>
-      </div>
-
-      <!-- Quick Session Switcher -->
-      <form method="get" action="index.html" class="flex items-center gap-2">
-        <select id="event-select" name="eventId" onchange="onSessionChange(this.value)" class="w-full sm:w-auto px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-ink-950">
-          <option value="1" selected>AI Architecture • Main Auditorium</option>
-          <option value="2">C# ASP.NET Bootcamp • IT Lab 401</option>
-          <option value="3">General Assembly • AV Amphitheater</option>
-        </select>
-      </form>
-    </div>
-
-    <!-- Verified Check-In Banner (Optical Recognition Toast) -->
-    <div id="checkin-banner" class="hidden p-4 rounded-2xl border-2 border-emerald-500 bg-white text-ink-950 flex items-start gap-4 shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shrink-0 mt-0.5">
-        ✓
-      </div>
-      <div class="flex-1 space-y-0.5">
-        <div class="flex items-center justify-between">
-          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700">Check-In Confirmed &amp; Logged</span>
-          <span id="banner-timestamp" class="text-xs font-mono text-slate-500 font-bold">08:45:12 AM</span>
-        </div>
-        <div id="banner-student-name" class="font-extrabold text-base text-ink-950">Maria Clara C. Santos</div>
-        <div id="banner-student-sub" class="text-xs text-slate-600 font-mono">2023-10482 • BSIT 3-A • Seat Verified</div>
-      </div>
-      <button type="button" onclick="hideBanner()" class="text-slate-400 hover:text-slate-600 text-lg font-bold px-2 py-1">
-        &times;
-      </button>
-    </div>
-
-    <!-- Mode Selector Tabs (Phone Camera Scanner vs. Manual / USB Gun) -->
-    <div class="bg-slate-200/60 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
-      <button 
-        type="button" 
-        id="tab-camera" 
-        onclick="switchScannerMode('camera')" 
-        class="flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all"
-      >
-        <svg class="w-4 h-4 text-scholastic-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        <span>Optical Camera Scanner</span>
-        <kbd class="key-pill hidden sm:inline-flex">Space</kbd>
-      </button>
-
-      <button 
-        type="button" 
-        id="tab-manual" 
-        onclick="switchScannerMode('manual')" 
-        class="flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all"
-      >
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-        <span>Manual ID / USB Gun</span>
-        <kbd class="key-pill hidden sm:inline-flex">Enter</kbd>
-      </button>
-    </div>
-
-    <!-- VIEW 1: LIVE PHONE CAMERA SCANNER -->
-    <div id="mode-camera-view" class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-2xs space-y-4">
-      
-      <!-- Viewfinder Optical Reticle -->
-      <div class="relative max-w-md mx-auto aspect-square bg-ink-950 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
-        <!-- Live Video Element -->
-        <video id="camera-video" playsinline muted class="w-full h-full object-cover"></video>
-        <canvas id="camera-canvas" class="hidden"></canvas>
-
-        <!-- Precision Optical Reticle -->
-        <div id="viewfinder-overlay" class="absolute inset-0 pointer-events-none flex items-center justify-center p-8">
-          <div class="w-64 h-64 border border-white/30 rounded-2xl relative flex items-center justify-center">
-            
-            <!-- Corner Precision Brackets -->
-            <div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-emerald-400"></div>
-            <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-emerald-400"></div>
-            <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-emerald-400"></div>
-            <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-emerald-400"></div>
-
-            <!-- Optical Center Dot -->
-            <div class="w-2 h-2 rounded-full bg-emerald-400/80"></div>
-
-            <span class="absolute bottom-4 text-[10px] font-mono font-bold text-white/90 bg-ink-950/80 px-2.5 py-1 rounded-md">
-              Align AttendTa QR Pass
-            </span>
-          </div>
-        </div>
-
-        <!-- Camera Standby Overlay -->
-        <div id="camera-idle-screen" class="absolute inset-0 bg-ink-950 text-white flex flex-col items-center justify-center p-6 text-center space-y-4">
-          <div class="w-14 h-14 rounded-2xl bg-slate-900 text-scholastic-500 flex items-center justify-center border border-slate-800">
-            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-base">Terminal Scanner Ready</h3>
-            <p class="text-xs text-slate-400 mt-1 max-w-xs">
-              Activate camera feed to start scanning student door passes. Press <kbd class="key-pill">Space</kbd> anytime.
-            </p>
-          </div>
-          <button 
-            type="button" 
-            onclick="startCameraScanner()" 
-            class="btn-tactile px-5 py-2.5 rounded-xl bg-scholastic-500 hover:bg-scholastic-600 text-white font-extrabold text-xs shadow-sm flex items-center gap-2"
-          >
-            <span>Activate Optical Camera</span>
+        <div class="tabs tabs--pills" data-tabs="kiosk" role="tablist" aria-label="Check-in input mode">
+          <button type="button" class="tabs__tab inline-flex min-h-14 items-center gap-2" data-tab="camera" aria-selected="true" role="tab">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-qr-code"></use></svg>
+            Camera QR
+          </button>
+          <button type="button" class="tabs__tab inline-flex min-h-14 items-center gap-2" data-tab="manual" aria-selected="false" role="tab">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-search"></use></svg>
+            Search
+          </button>
+          <button type="button" class="tabs__tab inline-flex min-h-14 items-center gap-2" data-tab="keypad" aria-selected="false" role="tab">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-key"></use></svg>
+            Student number
           </button>
         </div>
 
-      </div>
-
-      <!-- Optical Controls Toolbar -->
-      <div class="max-w-md mx-auto flex items-center justify-between text-xs text-slate-600 pt-1">
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="switchCameraFacing()" id="flip-camera-btn" class="btn-tactile px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>Flip Facing</span>
-          </button>
-          <button type="button" onclick="stopCameraScanner()" id="stop-camera-btn" class="btn-tactile hidden px-3 py-1.5 rounded-lg border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold">
-            Pause Feed
-          </button>
-        </div>
-        <span class="text-[11px] font-mono text-slate-400" id="scan-status-text">Standby</span>
-      </div>
-
-    </div>
-
-    <!-- VIEW 2: MANUAL ID ENTRY & USB BARCODE GUN FORM -->
-    <div id="mode-manual-view" class="hidden bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xs space-y-5 text-center">
-      <div class="max-w-md mx-auto space-y-1">
-        <h2 class="text-lg font-extrabold text-ink-950">Manual Student Number or Barcode Gun</h2>
-        <p class="text-xs text-slate-500">
-          For attendee walk-ins or physical USB barcode laser readers.
-        </p>
-      </div>
-
-      <form id="manual-scan-form" method="post" action="index.html" onsubmit="handleManualSubmit(event)" class="max-w-md mx-auto space-y-4">
-        <input type="hidden" name="EventId" value="1">
-
-        <div class="relative">
-          <input 
-            type="text" 
-            id="manualStudentInput" 
-            name="StudentNumber" 
-            autocomplete="off" 
-            required
-            placeholder="e.g. 2023-10482" 
-            class="w-full text-center px-4 py-3.5 text-xl font-bold font-mono tracking-wider bg-slate-50 border-2 border-slate-300 rounded-2xl focus:outline-none focus:border-ink-950 focus:bg-white transition-all shadow-inner placeholder:text-slate-400 placeholder:text-sm placeholder:font-sans"
-          >
-        </div>
-
-        <button 
-          type="submit" 
-          class="btn-tactile w-full py-3 px-6 rounded-xl bg-ink-950 hover:bg-ink-900 text-white font-extrabold text-xs tracking-wide shadow-sm"
-        >
-          Verify &amp; Log Attendance &crarr;
-        </button>
-      </form>
-
-      <!-- Quick Fill Test Persona Buttons -->
-      <div class="pt-4 border-t border-slate-100 max-w-md mx-auto">
-        <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">Instant Validation Credentials</span>
-        <div class="flex flex-wrap items-center justify-center gap-1.5">
-          <button type="button" onclick="testCheckIn('2023-10482', 'Maria Clara C. Santos')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
-            Maria Clara (2023-10482)
-          </button>
-          <button type="button" onclick="testCheckIn('2023-09821', 'Adrian Jose V. Ramirez')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
-            Adrian Jose (2023-09821)
-          </button>
-          <button type="button" onclick="testCheckIn('2022-01948', 'Kathryn Joy Lim')" class="btn-tactile px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono font-semibold transition-colors">
-            Kathryn Joy (2022-01948)
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Live Turnout Stream (High-Density Cockpit Log) -->
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xs overflow-hidden">
-      <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-ink-950 flex items-center gap-2">
-          <span>Real-Time Door Feed</span>
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        </span>
-        <span id="turnout-counter" class="text-xs font-mono font-bold text-slate-700">1 Logged Admission</span>
-      </div>
-
-      <div id="checkins-stream" class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
-        <!-- Initial Verified Attendee -->
-        <div class="px-5 py-3 flex items-center justify-between hover:bg-slate-50 text-xs">
-          <div class="flex items-center gap-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <div>
-              <span class="font-bold text-ink-950">Maria Clara C. Santos (BSIT 3-A)</span>
-              <span class="text-slate-400 font-mono ml-1.5">(2023-10482)</span>
+        <!-- Camera QR -->
+        <div data-tab-panel="camera" role="tabpanel">
+          <div class="relative bg-ink rounded-lg overflow-hidden aspect-video">
+            <video data-kiosk-video autoplay muted playsinline class="h-full w-full object-cover"></video>
+            <div data-kiosk-fallback hidden class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center text-white bg-ink">
+              <svg class="icon h-8 w-8" aria-hidden="true"><use href="../assets/icons.svg#i-camera-off"></use></svg>
+              <p class="font-semibold">Camera unavailable</p>
+              <p class="max-w-xs text-sm text-white/80">Use Search or the student-number keypad &mdash; the manual flow always works.</p>
             </div>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="font-mono text-slate-500 text-[11px]">08:30:15 AM</span>
-            <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-mono">Admitted</span>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" class="btn btn--primary min-h-14" data-kiosk-start aria-pressed="false">
+              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-camera"></use></svg>
+              Start camera
+            </button>
+            <button type="button" class="btn btn--secondary min-h-14" data-kiosk-stop hidden>
+              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-camera-off"></use></svg>
+              Stop camera
+            </button>
           </div>
         </div>
+
+        <!-- Manual entry -->
+        <div data-tab-panel="manual" role="tabpanel" hidden>
+          <form method="post" action="index.html" data-action="kiosk.check-in" data-kiosk-manual novalidate class="space-y-4">
+            <div class="field">
+              <label class="field-label" for="kiosk-code">Pass code or student number</label>
+              <input class="input input--mono" id="kiosk-code" name="Code" type="text" autocomplete="off" placeholder="AT-XXXX-XXXX or 2023-10482" aria-label="Pass code or student number">
+              <p class="field-help">Press Enter to verify a pass code or student number.</p>
+            </div>
+            <button type="submit" class="btn btn--primary btn--lg min-h-14 w-full sm:w-auto">
+              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+              Check in
+            </button>
+          </form>
+        </div>
+
+        <!-- Student-number keypad -->
+        <div data-tab-panel="keypad" role="tabpanel" hidden>
+          <div class="mx-auto max-w-sm space-y-4">
+            <div class="rounded-lg border border-slate-200 bg-canvas-subtle px-4 py-3 text-center">
+              <div class="field-label">Student number</div>
+              <div class="font-mono text-2xl tracking-widest text-ink" data-keypad-display>&mdash;</div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 sm:gap-3 max-w-sm">
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="1">1</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="2">2</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="3">3</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="4">4</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="5">5</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="6">6</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="7">7</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="8">8</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="9">9</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="clear" aria-label="Clear entry">C</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="0">0</button>
+              <button type="button" class="btn btn--secondary w-full h-14 text-xl font-semibold" data-keypad-key="back" aria-label="Delete last digit">&larr;</button>
+            </div>
+            <button type="button" class="btn btn--primary min-h-14 w-full" data-keypad-submit>
+              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+              Check in
+            </button>
+          </div>
+        </div>
+
+        <!-- Gate flash host (app.js renders the outcome band here) -->
+        <div class="ta-kiosk-flash-host" data-kiosk-flash aria-live="assertive"></div>
+
       </div>
-    </div>
+    </section>
+
+    <!-- ===================================================================
+         Scan log
+         =================================================================== -->
+    <section class="card-hairline" aria-label="Today's check-ins">
+      <div class="card-hairline__header flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <h2 class="text-lg font-bold tracking-tight text-ink">Today's check-ins</h2>
+          <span class="badge badge--mono badge--neutral"><span data-kiosk-count>0</span> verified</span>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" data-scan-clear>
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-trash-2"></use></svg>
+          Clear log
+        </button>
+      </div>
+      <div class="card-hairline__body">
+        <div data-scan-log>
+          <p class="text-sm text-ink-muted py-3">No check-ins yet &mdash; verified scans will appear here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help strip -->
+    <p class="text-xs text-ink-muted">Scan a pass QR, type a pass code, search a name, or key in a student number. Duplicate scans within 2 seconds are ignored automatically.</p>
 
   </main>
 
-  <!-- Grounded Footer -->
-  <footer class="border-t border-slate-200/80 bg-white py-4 text-center text-xs text-slate-500 font-mono">
-    &copy; 2026 USTP Student Organization Council • AttendTa Attendance Terminal
-  </footer>
-
-  <!-- Scanner Logic & Keyboard Accelerators -->
   <script>
-    let isScanningActive = false;
-    let scanAnimationId = null;
-    let videoStream = null;
-    let currentFacingMode = 'environment';
-    let checkInCount = 1;
+    (function () {
+      'use strict';
 
-    // Keyboard Accelerators (Fitts & Transit Time Optimization)
-    window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
-        if (e.key === 'Escape') {
-          hideBanner();
-          e.target.blur();
+      var started = false;
+      var entryDigits = '';
+      var EMPTY_LOG = '<p class="text-sm text-ink-muted py-3">No check-ins yet \u2014 verified scans will appear here.</p>';
+
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      function formatEntry() {
+        if (entryDigits.length <= 4) return entryDigits;
+        return entryDigits.slice(0, 4) + '-' + entryDigits.slice(4);
+      }
+
+      function initSessionChip() {
+        var chip = document.querySelector('[data-ksession]');
+        var empty = document.querySelector('[data-ksession-none]');
+        var events = Ta.store.get('events') || [];
+        var live = null;
+
+        for (var i = 0; i < events.length; i++) {
+          if (events[i] && events[i].status === 'live') { live = events[i]; break; }
         }
-        return;
-      }
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (isScanningActive) {
-          stopCameraScanner();
-        } else {
-          switchScannerMode('camera');
-          startCameraScanner();
+
+        if (!live) {
+          if (chip) chip.setAttribute('hidden', '');
+          if (empty) empty.removeAttribute('hidden');
+          return;
         }
-      } else if (e.code === 'Enter') {
-        e.preventDefault();
-        switchScannerMode('manual');
-        const inp = document.getElementById('manualStudentInput');
-        if (inp) inp.focus();
-      } else if (e.key === 'Escape') {
-        hideBanner();
+
+        var type = Ta.store.find('types', live.typeId);
+        var accent = (type && type.accent) || 'indigo';
+
+        if (chip) {
+          chip.setAttribute('data-accent', accent);
+          var titleEl = chip.querySelector('.live-band__title');
+          var metaEl = chip.querySelector('.live-band__meta');
+          if (titleEl) titleEl.textContent = live.title;
+          if (metaEl) metaEl.textContent = live.registered + ' / ' + live.capacity + ' registered';
+          chip.removeAttribute('hidden');
+        }
+        if (empty) empty.setAttribute('hidden', '');
       }
-    });
 
-    function switchScannerMode(mode) {
-      const cameraView = document.getElementById('mode-camera-view');
-      const manualView = document.getElementById('mode-manual-view');
-      const tabCamera = document.getElementById('tab-camera');
-      const tabManual = document.getElementById('tab-manual');
+      function initScanLog() {
+        var log = document.querySelector('[data-scan-log]');
+        var countEl = document.querySelector('[data-kiosk-count]');
 
-      if (mode === 'camera') {
-        cameraView.classList.remove('hidden');
-        manualView.classList.add('hidden');
-        tabCamera.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all";
-        tabManual.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all";
-      } else {
-        cameraView.classList.add('hidden');
-        manualView.classList.remove('hidden');
-        tabManual.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 bg-white text-ink-950 shadow-2xs transition-all";
-        tabCamera.className = "flex-1 py-2.5 rounded-lg text-center flex items-center justify-center gap-2 text-slate-600 hover:text-ink-950 transition-all";
-        stopCameraScanner();
-        setTimeout(() => {
-          const inp = document.getElementById('manualStudentInput');
-          if (inp) inp.focus();
-        }, 100);
-      }
-    }
+        function render() {
+          if (!log) return;
+          var scans = Ta.store.get('scans');
+          if (!Array.isArray(scans)) scans = [];
+          var rows = scans.slice().sort(function (a, b) {
+            return (b && b.at ? b.at : 0) - (a && a.at ? a.at : 0);
+          }).slice(0, 8);
 
-    async function startCameraScanner() {
-      const idleScreen = document.getElementById('camera-idle-screen');
-      const stopBtn = document.getElementById('stop-camera-btn');
-      const statusText = document.getElementById('scan-status-text');
-      const healthLabel = document.getElementById('scanner-health-label');
-      const video = document.getElementById('camera-video');
+          if (!rows.length) { log.innerHTML = EMPTY_LOG; return; }
 
-      try {
-        statusText.textContent = "Requesting optical stream...";
-        const constraints = {
-          video: {
-            facingMode: currentFacingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
-        };
+          log.innerHTML = rows.map(function (scan) {
+            var member = Ta.store.find('members', scan.memberId);
+            var event = Ta.store.find('events', scan.eventId);
+            var name = member ? member.name : 'Unknown member';
+            var sid = member ? (member.studentId || member.id) : (scan.memberId || '');
+            var eventTitle = event ? event.title : '';
+            var time = '';
+            try { time = new Date(scan.at).toLocaleTimeString(); } catch (e) { time = ''; }
+            return '<div class="flex items-center justify-between gap-3 border-b border-slate-200 py-2 last:border-0">' +
+              '<div class="min-w-0">' +
+                '<div class="font-semibold text-sm text-ink">' + esc(name) + '</div>' +
+                '<div class="font-mono text-xs text-ink-muted">' + esc(sid) + '</div>' +
+                '<div class="text-xs text-ink-muted">' + esc(eventTitle) + '</div>' +
+              '</div>' +
+              '<div class="flex-none font-mono text-xs text-ink-muted">' + esc(time) + '</div>' +
+            '</div>';
+          }).join('');
+        }
 
-        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = videoStream;
-        await video.play();
+        render();
+        Ta.store.on('change', function (payload) {
+          if (payload && payload.key === 'scans') render();
+        });
 
-        isScanningActive = true;
-        idleScreen.classList.add('hidden');
-        stopBtn.classList.remove('hidden');
-        statusText.textContent = "Optical feed active";
-        healthLabel.textContent = "Live Feed (30 FPS)";
-
-        requestAnimationFrame(tickScan);
-      } catch (err) {
-        console.warn("Camera access fallback:", err);
-        statusText.textContent = "Hardware fallback active";
-        healthLabel.textContent = "Manual Fallback";
-        idleScreen.classList.remove('hidden');
-      }
-    }
-
-    function stopCameraScanner() {
-      isScanningActive = false;
-      if (scanAnimationId) cancelAnimationFrame(scanAnimationId);
-      if (videoStream) {
-        videoStream.getTracks().forEach(t => t.stop());
-        videoStream = null;
-      }
-      const idleScreen = document.getElementById('camera-idle-screen');
-      const stopBtn = document.getElementById('stop-camera-btn');
-      const statusText = document.getElementById('scan-status-text');
-      const healthLabel = document.getElementById('scanner-health-label');
-
-      idleScreen.classList.remove('hidden');
-      stopBtn.classList.add('hidden');
-      statusText.textContent = "Feed paused";
-      healthLabel.textContent = "Standby";
-    }
-
-    function switchCameraFacing() {
-      currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
-      if (isScanningActive) {
-        stopCameraScanner();
-        startCameraScanner();
-      }
-    }
-
-    function tickScan() {
-      if (!isScanningActive) return;
-
-      const video = document.getElementById('camera-video');
-      const canvas = document.getElementById('camera-canvas');
-
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.height = video.videoHeight;
-        canvas.width = video.videoWidth;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        
-        if (typeof jsQR !== 'undefined') {
-          const code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: 'dontInvert'
+        var clearBtn = document.querySelector('[data-scan-clear]');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', function () {
+            Ta.dialog.confirm({
+              title: 'Clear the scan log?',
+              message: "This resets today's recorded check-ins.",
+              confirmText: 'Clear log',
+              danger: true
+            }).then(function (ok) {
+              if (!ok) return;
+              Ta.store.set('scans', []);
+              if (countEl) countEl.textContent = '0';
+              Ta.toast('Scan log cleared.', { type: 'info', title: 'Cleared' });
+            });
           });
-
-          if (code && code.data) {
-            handleDecodedPayload(code.data);
-            return;
-          }
         }
       }
 
-      scanAnimationId = requestAnimationFrame(tickScan);
-    }
+      function initKeypad() {
+        var form = document.querySelector('[data-kiosk-manual]');
+        var input = document.getElementById('kiosk-code');
+        var display = document.querySelector('[data-keypad-display]');
 
-    function handleDecodedPayload(payload) {
-      let studentNum = payload;
-      const match = payload.match(/(\d{4}-\d{5})/);
-      if (match) {
-        studentNum = match[1];
-      }
-
-      processCheckIn(studentNum);
-
-      setTimeout(() => {
-        if (isScanningActive) {
-          requestAnimationFrame(tickScan);
+        function sync() {
+          var value = formatEntry();
+          if (display) display.textContent = value ? value : '\u2014';
+          if (input) input.value = value;
         }
-      }, 2000);
-    }
 
-    function processCheckIn(studentNumber, studentName = null) {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-keypad-key]'), function (btn) {
+          btn.addEventListener('click', function () {
+            var key = btn.getAttribute('data-keypad-key');
+            if (key === 'clear') entryDigits = '';
+            else if (key === 'back') entryDigits = entryDigits.slice(0, -1);
+            else if (/^[0-9]$/.test(key) && entryDigits.length < 9) entryDigits += key;
+            sync();
+          });
+        });
 
-      const names = {
-        '2023-10482': 'Maria Clara C. Santos (BSIT 3-A)',
-        '2023-09821': 'Adrian Jose V. Ramirez (BSIT 3-B)',
-        '2022-01948': 'Kathryn Joy Lim (BSCS 4-A)',
-        '2022-09412': 'Carl Vincent D. Ocampo (BSCS 3-B)',
-        '2023-01824': 'Danica Ysabel Navarro (BSIT 3-A)'
-      };
-
-      const resolvedName = studentName || names[studentNumber] || `Member (${studentNumber})`;
-
-      const banner = document.getElementById('checkin-banner');
-      document.getElementById('banner-student-name').textContent = resolvedName;
-      document.getElementById('banner-student-sub').textContent = `${studentNumber} • Seat Verified • Gate Pass A`;
-      document.getElementById('banner-timestamp').textContent = timeStr;
-      banner.classList.remove('hidden');
-
-      const stream = document.getElementById('checkins-stream');
-      const item = document.createElement('div');
-      item.className = 'px-5 py-3 flex items-center justify-between hover:bg-slate-50 text-xs transition-colors bg-emerald-50/50';
-      item.innerHTML = `
-        <div class="flex items-center gap-3">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <div>
-            <span class="font-bold text-ink-950">${resolvedName}</span>
-            <span class="text-slate-400 font-mono ml-1.5">(${studentNumber})</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <span class="font-mono text-slate-500 text-[11px]">${timeStr}</span>
-          <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-mono">Admitted</span>
-        </div>
-      `;
-      stream.insertBefore(item, stream.firstChild);
-
-      checkInCount++;
-      document.getElementById('turnout-counter').textContent = `${checkInCount} Logged Admissions`;
-    }
-
-    function hideBanner() {
-      document.getElementById('checkin-banner').classList.add('hidden');
-    }
-
-    function handleManualSubmit(e) {
-      e.preventDefault();
-      const input = document.getElementById('manualStudentInput');
-      const studentNum = input.value.trim();
-      if (studentNum) {
-        processCheckIn(studentNum);
-        input.value = '';
+        var submit = document.querySelector('[data-keypad-submit]');
+        if (submit) {
+          submit.addEventListener('click', function () {
+            var value = input ? input.value.trim() : '';
+            if (!value) {
+              Ta.toast('Enter a student number first.', { type: 'warning', title: 'Keypad' });
+              return;
+            }
+            if (form) {
+              if (form.requestSubmit) form.requestSubmit();
+              else form.submit();
+            }
+            entryDigits = '';
+            sync();
+          });
+        }
       }
-    }
 
-    function testCheckIn(num, name) {
-      processCheckIn(num, name);
-    }
+      function init() {
+        initSessionChip();
+        initKeypad();
+        initScanLog();
+      }
 
-    function onSessionChange(eventId) {
-      const titles = {
-        '1': 'AI Architecture & High-Agency Systems',
-        '2': 'C# ASP.NET Core Bootcamp',
-        '3': 'Midyear General Assembly'
-      };
-      document.getElementById('active-event-title').textContent = titles[eventId] || 'Active Event';
-    }
+      function start() {
+        if (started) return;
+        if (!window.Ta || !window.Ta.store) return;
+        started = true;
+        try { init(); } catch (e) { /* fail open: static content remains */ }
+      }
 
-    window.addEventListener('beforeunload', stopCameraScanner);
+      document.addEventListener('ta:ready', start);
+      if (window.Ta && window.Ta.store) start();
+    })();
   </script>
 </body>
 </html>

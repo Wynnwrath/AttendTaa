@@ -496,6 +496,9 @@
   font-size: 13px;
   padding: 32px;
 }
+.table-ledger tbody tr[hidden] {
+  display: none;
+}
 /* Card fallback for narrow viewports */
 @media (max-width: 639px) {
   .table-ledger--cards thead {

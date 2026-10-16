@@ -1,250 +1,545 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa &bull; Events &bull; Create Event</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Create Event &middot; AttendTa</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
+  <script src="../assets/tailwind.config.js"></script>
+  <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
 
-  <!-- Unified Officer Navigation Header -->
-  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
-          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-xs shrink-0">
-          <div class="flex flex-col">
-            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
-            <span class="text-[11px] font-semibold text-amber-600 uppercase tracking-wider">Officer Operations</span>
-          </div>
+<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="flex min-h-[100dvh]">
+
+    <!-- ===================================================================
+         Officer shell - left sidebar (>=1024px)
+         =================================================================== -->
+    <aside class="sidenav sticky top-0 h-[100dvh]" data-sidebar aria-label="Primary">
+      <div class="sidenav__brand overflow-hidden">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight [[data-collapsed=true]_&amp;]:hidden">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
         </a>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">&larr; Back to Events List</a>
-      </div>
-    </div>
-  </header>
 
-  <!-- Main Body Content -->
-  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-    <!-- Breadcrumb Navigation -->
-    <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-      <a href="index.html" class="hover:text-slate-900">Events Operations</a>
-      <span>/</span>
-      <span class="text-slate-900 font-bold">Create New Event</span>
-    </nav>
-
-    <!-- Page Title -->
-    <div>
-      <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Create &amp; Post Organization Event</h1>
-      <p class="text-xs sm:text-sm text-slate-600 mt-1">
-        Configure session title, classification, campus venue, capacity limits, and registration timeline.
-      </p>
-    </div>
-
-    <!-- Form Card -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-sm">
-      <form method="post" action="index.html" class="space-y-8">
-
-        <!-- Group 1: General Details -->
-        <div class="space-y-4">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
-            1. Core Information
-          </h2>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div class="sm:col-span-2">
-              <label for="eventTitle" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Event Title <span class="text-rose-500">*</span>
-              </label>
-              <input 
-                type="text" 
-                id="eventTitle" 
-                name="Title" 
-                required
-                placeholder="e.g. Next-Gen Web Architecture Seminar 2026"
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-            </div>
-
-            <div>
-              <label for="classification" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Classification Type <span class="text-rose-500">*</span>
-              </label>
-              <select 
-                id="classification" 
-                name="ClassificationId" 
-                required
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                <option value="">Select Type...</option>
-                <option value="1" selected>Technical Seminar</option>
-                <option value="2">General Assembly</option>
-                <option value="3">Hands-on Workshop</option>
-                <option value="4">Community Outreach</option>
-                <option value="5">Collegiate Competition</option>
-              </select>
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="description" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Event Description &amp; Objectives
-              </label>
-              <textarea 
-                id="description" 
-                name="Description" 
-                rows="3"
-                placeholder="Describe key learning outcomes, prerequisites, guest speaker background, and what participants must bring..."
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        <!-- Group 2: Venue & Capacity -->
-        <div class="space-y-4">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
-            2. Facility &amp; Capacity Bounds
-          </h2>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label for="venue" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Assigned Campus Venue <span class="text-rose-500">*</span>
-              </label>
-              <select 
-                id="venue" 
-                name="VenueId" 
-                required
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                <option value="">Select Venue...</option>
-                <option value="1" selected>Main University Auditorium (Max 500)</option>
-                <option value="2">IT Multimedia Lab 401 (Max 60)</option>
-                <option value="3">College AV Amphitheater (Max 180)</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="participantLimit" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Participant Limit <span class="text-rose-500">*</span>
-              </label>
-              <input 
-                type="number" 
-                id="participantLimit" 
-                name="ParticipantLimit" 
-                required
-                min="1"
-                max="500"
-                value="150"
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Group 3: Schedule & Deadlines -->
-        <div class="space-y-4">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
-            3. Schedule &amp; Registration Deadline
-          </h2>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div>
-              <label for="eventDate" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Event Date <span class="text-rose-500">*</span>
-              </label>
-              <input 
-                type="date" 
-                id="eventDate" 
-                name="EventDate" 
-                required
-                value="2026-10-25"
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-            </div>
-
-            <div>
-              <label for="startTime" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Start Time <span class="text-rose-500">*</span>
-              </label>
-              <input 
-                type="time" 
-                id="startTime" 
-                name="StartTime" 
-                required
-                value="09:00"
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-            </div>
-
-            <div>
-              <label for="deadline" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Registration Deadline <span class="text-rose-500">*</span>
-              </label>
-              <input 
-                type="date" 
-                id="deadline" 
-                name="RegistrationDeadline" 
-                required
-                value="2026-10-24"
-                class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Form Actions Bar -->
-        <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">
-            &larr; Cancel and Return to Events
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
           </a>
-
-          <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button 
-              type="submit" 
-              name="SubmitType" 
-              value="Draft"
-              class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs active:scale-95 transition-all"
-            >
-              Save as Draft
-            </button>
-            <button 
-              type="submit" 
-              name="SubmitType" 
-              value="Publish"
-              class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
-            >
-              Publish &amp; Open Registration
-            </button>
-          </div>
+          <a class="sidenav__link" href="index.html" data-nav aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
         </div>
 
-      </form>
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="../admin/users.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="../admin/auditlogs.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ===================================================================
+         Right column: top bar + main + footer
+         =================================================================== -->
+    <div class="flex min-w-0 flex-1 flex-col">
+
+      <header class="sticky top-0 z-sticky flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 sm:px-6">
+        <button type="button" class="icon-btn lg:hidden" data-drawer-open="nav" aria-label="Open navigation"
+          aria-controls="app-nav-drawer">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
+        <button type="button" class="icon-btn hidden lg:inline-flex" data-sidebar-toggle aria-label="Toggle sidebar"
+          aria-expanded="true">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
+
+        <div class="ml-1 hidden min-w-0 sm:block">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <span class="breadcrumb__item"><a href="../index.html">Home</a></span>
+            <span class="breadcrumb__sep" aria-hidden="true">/</span>
+            <span class="breadcrumb__item"><a href="index.html">Events</a></span>
+            <span class="breadcrumb__sep" aria-hidden="true">/</span>
+            <span class="breadcrumb__item"><span data-crumb-current aria-current="page">Create</span></span>
+          </nav>
+        </div>
+
+        <div class="ml-auto flex items-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+              data-session-initials aria-hidden="true">DN</div>
+            <div class="hidden text-right sm:block">
+              <div class="text-xs font-semibold text-ink" data-session-name>Officer console</div>
+              <div class="font-mono text-xs text-ink-muted" data-session-role>Operations</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn--ghost btn--sm" data-sign-out aria-label="Sign out">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-log-out"></use></svg>
+            <span class="hidden sm:inline">Sign Out</span>
+          </button>
+        </div>
+      </header>
+
+      <main id="main" class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-4xl space-y-6">
+
+          <!-- Page header -->
+          <div class="min-w-0">
+            <h1 class="font-gate text-2xl font-bold tracking-tight text-ink" data-page-title>Create Event</h1>
+            <p class="mt-1 max-w-2xl text-sm text-ink-muted">Draft it now &mdash; publish when the details are final.</p>
+          </div>
+
+          <!-- Sectioned event form -->
+          <form id="event-form" method="post" action="create.html" data-action="events.publish" data-validate
+            class="space-y-4">
+            <input type="hidden" name="SubmitAction" value="events.publish" data-submit-mirror>
+
+            <section class="card-hairline">
+              <div class="card-hairline__body space-y-4">
+                <h2 class="text-lg font-bold text-ink">Basics</h2>
+                <div class="field">
+                  <label class="field-label field-required" for="event-title">Event title</label>
+                  <input class="input" id="event-title" name="Title" type="text" required minlength="4" data-validate
+                    autocomplete="off" placeholder="e.g. Next-Gen Web Architecture Seminar 2026">
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div class="field">
+                    <label class="field-label field-required" for="event-type">Type</label>
+                    <select class="select" id="event-type" name="TypeId" required data-validate>
+                      <option value="">Select a type&hellip;</option>
+                      <option value="type-1">Seminar</option>
+                      <option value="type-2">Recognition Ceremony</option>
+                      <option value="type-3">Workshop</option>
+                      <option value="type-4">Assembly</option>
+                      <option value="type-5">Outreach</option>
+                      <option value="type-6">Sports</option>
+                      <option value="type-7">Cultural Night</option>
+                      <option value="type-8">Orientation</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field-label field-required" for="event-venue">Venue</label>
+                    <select class="select" id="event-venue" name="VenueId" required data-validate>
+                      <option value="">Select a venue&hellip;</option>
+                      <option value="venue-1">Main Auditorium &middot; College of Engineering</option>
+                      <option value="venue-2">IT Multimedia Lab 401 &middot; Information Technology Building</option>
+                      <option value="venue-3">College AV Amphitheater &middot; Student Learning Center</option>
+                      <option value="venue-4">University Gymnasium &middot; Sports Complex</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card-hairline">
+              <div class="card-hairline__body space-y-4">
+                <h2 class="text-lg font-bold text-ink">Schedule &amp; capacity</h2>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div class="field">
+                    <label class="field-label field-required" for="event-date">Date</label>
+                    <input class="input input--mono" id="event-date" name="Date" type="date" required data-validate>
+                  </div>
+                  <div class="field">
+                    <label class="field-label field-required" for="event-start">Start time</label>
+                    <input class="input input--mono" id="event-start" name="StartTime" type="time" required
+                      data-validate>
+                  </div>
+                  <div class="field">
+                    <label class="field-label field-required" for="event-end">End time</label>
+                    <input class="input input--mono" id="event-end" name="EndTime" type="time" required data-validate>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label field-required" for="event-capacity">Capacity</label>
+                  <input class="input input--mono" id="event-capacity" name="Capacity" type="number" min="1" max="1000"
+                    required data-validate>
+                  <div class="field-help" data-venue-help>Select a venue to see its capacity limit.</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card-hairline">
+              <div class="card-hairline__body space-y-4">
+                <h2 class="text-lg font-bold text-ink">Presentation</h2>
+                <div class="field">
+                  <label class="field-label field-required" for="event-description">Description</label>
+                  <textarea class="textarea" id="event-description" name="Description" rows="4" required
+                    minlength="20" data-validate
+                    placeholder="Describe the objectives, format, and what participants should expect."></textarea>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="event-cover">Cover image</label>
+                  <select class="select" id="event-cover" name="Cover">
+                    <option value="assets/event-cyber.jpg">Cyber &amp; AI keynote</option>
+                    <option value="assets/event-workshop.jpg">Workshop / coding lab</option>
+                    <option value="assets/event-assembly.jpg">Assembly / auditorium</option>
+                    <option value="assets/event-outreach.jpg">Outreach / community</option>
+                    <option value="assets/hero-pass.jpg">Ceremonial / recognition</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <!-- Sticky action bar -->
+            <div
+              class="sticky bottom-0 z-sticky -mx-4 sm:-mx-6 border-t border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-6 py-3 flex items-center justify-between gap-3 print-hidden">
+              <a class="btn btn--ghost btn--sm" href="index.html">Cancel</a>
+              <div class="flex flex-1 flex-col gap-2 sm:flex-none sm:flex-row sm:items-center">
+                <button type="submit" class="btn btn--secondary min-h-14 w-full sm:w-auto" data-draft="true"
+                  data-submit-action="events.save-draft" data-label-default="Save draft"
+                  data-label-edit="Save changes (draft)">Save draft</button>
+                <button type="submit" class="btn btn--primary min-h-14 w-full sm:w-auto"
+                  data-submit-action="events.publish" data-label-default="Publish event"
+                  data-label-edit="Publish changes">Publish event</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </main>
+
+      <footer class="border-t border-slate-200 px-4 py-4 text-xs text-ink-muted sm:px-6 lg:px-8">
+        &copy; 2026 USTP Student Organization Council &mdash; AttendTa Event &amp; Attendance Management System
+      </footer>
+
     </div>
+  </div>
 
-  </main>
+  <!-- ===================================================================
+       Mobile navigation drawer (<1024px)
+       =================================================================== -->
+  <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
+    <div class="drawer__panel">
+      <div class="sidenav__brand">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
+        </a>
+        <button type="button" class="icon-btn ml-auto" data-drawer-close aria-label="Close navigation">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x"></use></svg>
+        </button>
+      </div>
 
-  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-medium">
-    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
-  </footer>
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
+          </a>
+          <a class="sidenav__link" href="index.html" aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
+        </div>
 
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="../admin/users.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="../admin/auditlogs.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var editingId = null;
+      var lastSubmitter = null;
+      var started = false;
+
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      function cap(text) {
+        text = String(text || '');
+        return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
+      }
+
+      function deriveInitials(name) {
+        var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '??';
+        var first = parts[0].charAt(0);
+        var last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase() || '??';
+      }
+
+      function queryParam(name) {
+        var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        if (!match) return null;
+        try { return decodeURIComponent(match[1].replace(/\+/g, ' ')); } catch (e) { return match[1]; }
+      }
+
+      function todayISO() {
+        var d = new Date();
+        var m = ('0' + (d.getMonth() + 1)).slice(-2);
+        var day = ('0' + d.getDate()).slice(-2);
+        return d.getFullYear() + '-' + m + '-' + day;
+      }
+
+      function computeStatus(date) {
+        return date === todayISO() ? 'live' : 'upcoming';
+      }
+
+      function initSession() {
+        var session = Ta.store.get('session') || {};
+        var name = session.name || 'Officer console';
+        var role = session.role ? cap(session.role) : 'Operations';
+        var nameEl = document.querySelector('[data-session-name]');
+        var roleEl = document.querySelector('[data-session-role]');
+        var initialsEl = document.querySelector('[data-session-initials]');
+        if (nameEl) nameEl.textContent = name;
+        if (roleEl) roleEl.textContent = role;
+        if (initialsEl) initialsEl.textContent = deriveInitials(name);
+      }
+
+      function updateVenueHelp(form) {
+        var venueSelect = form.elements.VenueId;
+        var capacityInput = form.elements.Capacity;
+        var help = form.querySelector('[data-venue-help]');
+        if (!venueSelect || !help) return;
+        var venue = Ta.store.find('venues', venueSelect.value);
+        var requested = parseInt(capacityInput.value, 10);
+        help.classList.remove('text-scholastic-deep');
+        if (!venue) {
+          help.textContent = 'Select a venue to see its capacity limit.';
+          return;
+        }
+        if (!isNaN(requested) && requested > venue.capacity) {
+          help.textContent = 'Capacity exceeds ' + venue.name + ' limit (' + venue.capacity + '). Registrations may be capped.';
+          help.classList.add('text-scholastic-deep');
+        } else {
+          help.textContent = 'Venue capacity: ' + venue.capacity + ' max';
+        }
+      }
+
+      function readForm(form) {
+        var f = form.elements;
+        return {
+          title: f.Title.value.trim(),
+          typeId: f.TypeId.value,
+          venueId: f.VenueId.value,
+          date: f.Date.value,
+          startTime: f.StartTime.value,
+          endTime: f.EndTime.value,
+          capacity: parseInt(f.Capacity.value, 10) || 0,
+          description: f.Description.value.trim(),
+          cover: f.Cover.value
+        };
+      }
+
+      function prefillEdit(form) {
+        if (!editingId) { updateVenueHelp(form); return; }
+        var ev = Ta.store.find('events', editingId);
+        if (!ev) { editingId = null; updateVenueHelp(form); return; }
+
+        var f = form.elements;
+        f.Title.value = ev.title || '';
+        f.TypeId.value = ev.typeId || '';
+        f.VenueId.value = ev.venueId || '';
+        f.Date.value = ev.date || '';
+        f.StartTime.value = ev.startTime || '';
+        f.EndTime.value = ev.endTime || '';
+        f.Capacity.value = ev.capacity != null ? ev.capacity : '';
+        f.Description.value = ev.description || '';
+        f.Cover.value = ev.cover || 'assets/event-cyber.jpg';
+
+        var title = document.querySelector('[data-page-title]');
+        if (title) title.textContent = 'Edit Event';
+        var crumb = document.querySelector('[data-crumb-current]');
+        if (crumb) crumb.textContent = 'Edit event';
+        Array.prototype.forEach.call(form.querySelectorAll('[data-label-default]'), function (btn) {
+          btn.textContent = btn.getAttribute('data-label-edit') || btn.textContent;
+        });
+        updateVenueHelp(form);
+      }
+
+      function save(form, isDraft) {
+        var data = readForm(form);
+        if (editingId) {
+          Ta.store.update('events', function (list) {
+            return (list || []).map(function (ev) {
+              if (ev.id !== editingId) return ev;
+              var next = Object.assign({}, ev, data);
+              if (isDraft) {
+                next.status = ev.status === 'draft' ? 'draft' : ev.status;
+              } else {
+                next.status = computeStatus(data.date);
+              }
+              return next;
+            });
+          });
+        } else {
+          var events = (Ta.store.get('events') || []).slice();
+          events.push(Object.assign({
+            id: Ta.store.nextId('events', 'ev-'),
+            registered: 0,
+            status: isDraft ? 'draft' : computeStatus(data.date)
+          }, data));
+          Ta.store.set('events', events);
+        }
+
+        Ta.toast(isDraft ? 'Draft saved \u2014 publish it when the details are final.' : 'Event published \u2014 now visible to students.', {
+          type: 'success',
+          title: isDraft ? 'Draft saved' : 'Published'
+        });
+        window.setTimeout(function () { window.location.assign('index.html'); }, 400);
+      }
+
+      function onSubmit(event) {
+        var form = event.target;
+        if (!form || form.tagName !== 'FORM' || !form.hasAttribute('data-validate')) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (!Ta.form.validate(form)) {
+          Ta.toast('Please correct the highlighted fields.', { type: 'warning', title: 'Check the form' });
+          return;
+        }
+        var submitter = event.submitter || lastSubmitter;
+        var action = 'events.publish';
+        if (submitter) {
+          action = submitter.getAttribute('data-submit-action') ||
+            (submitter.hasAttribute('data-draft') ? 'events.save-draft' : 'events.publish');
+        }
+        save(form, action === 'events.save-draft');
+      }
+
+      function init() {
+        var form = document.getElementById('event-form');
+        if (!form) return;
+        editingId = queryParam('id');
+        initSession();
+
+        var main = document.getElementById('main');
+        if (main) main.addEventListener('submit', onSubmit);
+
+        form.elements.VenueId.addEventListener('change', function () { updateVenueHelp(form); });
+        form.elements.Capacity.addEventListener('input', function () { updateVenueHelp(form); });
+
+        Array.prototype.forEach.call(form.querySelectorAll('button[type="submit"]'), function (btn) {
+          btn.addEventListener('click', function () {
+            lastSubmitter = btn;
+            var mirror = form.querySelector('[data-submit-mirror]');
+            if (mirror) mirror.value = btn.getAttribute('data-submit-action') || 'events.publish';
+          });
+        });
+
+        var signOut = document.querySelector('[data-sign-out]');
+        if (signOut) {
+          signOut.addEventListener('click', function () {
+            Ta.store.set('session', null);
+            window.location.assign('../account/login.html');
+          });
+        }
+
+        prefillEdit(form);
+      }
+
+      function start() {
+        if (started) return;
+        if (!window.Ta || !window.Ta.store) return;
+        started = true;
+        try { init(); } catch (err) { /* fail open: static form remains */ }
+      }
+
+      document.addEventListener('ta:ready', start);
+      if (window.Ta && window.Ta.store) start();
+    })();
+  </script>
 </body>
+
 </html>
