@@ -1,374 +1,621 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa &bull; Admin &bull; Appoint Officer &amp; Permissions</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>New User &middot; AttendTa</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
+  <script src="../assets/tailwind.config.js"></script>
+  <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
 
-  <!-- Header -->
-  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="../index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
-          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs">
-          <div class="flex flex-col">
-            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
-            <span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">System Administration</span>
-          </div>
+<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="flex min-h-[100dvh]">
+
+    <!-- ===================================================================
+         Officer shell - left sidebar (>=1024px)
+         =================================================================== -->
+    <aside class="sidenav sticky top-0 h-[100dvh]" data-sidebar aria-label="Primary">
+      <div class="sidenav__brand overflow-hidden">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight [[data-collapsed=true]_&amp;]:hidden">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
         </a>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="users.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">&larr; Back to Accounts Directory</a>
-      </div>
-    </div>
-  </header>
 
-  <!-- Main Body Content -->
-  <main class="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-    <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-      <a href="users.html" class="hover:text-slate-900">Administration</a>
-      <span>/</span>
-      <span class="text-slate-900 font-bold">Appoint Officer &amp; Configure Permissions</span>
-    </nav>
-
-    <!-- Page Title -->
-    <div>
-      <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Appoint Officer &amp; Set Permissions</h1>
-      <p class="text-xs sm:text-sm text-slate-600 mt-1">
-        Select a member account, apply a role authority preset, and customize granular operational capability checkboxes.
-      </p>
-    </div>
-
-    <!-- Dedicated Form Card (Razor Compatible OnPostAsync) -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-      <form id="appoint-form" method="post" action="users.html" class="space-y-6">
-
-        <!-- Select Member -->
-        <div>
-          <label for="studentMember" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Select Member Account <span class="text-rose-500">*</span>
-          </label>
-          <select 
-            id="studentMember" 
-            name="StudentNumber" 
-            required
-            onchange="syncMemberDetails()"
-            class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-medium focus:ring-2 focus:ring-blue-600"
-          >
-            <option value="">Choose registered student member...</option>
-            <option value="2023-10482">Maria Clara C. Santos (2023-10482 &bull; BSIT 3-A)</option>
-            <option value="2023-09821">Adrian Jose V. Ramirez (2023-09821 &bull; BSIT 3-B)</option>
-            <option value="2022-01948">Kathryn Joy Lim (2022-01948 &bull; BSCS 4-A)</option>
-            <option value="2022-09412">Carl Vincent D. Ocampo (2022-09412 &bull; BSCS 3-B)</option>
-            <option value="2023-01824">Danica Ysabel Navarro (2023-01824 &bull; BSIT 3-A)</option>
-          </select>
-        </div>
-
-        <!-- Role Preset Selector -->
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label for="rolePreset" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
-              Role Authority Preset <span class="text-rose-500">*</span>
-            </label>
-            <span class="text-[11px] text-blue-600 font-mono">Applies Recommended Scopes</span>
-          </div>
-          <select 
-            id="rolePreset" 
-            name="RolePreset" 
-            required
-            onchange="applyRolePreset()"
-            class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 font-semibold focus:ring-2 focus:ring-blue-600"
-          >
-            <option value="Officer" selected>Chapter Officer (Level 3 &bull; Events, Kiosk, Rosters, Approvals, Certificates, Reports)</option>
-            <option value="Staff">Committee Staff (Level 2 &bull; Door Attendance Kiosk Scanner Only)</option>
-            <option value="Admin">Administrator (Level 4 &bull; Full Root Authority &amp; System Governance)</option>
-            <option value="Member">Student Member (Level 1 &bull; Standard Event Calendar &amp; RSVP Passes)</option>
-          </select>
-        </div>
-
-        <!-- Specific Title / Designation -->
-        <div>
-          <label for="designation" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Executive Title / Chapter Designation <span class="text-rose-500">*</span>
-          </label>
-          <input 
-            type="text" 
-            id="designation" 
-            name="Designation" 
-            required
-            placeholder="e.g. Vice President for Internal Affairs, Secretary, Logistics Head"
-            value="Chapter Officer"
-            class="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-600"
-          >
-          <span class="text-[11px] text-slate-400 mt-1 block">Displayed on official rosters, certificates, and security audit records.</span>
-        </div>
-
-        <!-- Granular Permission Checkboxes Section -->
-        <div class="pt-4 border-t border-slate-200 space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="block text-xs font-bold uppercase tracking-wider text-slate-900">
-                Granular Permission Scopes
-              </span>
-              <span class="text-[11px] text-slate-500">Fine-tune individual operational permissions with checkboxes.</span>
-            </div>
-            <span id="perm-count-badge" class="px-2 py-0.5 rounded-full text-[11px] bg-blue-100 text-blue-800 font-mono font-bold">
-              9 Active
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-
-            <!-- 1. Calendar RSVP -->
-            <label class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50/80 flex items-start gap-3 cursor-pointer transition-colors bg-white">
-              <input type="checkbox" id="perm-calendar" name="Permissions" value="calendar" onchange="updatePermCount()" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500">
-              <div>
-                <strong class="text-xs text-slate-900 block font-bold">Event Calendar &amp; RSVP</strong>
-                <span class="text-[11px] text-slate-500">Browse sessions and self-reserve event seats</span>
-              </div>
-            </label>
-
-            <!-- 2. Digital QR Passes -->
-            <label class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50/80 flex items-start gap-3 cursor-pointer transition-colors bg-white">
-              <input type="checkbox" id="perm-passes" name="Permissions" value="passes" onchange="updatePermCount()" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500">
-              <div>
-                <strong class="text-xs text-slate-900 block font-bold">Digital QR Passes</strong>
-                <span class="text-[11px] text-slate-500">Access personal single-entry pass QR credentials</span>
-              </div>
-            </label>
-
-            <!-- 3. Kiosk Terminal -->
-            <label class="p-3 rounded-xl border border-teal-200 hover:bg-teal-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-teal-50/20">
-              <input type="checkbox" id="perm-kiosk" name="Permissions" value="kiosk" onchange="updatePermCount()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
-              <div>
-                <strong class="text-xs text-teal-950 block font-bold">Door Check-In Kiosk</strong>
-                <span class="text-[11px] text-teal-700">Operate hardware camera scanner terminal</span>
-              </div>
-            </label>
-
-            <!-- 4. Event Creation & Posting -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-events" name="Permissions" value="events" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Event Creation &amp; Scheduling</strong>
-                <span class="text-[11px] text-amber-700">Create, publish, edit, and archive chapter events</span>
-              </div>
-            </label>
-
-            <!-- 5. Registration Rosters -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-rosters" name="Permissions" value="rosters" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Registration Rosters</strong>
-                <span class="text-[11px] text-amber-700">Manage waitlists, promote attendees, cancel passes</span>
-              </div>
-            </label>
-
-            <!-- 6. Account Approvals -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-approvals" name="Permissions" value="approvals" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Membership Approvals</strong>
-                <span class="text-[11px] text-amber-700">Review student account applications &amp; verify</span>
-              </div>
-            </label>
-
-            <!-- 7. Master Data Venues -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-masterdata" name="Permissions" value="masterdata" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Master Data &amp; Venues</strong>
-                <span class="text-[11px] text-amber-700">Maintain room capacities, event types, contacts</span>
-              </div>
-            </label>
-
-            <!-- 8. Certificate Management -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-certificates" name="Permissions" value="certificates" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Certificates &amp; Issuance</strong>
-                <span class="text-[11px] text-amber-700">Batch-generate PDF attendance credentials</span>
-              </div>
-            </label>
-
-            <!-- 9. Turnout Reports -->
-            <label class="p-3 rounded-xl border border-amber-200 hover:bg-amber-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-amber-50/20">
-              <input type="checkbox" id="perm-reports" name="Permissions" value="reports" onchange="updatePermCount()" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-              <div>
-                <strong class="text-xs text-amber-950 block font-bold">Turnout Analytics &amp; CSV</strong>
-                <span class="text-[11px] text-amber-700">Demographic evaluation charts and roster exports</span>
-              </div>
-            </label>
-
-            <!-- 10. Root Governance -->
-            <label class="p-3 rounded-xl border border-blue-200 hover:bg-blue-50/50 flex items-start gap-3 cursor-pointer transition-colors bg-blue-50/30">
-              <input type="checkbox" id="perm-admin" name="Permissions" value="admin" onchange="updatePermCount()" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500">
-              <div>
-                <strong class="text-xs text-blue-950 block font-bold">Root System Governance</strong>
-                <span class="text-[11px] text-blue-700">Role assignment, lockout, and security audit logs</span>
-              </div>
-            </label>
-
-          </div>
-        </div>
-
-        <!-- Submit Actions -->
-        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
-          <a href="users.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900">
-            Cancel
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
           </a>
-          <button 
-            type="submit" 
-            class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
-          >
-            Save Role &amp; Permission Scopes
+          <a class="sidenav__link" href="../events/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="users.html" data-nav aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="auditlogs.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ===================================================================
+         Right column: top bar + main + footer
+         =================================================================== -->
+    <div class="flex min-w-0 flex-1 flex-col">
+
+      <header class="sticky top-0 z-sticky flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 sm:px-6">
+        <button type="button" class="icon-btn lg:hidden" data-drawer-open="nav" aria-label="Open navigation"
+          aria-controls="app-nav-drawer">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
+        <button type="button" class="icon-btn hidden lg:inline-flex" data-sidebar-toggle aria-label="Toggle sidebar"
+          aria-expanded="true">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
+
+        <div class="ml-1 hidden min-w-0 sm:block">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <span class="breadcrumb__item"><a href="../index.html">Home</a></span>
+            <span class="breadcrumb__sep" aria-hidden="true">/</span>
+            <span class="breadcrumb__item"><a href="users.html">Users</a></span>
+            <span class="breadcrumb__sep" aria-hidden="true">/</span>
+            <span class="breadcrumb__item"><span data-crumb-current aria-current="page">New user</span></span>
+          </nav>
+        </div>
+
+        <div class="ml-auto flex items-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+              data-session-initials aria-hidden="true">MV</div>
+            <div class="hidden text-right sm:block">
+              <div class="text-xs font-semibold text-ink" data-session-name>Engr. Marcus Vance</div>
+              <div class="font-mono text-xs text-ink-muted" data-session-role>System Administrator</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn--ghost btn--sm" data-sign-out aria-label="Sign out">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-log-out"></use></svg>
+            <span class="hidden sm:inline">Sign Out</span>
           </button>
         </div>
+      </header>
 
-      </form>
+      <main id="main" class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-4xl space-y-6">
+
+          <!-- Page header -->
+          <div class="min-w-0">
+            <h1 class="font-gate text-2xl font-bold tracking-tight text-ink" data-page-title>New user</h1>
+            <p class="mt-1 max-w-2xl text-sm text-ink-muted" data-page-help>Create a console account, choose a role,
+              and grant only the permission scopes it needs.</p>
+          </div>
+
+          <!-- User form -->
+          <form id="user-form" method="post" action="user-create.html" data-action="users.save" data-validate
+            class="space-y-4">
+            <input type="hidden" name="UserId" value="">
+
+            <section class="card-hairline">
+              <div class="card-hairline__body space-y-4">
+                <h2 class="text-lg font-bold text-ink">Account</h2>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div class="field">
+                    <label class="field-label field-required" for="user-name">Full name</label>
+                    <input class="input" id="user-name" name="Name" type="text" required minlength="3" data-validate
+                      autocomplete="off" placeholder="e.g. Lorenzo Miguel P. Cruz">
+                  </div>
+                  <div class="field">
+                    <label class="field-label field-required" for="user-email">Institutional email</label>
+                    <input class="input" id="user-email" name="Email" type="email" required data-validate
+                      autocomplete="off" placeholder="name@ustp.edu.ph">
+                  </div>
+                  <div class="field">
+                    <label class="field-label field-required" for="user-role">Role</label>
+                    <select class="select" id="user-role" name="Role" required data-validate>
+                      <option value="officer" selected>Officer</option>
+                      <option value="admin">Admin</option>
+                      <option value="staff">Staff</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field-label" for="user-status">Account status</label>
+                    <select class="select" id="user-status" name="Status">
+                      <option value="active" selected>Active</option>
+                      <option value="deactivated">Deactivated</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="user-designation">Designation / title</label>
+                  <input class="input" id="user-designation" name="Designation" type="text" autocomplete="off"
+                    placeholder="e.g. Secretary, Treasurer, Logistics Head">
+                  <div class="field-help">Shown on rosters, certificates, and audit records.</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card-hairline" aria-labelledby="scopes-title">
+              <div class="card-hairline__body space-y-4">
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <h2 id="scopes-title" class="text-lg font-bold text-ink">Permission scopes</h2>
+                    <p class="text-xs text-ink-muted">Fine-tune which parts of the console this account can reach.</p>
+                  </div>
+                  <span class="badge badge--mono" data-perm-count>7 of 8 active</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <fieldset class="rounded-md border border-slate-200 p-4">
+                    <legend class="sr-only">Events &amp; Attendance</legend>
+                    <h3 class="text-sm font-semibold text-ink">Events &amp; Attendance</h3>
+                    <div class="mt-3 space-y-2">
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-events">
+                        <input class="checkbox" id="perm-events" name="Permissions" type="checkbox" value="events"
+                          checked>
+                        <span class="text-sm text-ink-secondary">Create/edit events</span>
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-kiosk">
+                        <input class="checkbox" id="perm-kiosk" name="Permissions" type="checkbox" value="kiosk"
+                          checked>
+                        <span class="text-sm text-ink-secondary">Door kiosk check-in</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="rounded-md border border-slate-200 p-4">
+                    <legend class="sr-only">People</legend>
+                    <h3 class="text-sm font-semibold text-ink">People</h3>
+                    <div class="mt-3 space-y-2">
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-members">
+                        <input class="checkbox" id="perm-members" name="Permissions" type="checkbox" value="members"
+                          checked>
+                        <span class="text-sm text-ink-secondary">Members registry</span>
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-approvals">
+                        <input class="checkbox" id="perm-approvals" name="Permissions" type="checkbox"
+                          value="approvals" checked>
+                        <span class="text-sm text-ink-secondary">Membership approvals</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="rounded-md border border-slate-200 p-4">
+                    <legend class="sr-only">Records</legend>
+                    <h3 class="text-sm font-semibold text-ink">Records</h3>
+                    <div class="mt-3 space-y-2">
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-certificates">
+                        <input class="checkbox" id="perm-certificates" name="Permissions" type="checkbox"
+                          value="certificates" checked>
+                        <span class="text-sm text-ink-secondary">Certificates</span>
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-reports">
+                        <input class="checkbox" id="perm-reports" name="Permissions" type="checkbox" value="reports"
+                          checked>
+                        <span class="text-sm text-ink-secondary">Reports &amp; exports</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="rounded-md border border-slate-200 p-4">
+                    <legend class="sr-only">System</legend>
+                    <h3 class="text-sm font-semibold text-ink">System</h3>
+                    <div class="mt-3 space-y-2">
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-masterdata">
+                        <input class="checkbox" id="perm-masterdata" name="Permissions" type="checkbox"
+                          value="masterdata" checked>
+                        <span class="text-sm text-ink-secondary">Venues &amp; event types</span>
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3"
+                        for="perm-admin">
+                        <input class="checkbox" id="perm-admin" name="Permissions" type="checkbox" value="admin">
+                        <span class="text-sm text-ink-secondary">Users &amp; roles</span>
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </section>
+
+            <!-- Sticky action bar -->
+            <div
+              class="sticky bottom-0 z-sticky -mx-4 sm:-mx-6 border-t border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-6 py-3 flex items-center justify-between gap-3 print-hidden">
+              <a class="btn btn--ghost btn--sm" href="users.html">Cancel</a>
+              <button type="submit" class="btn btn--primary min-h-14 w-full sm:w-auto" data-submit-label>Create
+                user</button>
+            </div>
+          </form>
+
+        </div>
+      </main>
+
+      <footer class="border-t border-slate-200 px-4 py-4 text-xs text-ink-muted sm:px-6 lg:px-8">
+        &copy; 2026 USTP Student Organization Council &mdash; AttendTa Event &amp; Attendance Management System
+      </footer>
+
     </div>
+  </div>
 
-  </main>
+  <!-- ===================================================================
+       Mobile navigation drawer (<1024px)
+       =================================================================== -->
+  <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
+    <div class="drawer__panel">
+      <div class="sidenav__brand">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
+        </a>
+        <button type="button" class="icon-btn ml-auto" data-drawer-close aria-label="Close navigation">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x"></use></svg>
+        </button>
+      </div>
+
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
+          </a>
+          <a class="sidenav__link" href="../events/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="users.html" aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="auditlogs.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
 
   <script>
-    const ALL_SCOPES = ['calendar', 'passes', 'kiosk', 'events', 'rosters', 'approvals', 'masterdata', 'certificates', 'reports', 'admin'];
+    (function () {
+      'use strict';
 
-    const ROLE_PRESETS = {
-      'Admin': {
-        title: 'System Administrator',
-        scopes: ['calendar', 'passes', 'kiosk', 'events', 'rosters', 'approvals', 'masterdata', 'certificates', 'reports', 'admin']
-      },
-      'Officer': {
-        title: 'Chapter Officer',
-        scopes: ['calendar', 'passes', 'kiosk', 'events', 'rosters', 'approvals', 'masterdata', 'certificates', 'reports']
-      },
-      'Staff': {
-        title: 'Committee Staff',
-        scopes: ['calendar', 'passes', 'kiosk']
-      },
-      'Member': {
-        title: 'Student Member',
-        scopes: ['calendar', 'passes']
-      }
-    };
+      var FALLBACK_SESSION = { name: 'Engr. Marcus Vance', role: 'System Administrator', initials: 'MV' };
+      var SCOPES = ['events', 'kiosk', 'members', 'approvals', 'certificates', 'reports', 'masterdata', 'admin'];
+      var PRESETS = {
+        admin: ['events', 'kiosk', 'members', 'approvals', 'certificates', 'reports', 'masterdata', 'admin'],
+        officer: ['events', 'kiosk', 'members', 'approvals', 'certificates', 'reports', 'masterdata'],
+        staff: ['events', 'kiosk', 'certificates', 'reports']
+      };
+      var HONORIFICS = { engr: 1, eng: 1, prof: 1, dr: 1, mr: 1, ms: 1, mrs: 1, atty: 1 };
 
-    function applyRolePreset() {
-      const selected = document.getElementById('rolePreset').value;
-      const preset = ROLE_PRESETS[selected] || ROLE_PRESETS['Officer'];
+      var started = false;
+      var editingId = null;
 
-      // Set designation fallback if matching default titles
-      const desInput = document.getElementById('designation');
-      if (!desInput.value || Object.values(ROLE_PRESETS).some(p => p.title === desInput.value)) {
-        desInput.value = preset.title;
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
       }
 
-      // Check the scopes
-      ALL_SCOPES.forEach(scope => {
-        const cb = document.getElementById(`perm-${scope}`);
-        if (cb) cb.checked = preset.scopes.includes(scope);
-      });
+      function initialsOf(name) {
+        var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        while (parts.length > 1 && HONORIFICS[parts[0].toLowerCase().replace(/\.$/, '')]) parts.shift();
+        if (!parts.length) return '??';
+        var first = parts[0].charAt(0);
+        var last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase() || '??';
+      }
 
-      updatePermCount();
-    }
+      function queryParam(name) {
+        var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        if (!match) return null;
+        try { return decodeURIComponent(match[1].replace(/\+/g, ' ')); } catch (e) { return match[1]; }
+      }
 
-    function updatePermCount() {
-      const activeCount = ALL_SCOPES.filter(s => document.getElementById(`perm-${s}`)?.checked).length;
-      const badge = document.getElementById('perm-count-badge');
-      if (badge) badge.textContent = `${activeCount} Active`;
-    }
+      function isActive(user) {
+        return !(user && (user.deactivated || user.active === false));
+      }
 
-    function getSelectedScopes() {
-      return ALL_SCOPES.filter(s => document.getElementById(`perm-${s}`)?.checked);
-    }
+      function setPermissions(list) {
+        list = list || [];
+        Array.prototype.forEach.call(document.querySelectorAll('input[name="Permissions"]'), function (box) {
+          box.checked = list.indexOf(box.value) !== -1;
+        });
+      }
 
-    function syncMemberDetails() {
-      const studentNum = document.getElementById('studentMember').value;
-      if (!studentNum) return;
+      function applyPreset(role) {
+        setPermissions(PRESETS[role] || PRESETS.officer);
+        updatePermCount();
+      }
 
-      const stored = localStorage.getItem('attendta_accounts_v2');
-      if (stored) {
-        try {
-          const accounts = JSON.parse(stored);
-          const user = accounts.find(a => a.studentNumber === studentNum);
-          if (user) {
-            document.getElementById('rolePreset').value = user.role || 'Officer';
-            document.getElementById('designation').value = user.roleTitle || (user.role === 'Admin' ? 'Administrator' : 'Chapter Officer');
+      function readPermissions() {
+        var out = [];
+        Array.prototype.forEach.call(document.querySelectorAll('input[name="Permissions"]'), function (box) {
+          if (box.checked) out.push(box.value);
+        });
+        return out;
+      }
 
-            const userPerms = user.permissions || (ROLE_PRESETS[user.role] ? ROLE_PRESETS[user.role].scopes : ROLE_PRESETS['Officer'].scopes);
-            ALL_SCOPES.forEach(scope => {
-              const cb = document.getElementById(`perm-${scope}`);
-              if (cb) cb.checked = userPerms.includes(scope);
+      function updatePermCount() {
+        var el = document.querySelector('[data-perm-count]');
+        if (!el) return;
+        el.textContent = readPermissions().length + ' of ' + SCOPES.length + ' active';
+      }
+
+      function initSession() {
+        var session = Ta.store.get('session') || {};
+        var name = session.name || FALLBACK_SESSION.name;
+        var role = session.role || FALLBACK_SESSION.role;
+        var initials = session.initials || (session.name ? initialsOf(name) : FALLBACK_SESSION.initials);
+        var nameEl = document.querySelector('[data-session-name]');
+        var roleEl = document.querySelector('[data-session-role]');
+        var initialsEl = document.querySelector('[data-session-initials]');
+        if (nameEl) nameEl.textContent = name;
+        if (roleEl) roleEl.textContent = role;
+        if (initialsEl) initialsEl.textContent = initials;
+      }
+
+      function initApprovals() {
+        var pending = (Ta.store.get('approvals') || []).filter(function (a) {
+          return a.status === 'pending';
+        }).length;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-approvals-badge]'), function (badge) {
+          badge.textContent = String(pending);
+          if (pending === 0) badge.setAttribute('hidden', '');
+          else badge.removeAttribute('hidden');
+        });
+      }
+
+      function setEditMode() {
+        var title = document.querySelector('[data-page-title]');
+        if (title) title.textContent = 'Edit user';
+        var help = document.querySelector('[data-page-help]');
+        if (help) help.textContent = 'Update this account\u2019s role, status, and permission scopes.';
+        var crumb = document.querySelector('[data-crumb-current]');
+        if (crumb) crumb.textContent = 'Edit user';
+        var btn = document.querySelector('[data-submit-label]');
+        if (btn) btn.textContent = 'Save changes';
+      }
+
+      function actorName() {
+        var session = Ta.store.get('session') || {};
+        return session.name || FALLBACK_SESSION.name;
+      }
+
+      function appendAudit(action, target) {
+        var log = (Ta.store.get('auditlog') || []).slice();
+        log.push({
+          id: Ta.store.nextId('auditlog', 'log-'),
+          actor: actorName(),
+          action: action,
+          target: target,
+          timestamp: new Date().toISOString()
+        });
+        Ta.store.set('auditlog', log);
+      }
+
+      function prefill(form, user) {
+        form.elements.UserId.value = user.id;
+        form.elements.Name.value = user.name || '';
+        form.elements.Email.value = user.email || '';
+        form.elements.Role.value = user.role || 'officer';
+        form.elements.Status.value = isActive(user) ? 'active' : 'deactivated';
+        form.elements.Designation.value = user.designation || '';
+        if (Array.isArray(user.permissions) && user.permissions.length) setPermissions(user.permissions);
+        else applyPreset(form.elements.Role.value);
+        updatePermCount();
+        setEditMode();
+      }
+
+      function save(form) {
+        var f = form.elements;
+        var name = f.Name.value.trim();
+        var email = f.Email.value.trim();
+        var role = f.Role.value;
+        var active = f.Status.value !== 'deactivated';
+        var designation = f.Designation.value.trim();
+        var permissions = readPermissions();
+        var users = (Ta.store.get('users') || []).slice();
+        var created = !editingId;
+
+        if (editingId) {
+          users = users.map(function (u) {
+            if (u.id !== editingId) return u;
+            return Object.assign({}, u, {
+              name: name,
+              email: email,
+              role: role,
+              active: active,
+              deactivated: !active,
+              designation: designation,
+              permissions: permissions
             });
-            updatePermCount();
+          });
+        } else {
+          users.push({
+            id: Ta.store.nextId('users', 'user-'),
+            name: name,
+            email: email,
+            role: role,
+            active: active,
+            deactivated: !active,
+            lastLogin: null,
+            designation: designation,
+            permissions: permissions
+          });
+        }
+
+        Ta.store.set('users', users);
+        appendAudit(created ? 'Created user' : 'Updated user', name);
+        Ta.toast(esc(name) + (created ? ' added to the console.' : ' updated.'), {
+          type: 'success',
+          title: created ? 'User created' : 'Changes saved'
+        });
+        window.setTimeout(function () { window.location.assign('users.html'); }, 500);
+      }
+
+      function onSubmit(event) {
+        var form = event.target;
+        if (!form || form.id !== 'user-form') return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (!Ta.form.validate(form)) {
+          Ta.toast('Please correct the highlighted fields.', { type: 'warning', title: 'Check the form' });
+          return;
+        }
+        save(form);
+      }
+
+      function init() {
+        var form = document.getElementById('user-form');
+        if (!form) return;
+
+        initSession();
+        initApprovals();
+
+        var requested = queryParam('id');
+        if (requested) {
+          var user = Ta.store.find('users', requested);
+          if (!user) {
+            Ta.toast('That user could not be found. Returning to the directory.', {
+              type: 'error',
+              title: 'User not found'
+            });
+            window.setTimeout(function () { window.location.assign('users.html'); }, 900);
+            return;
           }
-        } catch (e) {
-          console.error(e);
+          editingId = requested;
+          prefill(form, user);
+        } else {
+          applyPreset(form.elements.Role.value);
+        }
+
+        form.elements.Role.addEventListener('change', function () {
+          applyPreset(form.elements.Role.value);
+        });
+
+        Array.prototype.forEach.call(form.querySelectorAll('input[name="Permissions"]'), function (box) {
+          box.addEventListener('change', updatePermCount);
+        });
+
+        updatePermCount();
+
+        var main = document.getElementById('main');
+        if (main) main.addEventListener('submit', onSubmit);
+
+        var signOut = document.querySelector('[data-sign-out]');
+        if (signOut) {
+          signOut.addEventListener('click', function () {
+            Ta.store.set('session', null);
+            window.location.assign('../account/login.html');
+          });
         }
       }
-    }
 
-    function initFormFromParams() {
-      const params = new URLSearchParams(window.location.search);
-      const studentNum = params.get('studentNumber');
-      if (studentNum) {
-        document.getElementById('studentMember').value = studentNum;
-        syncMemberDetails();
-      } else {
-        applyRolePreset();
+      function start() {
+        if (started) return;
+        if (!window.Ta || !window.Ta.store) return;
+        started = true;
+        try { init(); } catch (err) { /* fail open: static form remains */ }
       }
-    }
 
-    document.getElementById('appoint-form').addEventListener('submit', function(e) {
-      const studentNum = document.getElementById('studentMember').value;
-      const roleLevel = document.getElementById('rolePreset').value;
-      const designation = document.getElementById('designation').value;
-      const selectedScopes = getSelectedScopes();
-
-      if (!studentNum) return;
-
-      const stored = localStorage.getItem('attendta_accounts_v2');
-      if (stored) {
-        try {
-          let accounts = JSON.parse(stored);
-          const user = accounts.find(a => a.studentNumber === studentNum);
-          if (user) {
-            user.role = roleLevel;
-            user.roleTitle = designation ? designation : (roleLevel === 'Admin' ? 'Administrator' : 'Chapter Officer');
-            user.permissions = selectedScopes;
-            localStorage.setItem('attendta_accounts_v2', JSON.stringify(accounts));
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', initFormFromParams);
+      document.addEventListener('ta:ready', start);
+      if (window.Ta && window.Ta.store) start();
+    })();
   </script>
-
-  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-mono">
-    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
-  </footer>
-
 </body>
+
 </html>

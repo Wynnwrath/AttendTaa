@@ -1,454 +1,864 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa &bull; Admin &bull; Officer &amp; Role Management</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Users &amp; Roles &middot; AttendTa</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
+  <script src="../assets/tailwind.config.js"></script>
+  <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col justify-between text-slate-900 antialiased font-sans bg-slate-50">
 
-  <!-- Admin Header -->
-  <header class="border-b border-slate-200 bg-white sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="../index.html" class="flex items-center gap-3 text-slate-900 hover:opacity-90">
-          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs">
-          <div class="flex flex-col">
-            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
-            <span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">System Administration</span>
-          </div>
+<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="flex min-h-[100dvh]">
+
+    <!-- ===================================================================
+         Officer shell - left sidebar (>=1024px)
+         =================================================================== -->
+    <aside class="sidenav sticky top-0 h-[100dvh]" data-sidebar aria-label="Primary">
+      <div class="sidenav__brand overflow-hidden">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight [[data-collapsed=true]_&amp;]:hidden">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
         </a>
-        <nav class="hidden md:flex items-center gap-1">
-          <a href="users.html" class="px-3 py-1.5 rounded-md text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200/60">
-            Officers &amp; Roles
-          </a>
-          <a href="auditlogs.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-            Security Audit Logs
-          </a>
-          <a href="../reports/participation.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-            Turnout Reports
-          </a>
-          <a href="../events/index.html" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-            Event Operations Hub &rarr;
-          </a>
-        </nav>
       </div>
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden sm:block">
-          <div class="text-xs font-bold text-slate-900">Engr. Marcus Vance</div>
-          <div class="text-[11px] font-mono text-blue-700 font-bold">System Administrator</div>
+
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
+          </a>
+          <a class="sidenav__link" href="../events/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
         </div>
-        <div class="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs">MV</div>
-        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign Out</a>
-      </div>
-    </div>
-  </header>
 
-  <!-- Main Body Content -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="users.html" data-nav aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
 
-    <!-- Flash Alert -->
-    <div id="flash-alert" class="p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs font-medium flex items-center justify-between shadow-xs transition-all">
-      <div class="flex items-center gap-3">
-        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-        </svg>
-        <span id="flash-text">Security policy active: Role authority updates and account status controls are enabled.</span>
-      </div>
-      <span class="text-[11px] text-emerald-700 font-mono font-bold">Audited</span>
-    </div>
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="auditlogs.html" data-nav>
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
 
-    <!-- Page Title Bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5">
-      <div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Officer &amp; Role Management</h1>
-        <p class="text-xs sm:text-sm text-slate-600 mt-1">
-          Review accounts, inspect role permission levels, activate or deactivate access, and appoint chapter officers.
-        </p>
-      </div>
+    <!-- ===================================================================
+         Right column: top bar + main + footer
+         =================================================================== -->
+    <div class="flex min-w-0 flex-1 flex-col">
 
-      <!-- Appoint Officer Dedicated Page Button -->
-      <a href="user-create.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all self-start sm:self-auto">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-        </svg>
-        <span>+ Appoint / Promote Officer</span>
-      </a>
-    </div>
+      <header class="sticky top-0 z-sticky flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 sm:px-6">
+        <button type="button" class="icon-btn lg:hidden" data-drawer-open="nav" aria-label="Open navigation"
+          aria-controls="app-nav-drawer">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
+        <button type="button" class="icon-btn hidden lg:inline-flex" data-sidebar-toggle aria-label="Toggle sidebar"
+          aria-expanded="true">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+        </button>
 
-    <!-- Governance KPI Summary Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-        <span class="text-[11px] font-bold text-slate-500 uppercase font-mono block">All Registered Accounts</span>
-        <strong id="kpi-total-count" class="text-xl font-black text-slate-900 block mt-1">7 Accounts</strong>
-        <span class="text-[11px] text-slate-500">Admins, Officers &amp; Students</span>
-      </div>
+        <div class="ml-1 hidden min-w-0 sm:block">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <span class="breadcrumb__item"><a href="../index.html">Home</a></span>
+            <span class="breadcrumb__sep" aria-hidden="true">/</span>
+            <span class="breadcrumb__item"><span aria-current="page">Users</span></span>
+          </nav>
+        </div>
 
-      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-        <span class="text-[11px] font-bold text-blue-700 uppercase font-mono block">Executive Officers</span>
-        <strong id="kpi-officer-count" class="text-xl font-black text-blue-700 block mt-1">4 Privileged</strong>
-        <span class="text-[11px] text-blue-600">Admins &amp; Officers</span>
-      </div>
-
-      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-        <span class="text-[11px] font-bold text-emerald-700 uppercase font-mono block">Student Members</span>
-        <strong id="kpi-member-count" class="text-xl font-black text-emerald-700 block mt-1">3 Active Members</strong>
-        <span class="text-[11px] text-emerald-600">Regular chapter attendees</span>
-      </div>
-
-      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-        <span class="text-[11px] font-bold text-rose-700 uppercase font-mono block">Suspended / Deactivated</span>
-        <strong id="kpi-deactivated-count" class="text-xl font-black text-rose-700 block mt-1">1 Account</strong>
-        <span class="text-[11px] text-rose-600">Access revoked &bull; Recoverable</span>
-      </div>
-    </div>
-
-    <!-- All Accounts Directory Section -->
-    <div class="space-y-4 pt-2">
-
-      <!-- Table Toolbar & Filters -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <!-- Role Filter Pills -->
-        <div class="flex items-center gap-1.5">
-          <button type="button" onclick="setRoleFilter('all')" id="filter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-xs">
-            All Accounts
-          </button>
-          <button type="button" onclick="setRoleFilter('officers')" id="filter-officers" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50">
-            Officers &amp; Admins
-          </button>
-          <button type="button" onclick="setRoleFilter('members')" id="filter-members" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50">
-            Student Members
+        <div class="ml-auto flex items-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+              data-session-initials aria-hidden="true">MV</div>
+            <div class="hidden text-right sm:block">
+              <div class="text-xs font-semibold text-ink" data-session-name>Engr. Marcus Vance</div>
+              <div class="font-mono text-xs text-ink-muted" data-session-role>System Administrator</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn--ghost btn--sm" data-sign-out aria-label="Sign out">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-log-out"></use></svg>
+            <span class="hidden sm:inline">Sign Out</span>
           </button>
         </div>
+      </header>
 
-        <!-- Search Input -->
-        <div class="flex items-center gap-2">
-          <input 
-            type="text" 
-            id="account-search-input" 
-            placeholder="Search by name, student ID, or email..." 
-            oninput="filterAccounts()" 
-            class="px-3.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full sm:w-72"
-          >
-        </div>
-      </div>
+      <main id="main" class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-6xl space-y-6">
 
-      <!-- Accounts Table -->
-      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-700">
-            <thead class="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              <tr>
-                <th class="px-4 py-3.5">Account Holder</th>
-                <th class="px-4 py-3.5">Student Number</th>
-                <th class="px-4 py-3.5">Role &amp; Permission Level</th>
-                <th class="px-4 py-3.5">Account Status</th>
-                <th class="px-4 py-3.5 text-right">Access Actions</th>
-              </tr>
-            </thead>
-            <tbody id="accounts-tbody" class="divide-y divide-slate-100">
-              <!-- Populated dynamically from USERS_STATE -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Helper Notice -->
-      <div class="p-3.5 rounded-xl bg-slate-100/70 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-          <span>To promote an existing member or assign an executive office, use the <a href="user-create.html" class="text-blue-700 font-bold hover:underline">Appoint / Promote Officer</a> page.</span>
-        </div>
-        <span class="text-[11px] font-mono text-slate-500">ASP.NET Core Razor Pages Compatible</span>
-      </div>
-
-    </div>
-
-  </main>
-
-  <!-- Page Footer -->
-  <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-mono">
-    &copy; 2026 USTP Student Organization Council &bull; AttendTa Event &amp; Attendance Management System &bull; All rights reserved.
-  </footer>
-
-  <!-- PERSISTENT STATE CONTROLLER -->
-  <script>
-    const DEFAULT_ACCOUNTS = [
-      {
-        id: '1',
-        name: 'Engr. Marcus Vance',
-        email: 'mvance@ustp.edu.ph',
-        affiliation: 'USTP Computer Studies',
-        studentNumber: '2020-00001',
-        role: 'Admin',
-        roleTitle: 'Primary Administrator',
-        status: 'Active',
-        isRoot: true
-      },
-      {
-        id: '2',
-        name: 'John Rosell Talisic',
-        email: 'jtalisic@ustp.edu.ph',
-        affiliation: 'Student Council Adviser',
-        studentNumber: '2021-00012',
-        role: 'Admin',
-        roleTitle: 'Administrator',
-        status: 'Active',
-        isRoot: false
-      },
-      {
-        id: '3',
-        name: 'Danica Ysabel Navarro',
-        email: 'dnavarro@ustp.edu.ph',
-        affiliation: 'BSIT 3-A',
-        studentNumber: '2023-01824',
-        role: 'Officer',
-        roleTitle: 'Officer (Secretary)',
-        status: 'Active',
-        isRoot: false
-      },
-      {
-        id: '4',
-        name: 'Carl Vincent D. Ocampo',
-        email: 'cocampo@ustp.edu.ph',
-        affiliation: 'BSCS 3-B',
-        studentNumber: '2022-09412',
-        role: 'Officer',
-        roleTitle: 'Officer (Treasurer)',
-        status: 'Deactivated',
-        isRoot: false
-      },
-      {
-        id: '5',
-        name: 'Maria Clara C. Santos',
-        email: 'maria.santos@ustp.edu.ph',
-        affiliation: 'BSIT 3-A',
-        studentNumber: '2023-10482',
-        role: 'Member',
-        roleTitle: 'Student Member',
-        status: 'Active',
-        isRoot: false
-      },
-      {
-        id: '6',
-        name: 'Adrian Jose V. Ramirez',
-        email: 'adrian.ramirez@ustp.edu.ph',
-        affiliation: 'BSIT 3-B',
-        studentNumber: '2023-09821',
-        role: 'Member',
-        roleTitle: 'Student Member',
-        status: 'Active',
-        isRoot: false
-      },
-      {
-        id: '7',
-        name: 'Kathryn Joy Lim',
-        email: 'kathryn.lim@ustp.edu.ph',
-        affiliation: 'BSCS 4-A',
-        studentNumber: '2022-01948',
-        role: 'Member',
-        roleTitle: 'Student Member',
-        status: 'Active',
-        isRoot: false
-      }
-    ];
-
-    let accounts = [];
-    let activeFilter = 'all';
-
-    function initDatabase() {
-      const stored = localStorage.getItem('attendta_accounts_v2');
-      if (stored) {
-        try {
-          accounts = JSON.parse(stored);
-        } catch (e) {
-          accounts = DEFAULT_ACCOUNTS;
-        }
-      } else {
-        accounts = DEFAULT_ACCOUNTS;
-        saveDatabase();
-      }
-      renderAccountsTable();
-      updateKPICounters();
-    }
-
-    function saveDatabase() {
-      localStorage.setItem('attendta_accounts_v2', JSON.stringify(accounts));
-    }
-
-    function updateKPICounters() {
-      const total = accounts.length;
-      const officers = accounts.filter(a => a.role === 'Admin' || a.role === 'Officer' || a.role === 'Staff').length;
-      const members = accounts.filter(a => a.role === 'Member').length;
-      const deactivated = accounts.filter(a => a.status === 'Deactivated').length;
-
-      document.getElementById('kpi-total-count').textContent = `${total} Accounts`;
-      document.getElementById('kpi-officer-count').textContent = `${officers} Privileged`;
-      document.getElementById('kpi-member-count').textContent = `${members} Active Members`;
-      document.getElementById('kpi-deactivated-count').textContent = `${deactivated} Account${deactivated === 1 ? '' : 's'}`;
-    }
-
-    function getRoleBadgeHtml(role, roleTitle) {
-      if (role === 'Admin') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-blue-100 text-blue-800 border border-blue-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-          Level 4 &bull; Administrator
-        </span>`;
-      } else if (role === 'Officer') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-          Level 3 &bull; ${roleTitle || 'Chapter Officer'}
-        </span>`;
-      } else if (role === 'Staff') {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-teal-50 text-teal-800 border border-teal-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-          Level 2 &bull; Committee Staff
-        </span>`;
-      } else {
-        return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-          Level 1 &bull; Student Member
-        </span>`;
-      }
-    }
-
-    function renderAccountsTable() {
-      const tbody = document.getElementById('accounts-tbody');
-      tbody.innerHTML = '';
-
-      accounts.forEach(acc => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50/50 account-row transition-colors';
-        tr.setAttribute('data-id', acc.id);
-        tr.setAttribute('data-role', acc.role);
-        tr.setAttribute('data-status', acc.status);
-
-        tr.innerHTML = `
-          <td class="px-4 py-3.5">
-            <div class="font-bold text-slate-900 text-sm">${acc.name}</div>
-            <div class="text-slate-400 text-[11px]">${acc.email} &bull; ${acc.affiliation}</div>
-          </td>
-          <td class="px-4 py-3.5 font-mono text-slate-600">${acc.studentNumber}</td>
-          <td class="px-4 py-3.5">
-            ${getRoleBadgeHtml(acc.role, acc.roleTitle)}
-          </td>
-          <td class="px-4 py-3.5">
-            <span class="status-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${acc.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
-              <span class="w-1.5 h-1.5 rounded-full ${acc.status === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
-              ${acc.status}
-            </span>
-          </td>
-          <td class="px-4 py-3.5 text-right space-x-2">
-            ${acc.isRoot ? `
-              <span class="text-xs text-slate-400 font-mono">Protected Root</span>
-            ` : `
-              <a href="user-create.html?studentNumber=${acc.studentNumber}" class="text-xs font-semibold text-blue-700 hover:text-blue-900 hover:underline mr-2">
-                Edit Role &rarr;
+          <!-- Page header -->
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div class="min-w-0">
+              <h1 class="font-gate text-2xl font-bold tracking-tight text-ink">Users &amp; Roles</h1>
+              <p class="mt-1 max-w-2xl text-sm text-ink-muted">Provision console accounts, assign roles, and control who
+                can reach the officer tools.</p>
+            </div>
+            <div class="flex flex-none flex-wrap items-center gap-2">
+              <a class="btn btn--primary btn--sm" href="user-create.html">
+                <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-user-plus"></use></svg>
+                <span>New user</span>
               </a>
-              <button type="button" onclick="toggleAccountStatus('${acc.id}')" class="text-xs ${acc.status === 'Active' ? 'text-rose-600 hover:text-rose-800' : 'text-emerald-600 hover:text-emerald-800'} font-bold hover:underline">
-                ${acc.status === 'Active' ? 'Deactivate' : 'Reactivate'}
-              </button>
-            `}
-          </td>
-        `;
+            </div>
+          </div>
 
-        tbody.appendChild(tr);
-      });
+          <!-- Account KPIs -->
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="card-hairline p-5">
+              <div class="kpi">
+                <span class="kpi__label">Total users</span>
+                <span class="kpi__value" data-kpi-total>5</span>
+                <span class="kpi__delta text-ink-muted">Admin, officer &amp; staff accounts</span>
+              </div>
+            </div>
+            <div class="card-hairline p-5">
+              <div class="kpi">
+                <span class="kpi__label">Admins &amp; officers</span>
+                <span class="kpi__value" data-kpi-privileged>4</span>
+                <span class="kpi__delta text-ink-muted">Elevated console access</span>
+              </div>
+            </div>
+            <div class="card-hairline p-5">
+              <div class="kpi">
+                <span class="kpi__label">Staff</span>
+                <span class="kpi__value" data-kpi-staff>1</span>
+                <span class="kpi__delta text-ink-muted">Committee support accounts</span>
+              </div>
+            </div>
+            <div class="card-hairline p-5">
+              <div class="kpi">
+                <span class="kpi__label">Deactivated</span>
+                <span class="kpi__value" data-kpi-deactivated>1</span>
+                <span class="kpi__delta text-ink-muted">Access revoked, recoverable</span>
+              </div>
+            </div>
+          </div>
 
-      filterAccounts();
-    }
+          <!-- Users ledger -->
+          <section class="card-hairline" role="region" aria-label="User accounts">
+            <div class="card-hairline__header">
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by role">
+                  <span class="text-xs font-medium text-ink-muted">Role</span>
+                  <button type="button" class="chip" data-role-filter="all" aria-pressed="true">All <span
+                      class="chip__count" data-role-count="all">5</span></button>
+                  <button type="button" class="chip" data-role-filter="admin" aria-pressed="false">Admin <span
+                      class="chip__count" data-role-count="admin">1</span></button>
+                  <button type="button" class="chip" data-role-filter="officer" aria-pressed="false">Officer <span
+                      class="chip__count" data-role-count="officer">3</span></button>
+                  <button type="button" class="chip" data-role-filter="staff" aria-pressed="false">Staff <span
+                      class="chip__count" data-role-count="staff">1</span></button>
+                </div>
+                <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by status">
+                  <span class="text-xs font-medium text-ink-muted">Status</span>
+                  <button type="button" class="chip" data-status-filter="all" aria-pressed="true">All statuses <span
+                      class="chip__count" data-status-count="all">5</span></button>
+                  <button type="button" class="chip" data-status-filter="active" aria-pressed="false">Active <span
+                      class="chip__count" data-status-count="active">4</span></button>
+                  <button type="button" class="chip" data-status-filter="deactivated" aria-pressed="false">Deactivated
+                    <span class="chip__count" data-status-count="deactivated">1</span></button>
+                  <div class="relative ml-auto w-full sm:w-64">
+                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-ink-muted">
+                      <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-search"></use></svg>
+                    </span>
+                    <label class="sr-only" for="user-search">Search users</label>
+                    <input class="input pl-9" id="user-search" type="search" data-user-search autocomplete="off"
+                      placeholder="Search name or email...">
+                  </div>
+                </div>
+                <p class="text-xs text-ink-muted" data-result-count aria-live="polite">Showing 5 of 5 users</p>
+              </div>
+            </div>
 
-    function toggleAccountStatus(userId) {
-      const acc = accounts.find(a => a.id === userId);
-      if (!acc || acc.isRoot) return;
+            <div class="table-scroll">
+              <table class="table-ledger table-ledger--cards" data-table>
+                <caption class="sr-only">Console users, filterable by role and account status</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" data-sort="name">User</th>
+                    <th scope="col" data-sort="role">Role</th>
+                    <th scope="col" data-sort="status">Status</th>
+                    <th scope="col" data-sort="lastLogin">Last login</th>
+                    <th scope="col" class="text-right"><span class="sr-only">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody data-users-body>
+                  <tr data-id="user-1">
+                    <td data-th="User">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+                          aria-hidden="true">DN</div>
+                        <div class="min-w-0">
+                          <div class="font-semibold text-ink">Danica Ysabel Navarro</div>
+                          <div class="text-xs text-ink-muted">danica.navarro@ustp.edu.ph</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
+                    <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026 &middot; 8:12 AM</span></td>
+                    <td data-th="Actions" class="text-right">
+                      <div class="menu inline-block">
+                        <button type="button" class="icon-btn" data-menu-trigger
+                          aria-label="Actions for Danica Ysabel Navarro" aria-haspopup="true" aria-expanded="false">
+                          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-more-vertical"></use></svg>
+                        </button>
+                        <div class="menu__panel">
+                          <a class="menu__item" href="user-create.html?id=user-1">
+                            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-edit-3"></use></svg>Edit
+                            user</a>
+                          <div class="menu__divider"></div>
+                          <form method="post" action="users.html" data-action="users.toggle-status">
+                            <input type="hidden" name="UserId" value="user-1">
+                            <button type="submit" class="menu__item menu__item--danger">
+                              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x-circle"></use></svg>
+                              Deactivate</button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-id="user-2">
+                    <td data-th="User">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+                          aria-hidden="true">MV</div>
+                        <div class="min-w-0">
+                          <div class="font-semibold text-ink">Engr. Marcus Vance</div>
+                          <div class="text-xs text-ink-muted">marcus.vance@ustp.edu.ph</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-th="Role"><span class="badge badge--amber">Admin</span></td>
+                    <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026 &middot; 7:45 AM</span></td>
+                    <td data-th="Actions" class="text-right">
+                      <div class="menu inline-block">
+                        <button type="button" class="icon-btn" data-menu-trigger
+                          aria-label="Actions for Engr. Marcus Vance" aria-haspopup="true" aria-expanded="false">
+                          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-more-vertical"></use></svg>
+                        </button>
+                        <div class="menu__panel">
+                          <a class="menu__item" href="user-create.html?id=user-2">
+                            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-edit-3"></use></svg>Edit
+                            user</a>
+                          <div class="menu__divider"></div>
+                          <form method="post" action="users.html" data-action="users.toggle-status">
+                            <input type="hidden" name="UserId" value="user-2">
+                            <button type="submit" class="menu__item menu__item--danger">
+                              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x-circle"></use></svg>
+                              Deactivate</button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-id="user-3">
+                    <td data-th="User">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+                          aria-hidden="true">LC</div>
+                        <div class="min-w-0">
+                          <div class="font-semibold text-ink">Lorenzo Miguel P. Cruz</div>
+                          <div class="text-xs text-ink-muted">lorenzo.cruz@ustp.edu.ph</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
+                    <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 14, 2026 &middot; 4:20 PM</span></td>
+                    <td data-th="Actions" class="text-right">
+                      <div class="menu inline-block">
+                        <button type="button" class="icon-btn" data-menu-trigger
+                          aria-label="Actions for Lorenzo Miguel P. Cruz" aria-haspopup="true" aria-expanded="false">
+                          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-more-vertical"></use></svg>
+                        </button>
+                        <div class="menu__panel">
+                          <a class="menu__item" href="user-create.html?id=user-3">
+                            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-edit-3"></use></svg>Edit
+                            user</a>
+                          <div class="menu__divider"></div>
+                          <form method="post" action="users.html" data-action="users.toggle-status">
+                            <input type="hidden" name="UserId" value="user-3">
+                            <button type="submit" class="menu__item menu__item--danger">
+                              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x-circle"></use></svg>
+                              Deactivate</button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-id="user-4">
+                    <td data-th="User">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+                          aria-hidden="true">BD</div>
+                        <div class="min-w-0">
+                          <div class="font-semibold text-ink">Bea Angelica R. Domingo</div>
+                          <div class="text-xs text-ink-muted">bea.domingo@ustp.edu.ph</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-th="Role"><span class="badge badge--slate">Staff</span></td>
+                    <td data-th="Status"><span class="status-pill" data-status="deactivated">Deactivated</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Jul 2, 2026 &middot; 11:05 AM</span></td>
+                    <td data-th="Actions" class="text-right">
+                      <div class="menu inline-block">
+                        <button type="button" class="icon-btn" data-menu-trigger
+                          aria-label="Actions for Bea Angelica R. Domingo" aria-haspopup="true" aria-expanded="false">
+                          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-more-vertical"></use></svg>
+                        </button>
+                        <div class="menu__panel">
+                          <a class="menu__item" href="user-create.html?id=user-4">
+                            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-edit-3"></use></svg>Edit
+                            user</a>
+                          <div class="menu__divider"></div>
+                          <form method="post" action="users.html" data-action="users.toggle-status">
+                            <input type="hidden" name="UserId" value="user-4">
+                            <button type="submit" class="menu__item">
+                              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+                              Reactivate</button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-id="user-5">
+                    <td data-th="User">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse"
+                          aria-hidden="true">HS</div>
+                        <div class="min-w-0">
+                          <div class="font-semibold text-ink">Prof. Helena R. Salazar</div>
+                          <div class="text-xs text-ink-muted">helena.salazar@ustp.edu.ph</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
+                    <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 13, 2026 &middot; 9:30 AM</span></td>
+                    <td data-th="Actions" class="text-right">
+                      <div class="menu inline-block">
+                        <button type="button" class="icon-btn" data-menu-trigger
+                          aria-label="Actions for Prof. Helena R. Salazar" aria-haspopup="true" aria-expanded="false">
+                          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-more-vertical"></use></svg>
+                        </button>
+                        <div class="menu__panel">
+                          <a class="menu__item" href="user-create.html?id=user-5">
+                            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-edit-3"></use></svg>Edit
+                            user</a>
+                          <div class="menu__divider"></div>
+                          <form method="post" action="users.html" data-action="users.toggle-status">
+                            <input type="hidden" name="UserId" value="user-5">
+                            <button type="submit" class="menu__item menu__item--danger">
+                              <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x-circle"></use></svg>
+                              Deactivate</button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="ta-table-empty" data-users-empty hidden>
+                    <td colspan="5"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
 
-      if (acc.status === 'Active') {
-        acc.status = 'Deactivated';
-        showAuditToast(`Security action: Account suspended and access revoked for ${acc.name}.`);
-      } else {
-        acc.status = 'Active';
-        showAuditToast(`Security action: Account reactivated for ${acc.name}.`);
+        </div>
+      </main>
+
+      <footer class="border-t border-slate-200 px-4 py-4 text-xs text-ink-muted sm:px-6 lg:px-8">
+        &copy; 2026 USTP Student Organization Council &mdash; AttendTa Event &amp; Attendance Management System
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       Mobile navigation drawer (<1024px)
+       =================================================================== -->
+  <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
+    <div class="drawer__panel">
+      <div class="sidenav__brand">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28"
+            class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Officer console</span>
+          </span>
+        </a>
+        <button type="button" class="icon-btn ml-auto" data-drawer-close aria-label="Close navigation">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x"></use></svg>
+        </button>
+      </div>
+
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Operations</div>
+          <a class="sidenav__link" href="../kiosk/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-door-open"></use></svg>
+            <span>Door Scanner</span>
+          </a>
+          <a class="sidenav__link" href="../events/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="../account/approvals.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-check-circle"></use></svg>
+            <span>Approvals</span>
+            <span class="sidenav__badge" data-approvals-badge>3</span>
+          </a>
+          <a class="sidenav__link" href="../certificates/index.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-award"></use></svg>
+            <span>Certificates</span>
+          </a>
+          <a class="sidenav__link" href="../reports/participation.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-bar-chart-2"></use></svg>
+            <span>Reports</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">People</div>
+          <a class="sidenav__link" href="../masterdata/members.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-users"></use></svg>
+            <span>Members</span>
+          </a>
+          <a class="sidenav__link" href="users.html" aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-shield"></use></svg>
+            <span>Users</span>
+          </a>
+        </div>
+
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Records</div>
+          <a class="sidenav__link" href="../masterdata/eventtypes.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-list"></use></svg>
+            <span>Event Types</span>
+          </a>
+          <a class="sidenav__link" href="../masterdata/venues.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-map-pin"></use></svg>
+            <span>Venues</span>
+          </a>
+          <a class="sidenav__link" href="auditlogs.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>Audit Logs</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var ICON_BASE = '../assets/icons.svg#i-';
+      var FALLBACK_SESSION = { name: 'Engr. Marcus Vance', role: 'System Administrator', initials: 'MV' };
+      var ROLE_LABEL = { admin: 'Admin', officer: 'Officer', staff: 'Staff' };
+      var HONORIFICS = { engr: 1, eng: 1, prof: 1, dr: 1, mr: 1, ms: 1, mrs: 1, atty: 1 };
+      var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      var started = false;
+      var state = { role: 'all', status: 'all', q: '' };
+      var rendered = [];
+      var tbody = null;
+
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
       }
 
-      saveDatabase();
-      renderAccountsTable();
-      updateKPICounters();
-    }
-
-    function setRoleFilter(filter) {
-      activeFilter = filter;
-      const btnAll = document.getElementById('filter-all');
-      const btnOff = document.getElementById('filter-officers');
-      const btnMem = document.getElementById('filter-members');
-
-      [btnAll, btnOff, btnMem].forEach(b => {
-        b.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50';
-      });
-
-      if (filter === 'all') {
-        btnAll.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-xs';
-      } else if (filter === 'officers') {
-        btnOff.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-xs';
-      } else if (filter === 'members') {
-        btnMem.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs';
+      function icon(name, extraClass) {
+        return '<svg class="icon' + (extraClass ? ' ' + extraClass : '') +
+          '" aria-hidden="true"><use href="' + ICON_BASE + name + '"></use></svg>';
       }
 
-      filterAccounts();
-    }
+      function cap(text) {
+        text = String(text || '');
+        return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
+      }
 
-    function filterAccounts() {
-      const q = (document.getElementById('account-search-input')?.value || '').toLowerCase();
-      const rows = document.querySelectorAll('.account-row');
+      function initialsOf(name) {
+        var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        while (parts.length > 1 && HONORIFICS[parts[0].toLowerCase().replace(/\.$/, '')]) parts.shift();
+        if (!parts.length) return '??';
+        var first = parts[0].charAt(0);
+        var last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase() || '??';
+      }
 
-      rows.forEach(row => {
-        const role = row.getAttribute('data-role');
-        const text = row.innerText.toLowerCase();
+      function isActive(user) {
+        return !(user && (user.deactivated || user.active === false));
+      }
 
-        let matchesRole = true;
-        if (activeFilter === 'officers') {
-          matchesRole = (role === 'Admin' || role === 'Officer' || role === 'Staff');
-        } else if (activeFilter === 'members') {
-          matchesRole = (role === 'Member');
+      function fmtLogin(iso) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(String(iso || ''));
+        if (!m) return null;
+        var hour = parseInt(m[4], 10);
+        var ampm = hour >= 12 ? 'PM' : 'AM';
+        var h12 = hour % 12;
+        if (h12 === 0) h12 = 12;
+        return (MONTHS[parseInt(m[2], 10) - 1] || m[2]) + ' ' + parseInt(m[3], 10) + ', ' + m[1] +
+          ' \u00b7 ' + h12 + ':' + m[5] + ' ' + ampm;
+      }
+
+      function roleBadge(role) {
+        var cls = role === 'admin' ? 'badge--amber' : (role === 'staff' ? 'badge--slate' : 'badge--neutral');
+        return '<span class="badge ' + cls + '">' + esc(ROLE_LABEL[role] || cap(role) || 'User') + '</span>';
+      }
+
+      function emptyRowHtml() {
+        return '<tr class="ta-table-empty" data-users-empty hidden><td colspan="5"></td></tr>';
+      }
+
+      function rowHtml(user) {
+        var active = isActive(user);
+        var login = fmtLogin(user.lastLogin);
+        var loginCell = login
+          ? '<span class="text-sm text-ink-secondary">' + esc(login) + '</span>'
+          : '<span class="text-ink-muted">Never</span>';
+        return '<tr data-id="' + esc(user.id) + '">' +
+          '<td data-th="User"><div class="flex items-center gap-3">' +
+          '<div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse" aria-hidden="true">' +
+          esc(initialsOf(user.name)) + '</div>' +
+          '<div class="min-w-0"><div class="font-semibold text-ink">' + esc(user.name) + '</div>' +
+          '<div class="text-xs text-ink-muted">' + esc(user.email) + '</div></div></div></td>' +
+          '<td data-th="Role">' + roleBadge(user.role) + '</td>' +
+          '<td data-th="Status"><span class="status-pill" data-status="' + (active ? 'active' : 'deactivated') +
+          '">' + (active ? 'Active' : 'Deactivated') + '</span></td>' +
+          '<td data-th="Last login">' + loginCell + '</td>' +
+          '<td data-th="Actions" class="text-right">' + actionsHtml(user, active) + '</td>' +
+          '</tr>';
+      }
+
+      function actionsHtml(user, active) {
+        return '<div class="menu inline-block">' +
+          '<button type="button" class="icon-btn" data-menu-trigger aria-label="Actions for ' + esc(user.name) +
+          '" aria-haspopup="true" aria-expanded="false">' + icon('more-vertical') + '</button>' +
+          '<div class="menu__panel">' +
+          '<a class="menu__item" href="user-create.html?id=' + esc(user.id) + '">' + icon('edit-3') +
+          'Edit user</a>' +
+          '<div class="menu__divider"></div>' +
+          '<form method="post" action="users.html" data-action="users.toggle-status">' +
+          '<input type="hidden" name="UserId" value="' + esc(user.id) + '">' +
+          '<button type="submit" class="menu__item' + (active ? ' menu__item--danger' : '') + '">' +
+          icon(active ? 'x-circle' : 'check-circle') + (active ? 'Deactivate' : 'Reactivate') + '</button>' +
+          '</form></div></div>';
+      }
+
+      function setText(selector, value) {
+        var el = document.querySelector(selector);
+        if (el) el.textContent = String(value);
+      }
+
+      function matches(user) {
+        if (!user) return false;
+        if (state.role !== 'all' && user.role !== state.role) return false;
+        if (state.status !== 'all' && (state.status === 'active') !== isActive(user)) return false;
+        if (state.q && (String(user.name) + ' ' + String(user.email)).toLowerCase().indexOf(state.q) === -1) {
+          return false;
         }
+        return true;
+      }
 
-        const matchesQuery = !q || text.includes(q);
+      function setChipStates() {
+        Array.prototype.forEach.call(document.querySelectorAll('[data-role-filter]'), function (chip) {
+          chip.setAttribute('aria-pressed', chip.getAttribute('data-role-filter') === state.role ? 'true' : 'false');
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-status-filter]'), function (chip) {
+          chip.setAttribute('aria-pressed',
+            chip.getAttribute('data-status-filter') === state.status ? 'true' : 'false');
+        });
+      }
 
-        if (matchesRole && matchesQuery) {
-          row.style.display = '';
+      function setEmpty(noUsers) {
+        var row = tbody ? tbody.querySelector('[data-users-empty]') : null;
+        if (!row) return;
+        var cell = row.querySelector('td');
+        if (!cell) return;
+        if (noUsers) {
+          cell.innerHTML = '<div class="empty-state">' + icon('users', 'empty-state__icon') +
+            '<div class="empty-state__title">No users yet</div>' +
+            '<p class="empty-state__help">Create the first account to grant console access.</p>' +
+            '<div class="empty-state__action"><a class="btn btn--sm btn--primary" href="user-create.html">' +
+            icon('user-plus') + 'New user</a></div></div>';
         } else {
-          row.style.display = 'none';
+          cell.innerHTML = '<div class="empty-state">' + icon('filter', 'empty-state__icon') +
+            '<div class="empty-state__title">No users match these filters</div>' +
+            '<p class="empty-state__help">Adjust the search or clear the role and status filters.</p>' +
+            '<div class="empty-state__action"><button type="button" class="btn btn--sm btn--secondary" ' +
+            'data-clear-filters>Clear filters</button></div></div>';
         }
-      });
-    }
-
-    function showAuditToast(msg) {
-      const alert = document.getElementById('flash-alert');
-      const text = document.getElementById('flash-text');
-      if (text) text.textContent = msg;
-      if (alert) {
-        alert.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-100');
-        setTimeout(() => alert.classList.remove('ring-2', 'ring-emerald-400', 'bg-emerald-100'), 2500);
       }
-    }
 
-    document.addEventListener('DOMContentLoaded', initDatabase);
+      function applyFilter() {
+        var total = rendered.length;
+        var visible = 0;
+        rendered.forEach(function (r) {
+          var ok = matches(r.user);
+          r.el.hidden = !ok;
+          if (ok) visible += 1;
+        });
+        setText('[data-result-count]', 'Showing ' + visible + ' of ' + total + ' users');
+        var empty = tbody ? tbody.querySelector('[data-users-empty]') : null;
+        if (!empty) return;
+        if (total === 0) { setEmpty(true); empty.hidden = false; }
+        else if (visible === 0) { setEmpty(false); empty.hidden = false; }
+        else empty.hidden = true;
+      }
+
+      function countRole(users, role) {
+        return users.filter(function (u) { return u.role === role; }).length;
+      }
+
+      function updateKpis(users) {
+        users = users || [];
+        var privileged = 0;
+        var staff = 0;
+        var deactivated = 0;
+        users.forEach(function (u) {
+          if (u.role === 'admin' || u.role === 'officer') privileged += 1;
+          if (u.role === 'staff') staff += 1;
+          if (!isActive(u)) deactivated += 1;
+        });
+        setText('[data-kpi-total]', users.length);
+        setText('[data-kpi-privileged]', privileged);
+        setText('[data-kpi-staff]', staff);
+        setText('[data-kpi-deactivated]', deactivated);
+        setText('[data-role-count="all"]', users.length);
+        setText('[data-role-count="admin"]', countRole(users, 'admin'));
+        setText('[data-role-count="officer"]', countRole(users, 'officer'));
+        setText('[data-role-count="staff"]', countRole(users, 'staff'));
+        setText('[data-status-count="all"]', users.length);
+        setText('[data-status-count="active"]', users.length - deactivated);
+        setText('[data-status-count="deactivated"]', deactivated);
+      }
+
+      function updateApprovals() {
+        var pending = (Ta.store.get('approvals') || []).filter(function (a) {
+          return a.status === 'pending';
+        }).length;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-approvals-badge]'), function (badge) {
+          badge.textContent = String(pending);
+          if (pending === 0) badge.setAttribute('hidden', '');
+          else badge.removeAttribute('hidden');
+        });
+      }
+
+      function render() {
+        var users = Ta.store.get('users') || [];
+        if (tbody) tbody.innerHTML = users.map(rowHtml).join('') + emptyRowHtml();
+        rendered = [];
+        if (tbody) {
+          Array.prototype.forEach.call(tbody.querySelectorAll('tr[data-id]'), function (tr) {
+            var id = tr.getAttribute('data-id');
+            var user = null;
+            for (var i = 0; i < users.length; i++) { if (users[i].id === id) { user = users[i]; break; } }
+            rendered.push({ el: tr, user: user });
+          });
+        }
+        applyFilter();
+        updateKpis(users);
+        updateApprovals();
+      }
+
+      function actorName() {
+        var session = Ta.store.get('session') || {};
+        return session.name || FALLBACK_SESSION.name;
+      }
+
+      function appendAudit(action, target) {
+        var log = (Ta.store.get('auditlog') || []).slice();
+        log.push({
+          id: Ta.store.nextId('auditlog', 'log-'),
+          actor: actorName(),
+          action: action,
+          target: target,
+          timestamp: new Date().toISOString()
+        });
+        Ta.store.set('auditlog', log);
+      }
+
+      function applyToggle(user, active) {
+        Ta.store.update('users', function (list) {
+          return (list || []).map(function (u) {
+            return u.id === user.id ? Object.assign({}, u, { active: active, deactivated: !active }) : u;
+          });
+        });
+        appendAudit(active ? 'Reactivated user' : 'Deactivated user', user.name);
+        Ta.toast(user.name + (active ? ' reactivated \u2014 access restored.' : ' deactivated \u2014 access revoked.'), {
+          type: 'success',
+          title: active ? 'Reactivated' : 'Deactivated'
+        });
+      }
+
+      function toggleStatus(form) {
+        var input = form.querySelector('input[name="UserId"]');
+        var id = input ? input.value : '';
+        var user = Ta.store.find('users', id);
+        if (!user) return;
+        if (isActive(user)) {
+          Ta.dialog.confirm({
+            title: 'Deactivate this user?',
+            message: user.name + ' will lose access to the officer console. Their records stay, but sign-in is ' +
+              'blocked until the account is reactivated.',
+            confirmText: 'Deactivate',
+            cancelText: 'Keep active',
+            danger: true
+          }).then(function (ok) {
+            if (ok) applyToggle(user, false);
+          });
+        } else {
+          applyToggle(user, true);
+        }
+      }
+
+      function resetFilters() {
+        state.role = 'all';
+        state.status = 'all';
+        state.q = '';
+        var search = document.querySelector('[data-user-search]');
+        if (search) search.value = '';
+        setChipStates();
+        applyFilter();
+      }
+
+      function onMainClick(event) {
+        var target = event.target;
+        if (!target || !target.closest) return;
+        if (target.closest('[data-clear-filters]')) resetFilters();
+      }
+
+      function onSubmit(event) {
+        var form = event.target && event.target.closest ? event.target.closest('form[data-action]') : null;
+        if (!form) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (form.getAttribute('data-action') === 'users.toggle-status') toggleStatus(form);
+      }
+
+      function initSession() {
+        var session = Ta.store.get('session') || {};
+        var name = session.name || FALLBACK_SESSION.name;
+        var role = session.role || FALLBACK_SESSION.role;
+        var initials = session.initials || (session.name ? initialsOf(name) : FALLBACK_SESSION.initials);
+        var nameEl = document.querySelector('[data-session-name]');
+        var roleEl = document.querySelector('[data-session-role]');
+        var initialsEl = document.querySelector('[data-session-initials]');
+        if (nameEl) nameEl.textContent = name;
+        if (roleEl) roleEl.textContent = role;
+        if (initialsEl) initialsEl.textContent = initials;
+      }
+
+      function init() {
+        initSession();
+        tbody = document.querySelector('[data-users-body]');
+        var main = document.getElementById('main');
+
+        if (main) {
+          main.addEventListener('submit', onSubmit);
+          main.addEventListener('click', onMainClick);
+        }
+
+        var search = document.querySelector('[data-user-search]');
+        if (search) {
+          search.addEventListener('input', function () {
+            state.q = search.value.trim().toLowerCase();
+            applyFilter();
+          });
+        }
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-role-filter]'), function (chip) {
+          chip.addEventListener('click', function () {
+            state.role = chip.getAttribute('data-role-filter');
+            setChipStates();
+            applyFilter();
+          });
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-status-filter]'), function (chip) {
+          chip.addEventListener('click', function () {
+            state.status = chip.getAttribute('data-status-filter');
+            setChipStates();
+            applyFilter();
+          });
+        });
+
+        var signOut = document.querySelector('[data-sign-out]');
+        if (signOut) {
+          signOut.addEventListener('click', function () {
+            Ta.store.set('session', null);
+            window.location.assign('../account/login.html');
+          });
+        }
+
+        Ta.store.on('change', function (payload) {
+          if (payload && (payload.key === 'users' || payload.key === 'approvals')) render();
+        });
+
+        render();
+      }
+
+      function start() {
+        if (started) return;
+        if (!window.Ta || !window.Ta.store) return;
+        started = true;
+        try { init(); } catch (err) { /* fail open: static content remains */ }
+      }
+
+      document.addEventListener('ta:ready', start);
+      if (window.Ta && window.Ta.store) start();
+    })();
   </script>
-
 </body>
+
 </html>
