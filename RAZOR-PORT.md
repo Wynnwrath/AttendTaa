@@ -1,6 +1,6 @@
 # AttendTa v2 — Razor Port Contract
 
-**Status:** mechanical port contract · companion to `IMPLEMENTATION_PLAN.md` §3
+**Status:** final port contract (Phase 6, 2026-10-16) · companion to `IMPLEMENTATION_PLAN.md` §3
 **Source:** `F:\AttendTa\v2` (static HTML prototype, 22 pages)
 **Target:** ASP.NET Core Razor Pages (.NET 8/9) + Tailwind CSS CLI
 
@@ -115,6 +115,14 @@ Five layouts replace the five prototype shells (plan §5). Active nav state is p
 | `kiosk.session-change` | `OnGetAsync` (query) |
 | `kiosk.check-in` | `OnPostCheckInAsync` |
 
+**Prototype wiring status (verified Phase 6, 2026-10-16):** 19 of the 22 handlers exist in the prototype as real form POSTs — 18 as form-level `data-action` and `events.save-draft` as secondary-submit wiring (`data-submit-action` on the Save draft button in `events/create.html`, promoted to the form action by page JS on submit). **Three are target-only** (no prototype form exists):
+
+| `data-action` | Prototype | Port note |
+|---|---|---|
+| `members.save` | roster is search/filter + status toggle only | add member create/edit form in the port |
+| `certificates.endorse` | prototype issues directly from the eligible list | endorsement step is new at port |
+| `kiosk.session-change` | read-only live-session chip (`data-ksession`) | event selected via `?eventId=` query → `OnGetAsync` |
+
 **Destructive actions:** marked `[data-confirm]`. Prototype routes them through `Ta.dialog.confirm()` (promise, focus trap, Esc, `aria-modal`). Server-side, the same action becomes a **confirmation POST carrying an anti-forgery token** — the POST is the source of truth; the JS dialog is enhancement only.
 
 ---
@@ -135,7 +143,9 @@ Five layouts replace the five prototype shells (plan §5). Active nav state is p
 | `attendta:v2:passes` | `Pass` (**derived**) |
 | `attendta:v2:certificates` | `Certificate` |
 | `attendta:v2:auditlog` | `AuditLog` |
+| `attendta:v2:scans` | `CheckInScan` (door-scan log: code, result, duplicate window) |
 | `attendta:v2:session` | auth cookie / claims |
+| `attendta:v2:prefs` | `UserPreference` (density, reduced-motion) |
 | `attendta:v2:sidebar` | user preference |
 
 ---
@@ -169,11 +179,13 @@ Five layouts replace the five prototype shells (plan §5). Active nav state is p
 - **Icon sprite** `assets/icons.svg` is loaded over **HTTP** (`<use href=".../icons.svg#id">`); the server must send `image/svg+xml`. **Re-verify MIME** for `wwwroot` static files at port (ASP.NET static file middleware must map `.svg` → `image/svg+xml`). Known risk, plan §13.
 - **Logo** `assets/attendTa_logo.jpg` used in headers, pass emblem, kiosk.
 - **Media budget:** cover images **≤250KB** each; every `<img>` has explicit `width`/`height`; images **below the fold** load with `loading="lazy"`.
+- **Legacy renderer:** `js/qr-engine.js` (prototype-era vector-QR SVG generator) is **not referenced by the rebuilt pages** — do not port it. Passes ship as gate codes; if QR pass images are introduced at port, render them server-side.
 
 ---
 
 ## 9. Open items
 
-- **Handler wiring** per page is finalized in **Phase 6** of `IMPLEMENTATION_PLAN.md` (this map is the frozen target names).
-- **`_InkSeam`** partial: built in the prototype during **Phase 2.5** (signature element; 4 pages only, with reduced-motion / no-JS fallbacks) — port as host div + `ink-seam.css` + `ink-seam.js`.
-- **Kiosk camera:** `jsQR` decode is **client-only progressive enhancement**; when camera is denied/unavailable, the flow degrades to the **manual student-number POST fallback** (`kiosk.check-in` → `OnPostCheckInAsync`).
+- **Handler wiring** — verified final in Phase 6: 19/22 wired in the prototype, 3 target-only (§4 wiring status). This map's names are frozen.
+- **`_InkSeam`** — shipped in the prototype (`assets/ink-seam.css` + `assets/ink-seam.js`; `index`, `account/login`, `account/register`, `certificates/view` only; reduced-motion + no-JS fallbacks). Port as host div + both assets.
+- **Kiosk camera** — implemented in `assets/app.js` `Ta.kiosk`: user-gesture camera start (`facingMode: environment`), `jsQR` frame decode (CDN), permission-denied → toast + manual entry. Manual **pass-code or student-number POST** (`kiosk.check-in` → `OnPostCheckInAsync`) is the base flow and fallback.
+- **QR pass images** — the prototype prints **gate codes**, not QR images; any QR rendering is a port-side decision (do not port `js/qr-engine.js`; see §8).

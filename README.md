@@ -1,85 +1,117 @@
-# AttendTa v2 &bull; Student Organization Event & Attendance System
+# AttendTa v2 · Student Organization Event & Attendance System
 
-AttendTa v2 is a web-based event registration, real-time camera QR attendance verification, digital pass generator, and certificate issuance platform for university student organizations.
+AttendTa v2 is the static prototype of a university student-organization event platform: event publishing, student RSVPs, door passes, live attendance check-in, and certificate issuance — rebuilt on an *Institutional Precision* design system and structured as a mechanical port target for **ASP.NET Core Razor Pages** (see `RAZOR-PORT.md`).
+
+**Status:** Prototype complete — Phases 0–5 of `IMPLEMENTATION_PLAN.md` verified; documentation finalized in Phase 6.
 
 ---
 
-## 🚀 Quick Start (Run Locally in 5 Seconds)
+## Quick start
 
-Zero external dependencies or Node.js required. Runs on standard **Python 3**.
+Zero dependencies, zero build. Serve the folder with Python 3:
 
-### 1. Clone / Open this Folder
-```bash
-git clone https://github.com/YOUR_USERNAME/AttendTa-v2.git
-cd AttendTa-v2
-```
-
-### 2. Start the Local Server
 ```bash
 python server.py
 ```
-*(Or `python3 server.py` on macOS / Linux)*
 
-### 3. Open in Your Browser
-Open your browser and navigate to:
-👉 [**http://localhost:3000**](http://localhost:3000)
+Then open **http://localhost:3000**.
 
-The server will automatically load the **AttendTa v2 Portal Directory** (`index.html`).
+> Tailwind is loaded from the Play CDN (dev-only), so the first load needs network access.
 
 ---
 
-## 🧭 Live Pages & Route Directory
+## Pages (22)
 
-All routes below assume you are running `server.py` directly from this directory:
+| # | Area | Page | Path |
+|---|---|---|---|
+| 1 | Public | Gateway — showcase, live band, directory | `index.html` |
+| 2 | Auth | Sign in | `account/login.html` |
+| 3 | Auth | Membership request | `account/register.html` |
+| 4 | Officer | Account approval queue | `account/approvals.html` |
+| 5 | Student | Browse events + RSVP | `student/events.html` |
+| 6 | Student | Event dossier + cancel RSVP | `student/details.html?eventId=ev-1` |
+| 7 | Student | Door passes (gate codes, print / save) | `student/passes.html` |
+| 8 | Student | Attendance history | `student/history.html` |
+| 9 | Officer | Door scanner kiosk | `kiosk/index.html` |
+| 10 | Officer | Event operations | `events/index.html` |
+| 11 | Officer | Create event (save draft / publish) | `events/create.html` |
+| 12 | Officer | Roster, waitlist, promote, roster CSV | `events/details.html` |
+| 13 | Officer | Member records + status toggle | `masterdata/members.html` |
+| 14 | Officer | Event types (add / archive) | `masterdata/eventtypes.html` |
+| 15 | Officer | Venues | `masterdata/venues.html` |
+| 16 | Officer | Add venue | `masterdata/venue-create.html` |
+| 17 | Officer | Certificate issuance (single + batch) | `certificates/index.html` |
+| 18 | Public | Certificate view / print (A4) | `certificates/view.html` |
+| 19 | Officer | Participation report + CSV | `reports/participation.html` |
+| 20 | Admin | Users + status toggle | `admin/users.html` |
+| 21 | Admin | Appoint user — 8 permission scopes, 3 presets | `admin/user-create.html` |
+| 22 | Admin | Audit log | `admin/auditlogs.html` |
 
-| Module / Role | Page Description | Localhost URL |
-| :--- | :--- | :--- |
-| **Gateway** | Central Campus Showcase & Gateway | [`/index.html`](http://localhost:3000/index.html) |
-| **Authentication** | Student & Officer Sign In | [`/account/login.html`](http://localhost:3000/account/login.html) |
-| **Registration** | Student Membership Request | [`/account/register.html`](http://localhost:3000/account/register.html) |
-| **Approvals** | Officer Account Approval Queue | [`/account/approvals.html`](http://localhost:3000/account/approvals.html) |
-| **Student** | Browse Event Sessions & RSVP | [`/student/events.html`](http://localhost:3000/student/events.html) |
-| **Student** | Event Details & Seating Dossier | [`/student/details.html?eventId=1`](http://localhost:3000/student/details.html?eventId=1) |
-| **Student** | **QR Pass Generator (with Logo Emblem)** | [`/student/passes.html`](http://localhost:3000/student/passes.html) |
-| **Student** | Attendance History & Academic Vault | [`/student/history.html`](http://localhost:3000/student/history.html) |
-| **Officer** | **Live Attendance Phone Camera Kiosk** | [`/kiosk/index.html`](http://localhost:3000/kiosk/index.html) |
-| **Officer** | Event Operations & Publishing Hub | [`/events/index.html`](http://localhost:3000/events/index.html) |
-| **Officer** | Create Event Dedicated Form | [`/events/create.html`](http://localhost:3000/events/create.html) |
-| **Officer** | Attendee Rosters & Waitlist Overrides | [`/events/details.html`](http://localhost:3000/events/details.html) |
-| **Officer** | Master Member Records Directory | [`/masterdata/members.html`](http://localhost:3000/masterdata/members.html) |
-| **Officer** | Venue & Facilities Management | [`/masterdata/venues.html`](http://localhost:3000/masterdata/venues.html) |
-| **Officer** | Add Venue Dedicated Form | [`/masterdata/venue-create.html`](http://localhost:3000/masterdata/venue-create.html) |
-| **Officer** | Batch Certificate Issuance | [`/certificates/index.html`](http://localhost:3000/certificates/index.html) |
-| **Public** | Official Academic Certificate (Print PDF) | [`/certificates/view.html`](http://localhost:3000/certificates/view.html) |
-| **Officer** | Turnout Demographics & CSV Reports | [`/reports/participation.html`](http://localhost:3000/reports/participation.html) |
-| **Admin** | Officer & Role Management | [`/admin/users.html`](http://localhost:3000/admin/users.html) |
-| **Admin** | Appoint Officer & 10 Scope Checkmarks | [`/admin/user-create.html`](http://localhost:3000/admin/user-create.html) |
-| **Admin** | System Security Activity Audit Logs | [`/admin/auditlogs.html`](http://localhost:3000/admin/auditlogs.html) |
-
----
-
-## 🛠 Key System Features
-
-- **Phone Camera Scanner Kiosk (`/kiosk/index.html`):**
-  - Allows event officers to use their phone/tablet camera (Safari iOS / Chrome Android) to scan student QR passes in real time.
-  - Corner reticles, scanning laser guide, and manual student ID fallback.
-- **Dynamic Pass Generator with Emblem (`/student/passes.html`):**
-  - Instant high-contrast QR generation embedding the official **AttendTa logo emblem** at the center with high error correction.
-- **Officer Appointments & Granular Permissions (`/admin/`):**
-  - 4 Role Authority presets (`Administrator`, `Chapter Officer`, `Committee Staff`, `Student Member`) plus 10 granular operational capability checkboxes.
-- **ASP.NET Core Razor Pages Viable:**
-  - Standard semantic `<form method="post">` blocks that map directly to `.cshtml` Razor Page `OnPostAsync` handlers and Model Binding.
-- **Client-Side Reactive Synchronization:**
-  - Uses `localStorage` database simulation so updates made in one tab reflect across other open tabs.
+`student/details.html` accepts `?eventId=` (or `?id=`).
 
 ---
 
-## 💻 Tech Stack
-- **Frontend:** Semantic HTML5, Tailwind CSS, Modern ES6+ JavaScript.
-- **Libraries (CDN):** Tailwind CSS, `jsQR` (Camera decoding), `qrcodejs` (QR rendering).
-- **Backend Compatibility:** ASP.NET Core Razor Pages (.NET 8/9).
-- **Server:** Python 3 Standard Library (`http.server.ThreadingHTTPServer`).
+## Key features
+
+- **Door scanner kiosk** — camera QR scanning via `jsQR` when permission is granted; otherwise pass-code or student-number manual entry. Duplicate-scan window, `aria-live` narration, and a full-screen gate flash.
+- **Door passes** — every pass carries a gate code (`AT-XXXX-XXXX`); print and save-image (canvas PNG) exports; `active` / `used` / `revoked` states.
+- **Event lifecycle** — draft → publish; promotion from waitlist; roster CSV export.
+- **Certificates** — eligibility list, single and batch issuance, public print-ready view.
+- **Reports** — turnout metrics and filters, CSV export.
+- **Admin** — 3 role presets (Administrator / Officer / Staff) over 8 permission scopes in 4 grouped cards; audit logging.
+- **Design system** — `tokens.css` + plain-CSS components, one canonical Tailwind config, the Ink Seam signature element on 4 pages, reduced-motion honored globally.
 
 ---
 
-&copy; 2026 USTP Student Organization Council &bull; AttendTa Event Management System.
+## Architecture
+
+| File | Role |
+|---|---|
+| `assets/tokens.css` | Design tokens — palette, type, spacing (register: `assets/DESIGN-TOKENS.md`) |
+| `assets/components.css` | Component layer, plain CSS (no `@apply`) |
+| `assets/app.js` | `Ta` runtime — store, toast, dialog, nav, kiosk, export |
+| `assets/tailwind.config.js` | Canonical Tailwind config (single source; pages do not inline configs) |
+| `assets/icons.svg` | Icon sprite (`<use href>`) |
+| `assets/ink-seam.css` / `.js` | Ink Seam — `index`, `account/login`, `account/register`, `certificates/view` only |
+| `js/qr-engine.js` | Legacy prototype-era helper; **not referenced** — do not port |
+| `server.py` | Python 3 stdlib dev server (port 3000) |
+
+**Data layer:** `Ta.store` simulates a database in `localStorage` under `attendta:v2:*` (`members`, `users`, `approvals`, `types`, `venues`, `events`, `registrations`, `passes`, `certificates`, `auditlog`, `scans`, plus `session`, `prefs`, `sidebar`). Seed data loads on first visit. The swap list for EF Core entities is `RAZOR-PORT.md` §5.
+
+**Forms contract:** every flow is a real `<form method="post">` with a `data-action` naming the future Razor handler (`OnPost*Async`); `app.js` enhances only. The frozen 22-handler map is `RAZOR-PORT.md` §4.
+
+---
+
+## Verification
+
+No lint, typecheck, or test suite exists in the prototype; the stated bar (`IMPLEMENTATION_PLAN.md` §9) is the foundation checker plus manual passes:
+
+```bash
+python scratch/check_v2_ui.py --strict
+```
+
+The gate covers foundation markup rules (single `h1`, sprite + alt conventions, no inline handlers / `alert` / `confirm`, token-only color, focus + reduced-motion hooks, and more) and currently reports **TOTAL 0**.
+
+Evidence lives in `scratch/`: desktop and 390px screenshots, print PDFs (pass / certificate / report), and the mobile probe rig.
+
+---
+
+## Deferred (documented, not shipped — plan §12)
+
+- Dark-mode token values.
+- Tailwind compile step (done at the Razor port, not in the prototype).
+- Server-side persistence replacing `Ta.store`.
+- Full-site "live event takeover" (only the light accent system + LIVE band ship).
+
+---
+
+## Tech stack
+
+- Semantic HTML5 + Tailwind Play CDN (dev-only) + plain-CSS components
+- Vanilla ES6 (`assets/app.js`); `jsQR` (CDN) for kiosk camera decoding
+- Python 3 standard library server
+- **Target:** ASP.NET Core Razor Pages (.NET 8/9) — `RAZOR-PORT.md`
+
+---
+
+© 2026 USTP Student Organization Council · AttendTa Event Management System

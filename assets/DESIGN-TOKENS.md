@@ -2,8 +2,9 @@
 
 **Purpose:** the single, frozen value set for AttendTa v2 (static prototype) — the contract every builder references and no one re-invents. Design direction: *Institutional Precision* — registrar ledger × operations console. One brand accent: amber.
 
-**Version:** 2.0 · **Date:** 2026-10-15
+**Version:** 2.1 · **Date:** 2026-10-16
 **Method:** All ratios computed with WCAG 2.2 relative luminance (sRGB) against the stated surface. Source of truth: `assets/tokens.css`.
+**Changelog:** 2.1 (Phase 6 final) — adds `--navy-hover`; 2.0 (2026-10-15) — initial freeze after Wave D.
 
 ---
 
@@ -36,6 +37,7 @@
 | `--canvas-subtle` | `#F1F5F9` | — | n/a | Not applicable | Table headers, inset panels, kbd fill | — |
 | `--canvas-elevated` | `#FFFFFF` | — | n/a | Not applicable | The single elevated surface per view | Stacking many elevated cards |
 | `--canvas-dark` | `#0B1120` | ink-inverse | 18.83 | AAA | Kiosk / dark console plates | Anywhere else |
+| `--navy-hover` | `#0B1120` | ink-inverse | 18.83 | AAA | Hover/active plate for `.btn--primary` | Anywhere else |
 
 ## Amber (single brand accent)
 
