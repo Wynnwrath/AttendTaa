@@ -240,7 +240,7 @@
                     </td>
                     <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
                     <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
-                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026 &middot; 8:12 AM</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026<br>8:12 AM</span></td>
                     <td data-th="Actions" class="text-right">
                       <div class="menu inline-block">
                         <button type="button" class="icon-btn" data-menu-trigger
@@ -275,7 +275,7 @@
                     </td>
                     <td data-th="Role"><span class="badge badge--amber">Admin</span></td>
                     <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
-                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026 &middot; 7:45 AM</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 15, 2026<br>7:45 AM</span></td>
                     <td data-th="Actions" class="text-right">
                       <div class="menu inline-block">
                         <button type="button" class="icon-btn" data-menu-trigger
@@ -310,7 +310,7 @@
                     </td>
                     <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
                     <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
-                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 14, 2026 &middot; 4:20 PM</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 14, 2026<br>4:20 PM</span></td>
                     <td data-th="Actions" class="text-right">
                       <div class="menu inline-block">
                         <button type="button" class="icon-btn" data-menu-trigger
@@ -345,7 +345,7 @@
                     </td>
                     <td data-th="Role"><span class="badge badge--slate">Staff</span></td>
                     <td data-th="Status"><span class="status-pill" data-status="deactivated">Deactivated</span></td>
-                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Jul 2, 2026 &middot; 11:05 AM</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Jul 2, 2026<br>11:05 AM</span></td>
                     <td data-th="Actions" class="text-right">
                       <div class="menu inline-block">
                         <button type="button" class="icon-btn" data-menu-trigger
@@ -380,7 +380,7 @@
                     </td>
                     <td data-th="Role"><span class="badge badge--neutral">Officer</span></td>
                     <td data-th="Status"><span class="status-pill" data-status="active">Active</span></td>
-                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 13, 2026 &middot; 9:30 AM</span></td>
+                    <td data-th="Last login"><span class="text-sm text-ink-secondary">Oct 13, 2026<br>9:30 AM</span></td>
                     <td data-th="Actions" class="text-right">
                       <div class="menu inline-block">
                         <button type="button" class="icon-btn" data-menu-trigger
@@ -547,8 +547,10 @@
         var ampm = hour >= 12 ? 'PM' : 'AM';
         var h12 = hour % 12;
         if (h12 === 0) h12 = 12;
-        return (MONTHS[parseInt(m[2], 10) - 1] || m[2]) + ' ' + parseInt(m[3], 10) + ', ' + m[1] +
-          ' \u00b7 ' + h12 + ':' + m[5] + ' ' + ampm;
+        return {
+          date: (MONTHS[parseInt(m[2], 10) - 1] || m[2]) + ' ' + parseInt(m[3], 10) + ', ' + m[1],
+          time: h12 + ':' + m[5] + ' ' + ampm
+        };
       }
 
       function roleBadge(role) {
@@ -564,7 +566,7 @@
         var active = isActive(user);
         var login = fmtLogin(user.lastLogin);
         var loginCell = login
-          ? '<span class="text-sm text-ink-secondary">' + esc(login) + '</span>'
+          ? '<span class="text-sm text-ink-secondary">' + esc(login.date) + '<br>' + esc(login.time) + '</span>'
           : '<span class="text-ink-muted">Never</span>';
         return '<tr data-id="' + esc(user.id) + '">' +
           '<td data-th="User"><div class="flex items-center gap-3">' +

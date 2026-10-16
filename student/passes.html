@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="../assets/tailwind.config.js"></script>
 </head>
-<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
+<body class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -48,7 +48,7 @@
           data-student-initials aria-hidden="true">MS</div>
         <div class="hidden sm:block text-right">
           <div class="text-xs font-semibold text-ink" data-student-name>Maria Clara C. Santos</div>
-          <div class="font-mono text-xs text-ink-muted" data-student-meta>BSIT &middot; 2023-10482</div>
+          <div class="font-mono text-xs text-ink-muted meta-cluster" data-student-meta><span class="meta-cluster__item">BSIT</span><span class="meta-cluster__item">2023-10482</span></div>
         </div>
         <button type="button" class="btn btn--ghost btn--sm" data-sign-out aria-label="Sign out">
           <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-log-out"></use></svg>
@@ -325,7 +325,8 @@
         var initEl = document.querySelector('[data-student-initials]');
         if (nameEl) nameEl.textContent = member.name || 'Student';
         if (metaEl) {
-          metaEl.textContent = (member.program || '') + ' \u00b7 ' + (member.studentId || member.id || '');
+          metaEl.innerHTML = '<span class="meta-cluster__item">' + esc(member.program || '') + '</span>' +
+            '<span class="meta-cluster__item">' + esc(member.studentId || member.id || '') + '</span>';
         }
         if (initEl) initEl.textContent = member.initials || deriveInitials(member.name);
       }

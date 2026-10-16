@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
+<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -69,7 +69,7 @@
           </button>
           <button type="button" class="tabs__tab inline-flex min-h-14 items-center gap-2" data-tab="manual" aria-selected="false" role="tab">
             <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-search"></use></svg>
-            Search
+            Pass code
           </button>
           <button type="button" class="tabs__tab inline-flex min-h-14 items-center gap-2" data-tab="keypad" aria-selected="false" role="tab">
             <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-key"></use></svg>
@@ -84,7 +84,7 @@
             <div data-kiosk-fallback hidden class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center text-white bg-ink">
               <svg class="icon h-8 w-8" aria-hidden="true"><use href="../assets/icons.svg#i-camera-off"></use></svg>
               <p class="font-semibold">Camera unavailable</p>
-              <p class="max-w-xs text-sm text-white/80">Use Search or the student-number keypad &mdash; the manual flow always works.</p>
+              <p class="max-w-xs text-sm text-white/80">Use the pass-code field or the student-number keypad &mdash; the manual flow always works.</p>
             </div>
           </div>
           <div class="mt-4 flex flex-wrap items-center gap-3">
@@ -170,7 +170,7 @@
     </section>
 
     <!-- Help strip -->
-    <p class="text-xs text-ink-muted">Scan a pass QR, type a pass code, search a name, or key in a student number. Duplicate scans within 2 seconds are ignored automatically.</p>
+    <p class="text-xs text-ink-muted">Scan a pass QR, type a pass code, or key in a student number. Duplicate scans within 2 seconds are ignored automatically.</p>
 
   </main>
 

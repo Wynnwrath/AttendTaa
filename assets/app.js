@@ -622,6 +622,13 @@
 
   var drawerPrevFocus = null;
 
+  function setDrawerTriggers(id, open) {
+    var triggers = document.querySelectorAll('[data-drawer-open="' + id + '"]');
+    Array.prototype.forEach.call(triggers, function (t) {
+      t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
   function drawerOpen(id) {
     var drawer = document.querySelector('[data-drawer="' + id + '"]');
     if (!drawer) return false;
@@ -631,6 +638,8 @@
     drawerPrevFocus = document.activeElement;
     drawer.setAttribute('data-open', 'true');
     drawer.removeAttribute('aria-hidden');
+    drawer.removeAttribute('inert');
+    setDrawerTriggers(id, true);
     document.body.setAttribute('data-scroll-locked', '');
 
     backdrop.addEventListener('click', function handler() {
@@ -671,6 +680,9 @@
     if (drawerPrevFocus && drawerPrevFocus.focus) {
       try { drawerPrevFocus.focus(); } catch (e) { /* ignore */ }
     }
+    drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('inert', '');
+    setDrawerTriggers(id, false);
     return true;
   }
 
@@ -686,6 +698,11 @@
     Array.prototype.forEach.call(drawers, function (drawer) {
       ensureBackdrop(drawer);
       if (!drawer.hasAttribute('data-open')) drawer.setAttribute('data-open', 'false');
+      if (drawer.getAttribute('data-open') !== 'true') {
+        drawer.setAttribute('aria-hidden', 'true');
+        drawer.setAttribute('inert', '');
+        setDrawerTriggers(drawer.getAttribute('data-drawer'), false);
+      }
       var closer = drawer.querySelector('[data-drawer-close]');
       if (closer) {
         closer.addEventListener('click', function (e) {
@@ -1255,7 +1272,6 @@
     if (!member) return { ok: false, reason: 'unknown' };
     if (!event || event.status !== 'live') return { ok: false, reason: 'invalid' };
     if (registration && registration.status === 'cancelled') return { ok: false, reason: 'cancelled' };
-    if (registration && registration.status === 'attended') return { ok: false, reason: 'already', member: member, event: event };
 
     var scans = scansCollection();
     var now = Date.now();
@@ -1269,6 +1285,7 @@
       }
     }
 
+    if (registration && registration.status === 'attended') return { ok: false, reason: 'already', member: member, event: event };
     return { ok: true, passId: passId, member: member, event: event, registration: registration };
   }
 

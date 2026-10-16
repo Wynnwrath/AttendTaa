@@ -406,7 +406,8 @@
         var pillClass = row.state === 'active' ? 'status-pill status-pill--active'
           : (row.state === 'used' ? 'status-pill status-pill--neutral' : 'status-pill status-pill--pending');
         var programLine = row.member
-          ? esc(row.member.studentId || row.member.id) + ' &middot; ' + esc(row.member.program) + ' ' + esc(row.member.yearSection)
+          ? '<span class="meta-cluster__item">' + esc(row.member.studentId || row.member.id) + '</span>' +
+            '<span class="meta-cluster__item">' + esc(row.member.program) + ' ' + esc(row.member.yearSection) + '</span>'
           : 'Member record unavailable';
         return '<div class="card-hairline overflow-hidden" data-accent="' + esc(accent) + '">' +
           '<div class="pass-card__strip"></div>' +
@@ -417,7 +418,7 @@
             '</div>' +
             '<div>' +
               '<div class="pass-card__value">' + esc(row.member ? row.member.name : 'Unnamed member') + '</div>' +
-              '<div class="field-help">' + programLine + '</div>' +
+              '<div class="field-help meta-cluster">' + programLine + '</div>' +
             '</div>' +
             '<div class="meta-cluster">' +
               '<span class="meta-cluster__item">' + esc(row.event ? row.event.title : 'Event unavailable') + '</span>' +

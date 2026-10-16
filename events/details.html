@@ -840,7 +840,7 @@
             td('Student number', '<span class="font-mono text-xs text-ink-muted">' + esc(m.studentId || m.id) + '</span>') +
             td('Pass code', '<span class="font-mono text-xs text-ink-secondary">' +
               esc(pass ? pass.code : '\u2014') + '</span>') +
-            td('Check-in time', '<span class="text-sm text-ink-secondary">' + esc(fmtDateTime(scan.at)) + '</span>') +
+            td('Check-in time', '<span class="text-sm text-ink-secondary">' + esc(fmtDateValue(scan.at)) + '<br>' + esc(fmtTime(scan.at)) + '</span>') +
             '</tr>';
         }).join('');
       }
