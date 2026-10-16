@@ -1,304 +1,536 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AttendTa — Student Academic Sessions</title>
+  <title>Events &middot; AttendTa</title>
   <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Outfit"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-            serif: ['"Cinzel"', 'serif']
-          },
-          colors: {
-            ink: {
-              950: '#090D16',
-              900: '#0F172A',
-              700: '#334155',
-              500: '#64748B'
-            },
-            scholastic: {
-              500: '#D97706',
-              600: '#B45309',
-              50: '#FEF3C7'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <script src="../assets/tailwind.config.js"></script>
+  <script defer src="../assets/app.js"></script>
 </head>
-<body class="min-h-[100dvh] flex flex-col justify-between text-ink-950 antialiased font-sans bg-[#F8FAFC]">
+<body data-density="compact" class="min-h-[100dvh] flex flex-col bg-canvas-ground font-sans text-ink antialiased">
 
-  <!-- Student Header -->
-  <header class="border-b border-slate-200/80 bg-white sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="../index.html" class="flex items-center gap-3 text-ink-950 hover:opacity-90">
-          <img src="../assets/attendTa_logo.jpg" alt="AttendTa Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 border border-slate-200 shadow-2xs shrink-0">
-          <div class="flex flex-col">
-            <span class="font-extrabold text-base tracking-tight leading-tight">AttendTa</span>
-            <span class="text-[11px] font-semibold text-scholastic-600 uppercase tracking-wider font-mono">Student Portal</span>
-          </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="sticky top-0 z-nav border-b border-slate-200 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3">
+      <button type="button" class="icon-btn md:hidden" data-drawer-open="nav" aria-label="Open navigation" aria-controls="app-nav-drawer">
+        <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-menu"></use></svg>
+      </button>
+
+      <a class="flex items-center gap-2.5 min-w-0" href="../index.html" aria-label="AttendTa home">
+        <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="32" height="32" class="h-8 w-8 rounded object-contain">
+        <span class="font-extrabold text-base tracking-tight text-ink">AttendTa</span>
+        <span class="badge badge--mono badge--neutral hidden sm:inline-flex">AY 2026&ndash;2027</span>
+      </a>
+
+      <nav class="ml-4 hidden md:flex items-center gap-1" aria-label="Primary">
+        <a class="btn btn--ghost btn--sm" data-nav href="events.html" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+          Events
         </a>
-        <nav class="hidden md:flex items-center gap-1">
-          <a href="events.html" class="px-3 py-1.5 rounded-lg text-xs font-bold text-ink-950 bg-slate-100 border border-slate-200">Browse Sessions</a>
-          <a href="passes.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-ink-950 hover:bg-slate-100 transition-colors">
-            My Door Passes
-            <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-600 text-white font-mono">1</span>
-          </a>
-          <a href="history.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-ink-950 hover:bg-slate-100 transition-colors">Records &amp; Certificates</a>
-        </nav>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden sm:block">
-          <div class="text-xs font-bold text-ink-950">Maria Clara Santos</div>
-          <div class="text-[11px] font-mono text-slate-500">2023-10482 • BSIT 3-A</div>
+        <a class="btn btn--ghost btn--sm" data-nav href="passes.html">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-ticket"></use></svg>
+          My Passes
+          <span class="badge badge--amber" data-pass-count>2</span>
+        </a>
+        <a class="btn btn--ghost btn--sm" data-nav href="history.html">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+          History
+        </a>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2 sm:gap-3">
+        <div class="flex h-8 w-8 flex-none items-center justify-center rounded-pill bg-ink text-xs font-semibold text-ink-inverse" data-student-initials aria-hidden="true">MS</div>
+        <div class="hidden sm:block text-right">
+          <div class="text-xs font-semibold text-ink" data-student-name>Maria Clara C. Santos</div>
+          <div class="font-mono text-xs text-ink-muted" data-student-meta>BSIT &middot; 2023-10482</div>
         </div>
-        <div class="w-8 h-8 rounded-full bg-ink-950 text-white flex items-center justify-center font-bold text-xs">MS</div>
-        <a href="../account/login.html" class="text-xs font-semibold text-rose-600 hover:text-rose-800 ml-2">Sign Out</a>
+        <button type="button" class="btn btn--ghost btn--sm" data-sign-out aria-label="Sign out">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-log-out"></use></svg>
+          <span class="hidden sm:inline">Sign Out</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Body Content -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  <main id="main" class="flex-1">
+    <div class="mx-auto w-full max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Campus Announcement Strip -->
-    <div class="p-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-medium flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-scholastic-500 text-white flex items-center justify-center shrink-0 font-bold">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+      <div class="min-w-0">
+        <h1 class="font-gate text-2xl font-bold tracking-tight text-ink">Campus Events</h1>
+        <p class="mt-1 text-sm text-ink-muted">Sessions, assemblies, and outreach on the organization calendar.</p>
+      </div>
+
+      <!-- LIVE banner (static fallback = ev-1; replaced from the store) -->
+      <section data-live-banner aria-label="Live event">
+        <div class="space-y-3" data-accent="indigo">
+          <div class="live-band">
+            <span class="live-band__dot" aria-hidden="true"></span>
+            <div>
+              <div class="live-band__label">Live now</div>
+              <div class="live-band__title">AI Architecture &amp; High-Agency Systems</div>
+            </div>
+            <div class="live-band__meta">84 / 150 registered</div>
+          </div>
+          <div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-1">View event</a>
+          </div>
         </div>
-        <div>
-          <strong class="font-extrabold text-ink-950">AY 2026–2027 Registration Open:</strong>
-          <span>Reserve seats for accredited seminars, tech bootcamps, and general assemblies. Single-entry QR door passes are issued immediately upon confirmation.</span>
-        </div>
+      </section>
+
+      <!-- Filter chips -->
+      <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter events">
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">All <span class="chip__count">5</span></button>
+        <button type="button" class="chip" data-filter="live" aria-pressed="false">Live <span class="chip__count">1</span></button>
+        <button type="button" class="chip" data-filter="upcoming" aria-pressed="false">Upcoming <span class="chip__count">2</span></button>
+        <button type="button" class="chip" data-filter="past" aria-pressed="false">Past <span class="chip__count">2</span></button>
       </div>
-      <span class="text-[11px] font-mono text-slate-500 font-bold shrink-0">Term 1 Active</span>
-    </div>
 
-    <!-- Title & Filter Strip -->
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink-950">Upcoming Campus Sessions</h1>
-        <p class="text-xs sm:text-sm text-slate-500 mt-1">
-          Explore and reserve accredited chapter events. Digital admission passes sync to your academic record.
-        </p>
-      </div>
-      <div class="flex items-center gap-2 text-xs">
-        <button class="px-3 py-1.5 rounded-lg bg-ink-950 text-white font-bold">All Disciplines</button>
-        <button class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 font-medium hover:bg-slate-50">Seminars</button>
-        <button class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 font-medium hover:bg-slate-50">Workshops</button>
-      </div>
-    </div>
+      <!-- Event grid (static fallback; enhanced from the store) -->
+      <div id="event-grid" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 
-    <!-- Event Cards Grid (Editorial Cards with Real Photography) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- Event 1 (Registered) -->
-      <div class="bg-white border-2 border-emerald-500 rounded-2xl shadow-2xs flex flex-col justify-between overflow-hidden group">
-        <div>
-          <!-- Photography Cover Banner -->
-          <a href="details.html?eventId=1" class="relative h-44 w-full bg-slate-900 overflow-hidden block">
-            <img src="../assets/event-cyber.jpg" alt="AI Architecture" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90">
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/20 to-transparent"></div>
-            <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/95 text-ink-950 backdrop-blur shadow-2xs">
-                Technical Seminar
-              </span>
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-600 text-white shadow-2xs">
-                Pass Issued
-              </span>
-            </div>
-            <div class="absolute bottom-3 left-3 right-3 text-white">
-              <h2 class="text-base font-extrabold tracking-tight leading-snug drop-shadow-sm group-hover:text-amber-200 transition-colors">
-                AI Architecture &amp; High-Agency Systems
-              </h2>
-            </div>
-          </a>
-
-          <div class="p-5 space-y-4">
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Exploration of modern LLM reasoning loops, sovereign AI agents, and production architecture. Keynote lecture by Dr. Julian Ramos followed by hands-on code laboratory.
-            </p>
-
-            <div class="pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-mono text-[11px]">
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Date:</span>
-                <span class="font-bold text-slate-800">Oct 15, 2026 • 09:00 - 12:00</span>
+        <div class="card-hairline overflow-hidden" data-accent="indigo" data-event-id="ev-1">
+          <img src="../assets/event-cyber.jpg" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">
+          <div class="card-hairline__body space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge badge--accent">Seminar</span>
+                <span class="status-pill" data-status="live">Live</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Hall:</span>
-                <span>Main University Auditorium</span>
-              </div>
+              <span class="badge badge--emerald">Registered</span>
             </div>
-
-            <!-- Capacity Fill Meter -->
-            <div class="space-y-1.5 pt-2 border-t border-slate-100">
-              <div class="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                <span>Capacity: 84/150</span>
-                <span class="font-bold text-emerald-700">66 seats left</span>
-              </div>
-              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-emerald-600 h-1.5 rounded-full" style="width: 56%"></div>
-              </div>
+            <a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=ev-1">AI Architecture &amp; High-Agency Systems</a>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">Main Auditorium</span>
+              <span class="meta-cluster__item">Oct 15, 2026</span>
+              <span class="meta-cluster__item">09:00 &ndash; 12:00</span>
             </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:56%"></div></div>
+              <div class="gauge__meta"><span>84 registered</span><span>150 capacity</span></div>
+            </div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-1">View details</a>
           </div>
         </div>
 
-        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <a href="details.html?eventId=1" class="text-xs font-bold text-slate-700 hover:text-ink-950 underline underline-offset-4">
-            Seating Dossier
-          </a>
-          <a href="passes.html" class="btn-tactile px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs">
-            Open Door Pass
-          </a>
-        </div>
-      </div>
-
-      <!-- Event 2 (Has Seats) -->
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-2xs flex flex-col justify-between overflow-hidden group">
-        <div>
-          <!-- Photography Cover Banner -->
-          <a href="details.html?eventId=2" class="relative h-44 w-full bg-slate-900 overflow-hidden block">
-            <img src="../assets/event-assembly.jpg" alt="General Assembly" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90">
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/20 to-transparent"></div>
-            <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/95 text-ink-950 backdrop-blur shadow-2xs">
-                General Assembly
-              </span>
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
-                Seats Available
-              </span>
-            </div>
-            <div class="absolute bottom-3 left-3 right-3 text-white">
-              <h2 class="text-base font-extrabold tracking-tight leading-snug drop-shadow-sm group-hover:text-amber-200 transition-colors">
-                Midyear General Assembly &amp; Constitution Review
-              </h2>
-            </div>
-          </a>
-
-          <div class="p-5 space-y-4">
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Mandatory gathering for recognized chapter members. Constitution revisions, semester budget disclosures, and officer Q&amp;A.
-            </p>
-
-            <div class="pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-mono text-[11px]">
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Date:</span>
-                <span class="font-bold text-slate-800">Nov 05, 2026 • 10:00 - 15:00</span>
+        <div class="card-hairline overflow-hidden" data-accent="slate" data-event-id="ev-4">
+          <img src="../assets/event-assembly.jpg" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">
+          <div class="card-hairline__body space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge badge--accent">Assembly</span>
+                <span class="status-pill" data-status="neutral">Upcoming</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Hall:</span>
-                <span>College AV Amphitheater</span>
-              </div>
+              <span class="badge badge--emerald">Registered</span>
             </div>
-
-            <!-- Capacity Meter -->
-            <div class="space-y-1.5 pt-2 border-t border-slate-100">
-              <div class="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                <span>Capacity: 112/180</span>
-                <span class="font-bold text-slate-700">68 seats left</span>
-              </div>
-              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-scholastic-500 h-1.5 rounded-full" style="width: 62%"></div>
-              </div>
+            <a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=ev-4">Midyear General Assembly &amp; Constitution Review</a>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">College AV Amphitheater</span>
+              <span class="meta-cluster__item">Nov 5, 2026</span>
+              <span class="meta-cluster__item">10:00 &ndash; 15:00</span>
             </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:62%"></div></div>
+              <div class="gauge__meta"><span>112 registered</span><span>180 capacity</span></div>
+            </div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-4">View details</a>
           </div>
         </div>
 
-        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <a href="details.html?eventId=2" class="text-xs font-bold text-slate-700 hover:text-ink-950 underline underline-offset-4">
-            Seating Dossier
-          </a>
-          <form method="post" action="passes.html" class="inline">
-            <input type="hidden" name="EventId" value="2">
-            <button type="submit" class="btn-tactile px-4 py-2 rounded-lg bg-ink-950 hover:bg-ink-900 text-white font-bold text-xs shadow-xs">
-              Reserve Seat
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Event 3 (Full / Waitlist) -->
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-2xs flex flex-col justify-between overflow-hidden group">
-        <div>
-          <!-- Photography Cover Banner -->
-          <a href="details.html?eventId=3" class="relative h-44 w-full bg-slate-900 overflow-hidden block">
-            <img src="../assets/event-workshop.jpg" alt="Hands-on Workshop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90">
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/20 to-transparent"></div>
-            <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/95 text-ink-950 backdrop-blur shadow-2xs">
-                Hands-on Workshop
-              </span>
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-50 text-rose-800 border border-rose-200">
-                Full Capacity
-              </span>
-            </div>
-            <div class="absolute bottom-3 left-3 right-3 text-white">
-              <h2 class="text-base font-extrabold tracking-tight leading-snug drop-shadow-sm group-hover:text-amber-200 transition-colors">
-                C# ASP.NET Core &amp; Entity Framework Bootcamp
-              </h2>
-            </div>
-          </a>
-
-          <div class="p-5 space-y-4">
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Intensive coding lab covering modern software architecture, SQL Server persistence, and production deployment patterns.
-            </p>
-
-            <div class="pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-mono text-[11px]">
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Date:</span>
-                <span class="font-bold text-slate-800">Oct 20, 2026 • 13:00 - 17:00</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="text-slate-400">Hall:</span>
-                <span>IT Multimedia Lab 401</span>
+        <div class="card-hairline overflow-hidden" data-accent="moss" data-event-id="ev-5">
+          <img src="../assets/event-outreach.jpg" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">
+          <div class="card-hairline__body space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge badge--accent">Outreach</span>
+                <span class="status-pill" data-status="neutral">Upcoming</span>
               </div>
             </div>
-
-            <!-- Capacity Meter -->
-            <div class="space-y-1.5 pt-2 border-t border-slate-100">
-              <div class="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                <span class="text-rose-700 font-bold">Capacity: 60/60 Full</span>
-                <span class="font-bold text-scholastic-600">Waitlist Active</span>
-              </div>
-              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-rose-500 h-1.5 rounded-full" style="width: 100%"></div>
-              </div>
+            <a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=ev-5">Community Outreach: Coastal Cleanup Drive</a>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">University Gymnasium</span>
+              <span class="meta-cluster__item">Nov 20, 2026</span>
+              <span class="meta-cluster__item">07:00 &ndash; 11:00</span>
             </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:39%"></div></div>
+              <div class="gauge__meta"><span>47 registered</span><span>120 capacity</span></div>
+            </div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-5">View details</a>
           </div>
         </div>
 
-        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <a href="details.html?eventId=3" class="text-xs font-bold text-slate-700 hover:text-ink-950 underline underline-offset-4">
-            Seating Dossier
-          </a>
-          <form method="post" action="passes.html" class="inline">
-            <input type="hidden" name="EventId" value="3">
-            <input type="hidden" name="Waitlist" value="true">
-            <button type="submit" class="btn-tactile px-3.5 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs shadow-2xs">
-              Join Waitlist
-            </button>
-          </form>
+        <div class="card-hairline overflow-hidden" data-accent="teal" data-event-id="ev-2">
+          <img src="../assets/event-workshop.jpg" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">
+          <div class="card-hairline__body space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge badge--accent">Workshop</span>
+                <span class="status-pill" data-status="archived">Past</span>
+              </div>
+              <span class="badge badge--emerald">Attended</span>
+            </div>
+            <a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=ev-2">C# ASP.NET Core &amp; Entity Framework Bootcamp</a>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">IT Multimedia Lab 401</span>
+              <span class="meta-cluster__item">Sep 26, 2026</span>
+              <span class="meta-cluster__item">13:00 &ndash; 17:00</span>
+            </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:100%"></div></div>
+              <div class="gauge__meta"><span>60 registered</span><span>60 capacity</span></div>
+            </div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-2">View details</a>
+          </div>
+        </div>
+
+        <div class="card-hairline overflow-hidden" data-accent="crimson" data-event-id="ev-3">
+          <img src="../assets/event-assembly.jpg" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">
+          <div class="card-hairline__body space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge badge--accent">Orientation</span>
+                <span class="status-pill" data-status="archived">Past</span>
+              </div>
+            </div>
+            <a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=ev-3">First Semester Orientation &amp; Welcome Assembly</a>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">College AV Amphitheater</span>
+              <span class="meta-cluster__item">Aug 29, 2026</span>
+              <span class="meta-cluster__item">10:00 &ndash; 15:00</span>
+            </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:87%"></div></div>
+              <div class="gauge__meta"><span>156 registered</span><span>180 capacity</span></div>
+            </div>
+            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-3">View details</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty state (mirrors account/approvals.html; toggled by the filter) -->
+      <div class="card-hairline" data-empty hidden>
+        <div class="empty-state">
+          <svg class="icon empty-state__icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+          <div class="empty-state__title">No events in this view</div>
+          <p class="empty-state__help">Try another filter &mdash; or show everything on the calendar.</p>
+          <div class="empty-state__action">
+            <button type="button" class="btn btn--primary btn--sm" data-filter="all">Show all events</button>
+          </div>
         </div>
       </div>
 
     </div>
-
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-200/80 bg-white py-4 text-center text-xs text-slate-500 font-mono">
-    &copy; 2026 USTP Student Organization Council • AttendTa Event Management Platform
-  </footer>
+  <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-ink-muted">&copy; 2026 USTP Student Organization Council &middot; AttendTa Event &amp; Attendance Management System</footer>
 
+  <!-- Mobile navigation drawer -->
+  <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
+    <div class="drawer__panel">
+      <div class="sidenav__brand">
+        <a href="../index.html" class="flex min-w-0 items-center gap-2.5 text-ink" aria-label="AttendTa home">
+          <img src="../assets/attendTa_logo.jpg" alt="AttendTa logo" width="28" height="28" class="h-7 w-7 flex-none rounded object-contain">
+          <span class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-sm font-extrabold tracking-tight">AttendTa</span>
+            <span class="truncate font-mono text-[11px] text-ink-muted">Student portal</span>
+          </span>
+        </a>
+        <button type="button" class="icon-btn ml-auto" data-drawer-close aria-label="Close navigation">
+          <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-x"></use></svg>
+        </button>
+      </div>
+
+      <nav class="sidenav__nav" aria-label="Sections">
+        <div class="sidenav__group">
+          <div class="sidenav__group-label">Student</div>
+          <a class="sidenav__link" href="events.html" aria-current="page">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-calendar"></use></svg>
+            <span>Events</span>
+          </a>
+          <a class="sidenav__link" href="passes.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-ticket"></use></svg>
+            <span>My Passes</span>
+            <span class="sidenav__badge" data-pass-count>2</span>
+          </a>
+          <a class="sidenav__link" href="history.html">
+            <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-clock"></use></svg>
+            <span>History</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var DEFAULT_MEMBER_ID = '2023-10482';
+      var TIME_SEP = ' \u2013 ';
+      var started = false;
+      var activeFilter = 'all';
+      var member = null;
+      var memberRegs = [];
+
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      function fmtDate(iso) {
+        var parts = String(iso || '').split('-');
+        if (parts.length < 3) return String(iso || '');
+        var month = parseInt(parts[1], 10);
+        var day = parseInt(parts[2], 10);
+        if (isNaN(month) || isNaN(day)) return String(iso || '');
+        return MONTHS[month - 1] + ' ' + day + ', ' + parts[0];
+      }
+
+      function kindOf(ev) {
+        if (ev.status === 'live') return 'live';
+        if (ev.status === 'upcoming') return 'upcoming';
+        return 'past';
+      }
+
+      function pct(ev) {
+        var cap = Number(ev.capacity) || 0;
+        if (!cap) return 0;
+        var value = Math.round((Number(ev.registered) || 0) / cap * 100);
+        if (value < 0) value = 0;
+        if (value > 100) value = 100;
+        return value;
+      }
+
+      function deriveInitials(name) {
+        var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '??';
+        var first = parts[0].charAt(0);
+        var last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase() || '??';
+      }
+
+      function resolveMember() {
+        var session = Ta.store.get('session');
+        var id = session && (session.studentId || session.id);
+        return Ta.store.find('members', id) || Ta.store.find('members', DEFAULT_MEMBER_ID);
+      }
+
+      function readEvents() {
+        return (Ta.store.get('events') || []).filter(function (ev) {
+          return ev.status !== 'draft';
+        });
+      }
+
+      function registrationFor(eventId) {
+        for (var i = 0; i < memberRegs.length; i++) {
+          if (memberRegs[i].eventId === eventId) return memberRegs[i];
+        }
+        return null;
+      }
+
+      function coverSrc(cover) {
+        if (!cover) return '';
+        return '../' + String(cover).replace(/^\.?\//, '');
+      }
+
+      function regBadge(reg) {
+        if (!reg) return '';
+        if (reg.status === 'confirmed') return '<span class="badge badge--emerald">Registered</span>';
+        if (reg.status === 'attended') return '<span class="badge badge--emerald">Attended</span>';
+        if (reg.status === 'waitlisted') return '<span class="badge badge--amber">Waitlisted</span>';
+        return '';
+      }
+
+      function cardHtml(ev) {
+        var type = Ta.store.find('types', ev.typeId);
+        var venue = Ta.store.find('venues', ev.venueId);
+        var accent = (type && type.accent) || 'amber';
+        var pillStatus = ev.status === 'live' ? 'live' : (ev.status === 'upcoming' ? 'neutral' : 'archived');
+        var pillLabel = ev.status === 'live' ? 'Live' : (ev.status === 'upcoming' ? 'Upcoming' : 'Past');
+        var typeName = type ? type.name : 'Event';
+        var venueName = venue ? venue.name : 'Venue to be announced';
+        var cover = coverSrc(ev.cover);
+
+        var out = '<div class="card-hairline overflow-hidden" data-accent="' + esc(accent) +
+          '" data-event-id="' + esc(ev.id) + '">';
+        if (cover) {
+          out += '<img src="' + esc(cover) + '" alt="" width="800" height="400" loading="lazy" class="h-40 w-full object-cover">';
+        }
+        out += '<div class="card-hairline__body space-y-3">' +
+          '<div class="flex items-center justify-between gap-2 flex-wrap">' +
+            '<div class="flex items-center gap-2 flex-wrap">' +
+              '<span class="badge badge--accent">' + esc(typeName) + '</span>' +
+              '<span class="status-pill" data-status="' + esc(pillStatus) + '">' + esc(pillLabel) + '</span>' +
+            '</div>' +
+            regBadge(member ? registrationFor(ev.id) : null) +
+          '</div>' +
+          '<a class="block text-base font-bold text-ink hover:underline" href="details.html?eventId=' + esc(ev.id) + '">' + esc(ev.title) + '</a>' +
+          '<div class="meta-cluster">' +
+            '<span class="meta-cluster__item">' + esc(venueName) + '</span>' +
+            '<span class="meta-cluster__item">' + esc(fmtDate(ev.date)) + '</span>' +
+            '<span class="meta-cluster__item">' + esc(ev.startTime) + TIME_SEP + esc(ev.endTime) + '</span>' +
+          '</div>' +
+          '<div class="gauge">' +
+            '<div class="gauge__track"><div class="gauge__fill" style="width:' + pct(ev) + '%"></div></div>' +
+            '<div class="gauge__meta"><span>' + esc(ev.registered) + ' registered</span><span>' + esc(ev.capacity) + ' capacity</span></div>' +
+          '</div>' +
+          '<a class="btn btn--secondary btn--sm" href="details.html?eventId=' + esc(ev.id) + '">View details</a>' +
+        '</div></div>';
+        return out;
+      }
+
+      function sortAll(events) {
+        var live = [];
+        var upcoming = [];
+        var past = [];
+        events.forEach(function (ev) {
+          var kind = kindOf(ev);
+          if (kind === 'live') live.push(ev);
+          else if (kind === 'upcoming') upcoming.push(ev);
+          else past.push(ev);
+        });
+        upcoming.sort(function (a, b) { return String(a.date).localeCompare(String(b.date)); });
+        past.sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+        return live.concat(upcoming, past);
+      }
+
+      function countEvents(events) {
+        var counts = { all: events.length, live: 0, upcoming: 0, past: 0 };
+        events.forEach(function (ev) { counts[kindOf(ev)] += 1; });
+        return counts;
+      }
+
+      function updateChips(counts) {
+        Array.prototype.forEach.call(document.querySelectorAll('.chip[data-filter]'), function (chip) {
+          var filter = chip.getAttribute('data-filter');
+          chip.setAttribute('aria-pressed', filter === activeFilter ? 'true' : 'false');
+          var counter = chip.querySelector('.chip__count');
+          if (counter && counts[filter] != null) counter.textContent = String(counts[filter]);
+        });
+      }
+
+      function renderLive(events) {
+        var wrap = document.querySelector('[data-live-banner]');
+        if (!wrap) return;
+        var live = null;
+        for (var i = 0; i < events.length; i++) {
+          if (events[i].status === 'live') { live = events[i]; break; }
+        }
+        if (!live) { wrap.setAttribute('hidden', ''); return; }
+        var type = Ta.store.find('types', live.typeId);
+        var accent = (type && type.accent) || 'amber';
+        wrap.removeAttribute('hidden');
+        wrap.innerHTML = '<div class="space-y-3" data-accent="' + esc(accent) + '">' +
+          '<div class="live-band">' +
+            '<span class="live-band__dot" aria-hidden="true"></span>' +
+            '<div>' +
+              '<div class="live-band__label">Live now</div>' +
+              '<div class="live-band__title">' + esc(live.title) + '</div>' +
+            '</div>' +
+            '<div class="live-band__meta">' + esc(live.registered) + ' / ' + esc(live.capacity) + ' registered</div>' +
+          '</div>' +
+          '<div><a class="btn btn--secondary btn--sm" href="details.html?eventId=' + esc(live.id) + '">View event</a></div>' +
+        '</div>';
+      }
+
+      function render() {
+        var events = readEvents();
+        var ordered = sortAll(events);
+        var list = activeFilter === 'all'
+          ? ordered
+          : ordered.filter(function (ev) { return kindOf(ev) === activeFilter; });
+
+        renderLive(events);
+        updateChips(countEvents(events));
+
+        var grid = document.getElementById('event-grid');
+        if (grid) {
+          grid.innerHTML = list.map(cardHtml).join('');
+          if (list.length) grid.removeAttribute('hidden');
+          else grid.setAttribute('hidden', '');
+        }
+
+        var empty = document.querySelector('[data-empty]');
+        if (empty) {
+          if (list.length) empty.setAttribute('hidden', '');
+          else empty.removeAttribute('hidden');
+        }
+      }
+
+      function initChrome() {
+        var name = (member && member.name) || 'Student';
+        var initials = (member && member.initials) || deriveInitials(name);
+        var program = (member && member.program) || '';
+        var studentId = (member && (member.studentId || member.id)) || '';
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-student-initials]'), function (el) {
+          el.textContent = initials;
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-student-name]'), function (el) {
+          el.textContent = name;
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-student-meta]'), function (el) {
+          el.textContent = program + ' \u00B7 ' + studentId;
+        });
+
+        var passes = Ta.store.get('passes') || [];
+        var active = member ? passes.filter(function (pass) {
+          return pass.memberId === member.id && pass.status === 'active';
+        }).length : 0;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-pass-count]'), function (el) {
+          el.textContent = String(active);
+          if (active === 0) el.setAttribute('hidden', '');
+          else el.removeAttribute('hidden');
+        });
+      }
+
+      function onFilterClick(event) {
+        var btn = event.target && event.target.closest ? event.target.closest('[data-filter]') : null;
+        if (!btn) return;
+        event.preventDefault();
+        activeFilter = btn.getAttribute('data-filter') || 'all';
+        render();
+      }
+
+      function init() {
+        member = resolveMember();
+        memberRegs = member ? (Ta.store.get('registrations') || []).filter(function (reg) {
+          return reg.memberId === member.id;
+        }) : [];
+
+        initChrome();
+
+        var main = document.getElementById('main');
+        if (main) main.addEventListener('click', onFilterClick);
+
+        var signOut = document.querySelector('[data-sign-out]');
+        if (signOut) {
+          signOut.addEventListener('click', function () {
+            Ta.store.set('session', null);
+            window.location.assign('../account/login.html');
+          });
+        }
+
+        render();
+      }
+
+      function start() {
+        if (started) return;
+        if (!window.Ta || !window.Ta.store) return;
+        started = true;
+        try { init(); } catch (err) { /* fail open: static content remains */ }
+      }
+
+      document.addEventListener('ta:ready', start);
+      if (window.Ta && window.Ta.store) start();
+    })();
+  </script>
 </body>
 </html>
