@@ -745,13 +745,18 @@
           Ta.toast('No active members selected.', { type: 'info' });
           return;
         }
+        var bulkBtn = document.querySelector('[data-bulk-deactivate]');
+        if (bulkBtn) { bulkBtn.disabled = true; bulkBtn.setAttribute('aria-busy', 'true'); }
         Ta.dialog.confirm({
           title: 'Deactivate selected members?',
           message: targets.length + ' selected member(s) will be marked inactive. They stay in records but drop out of active rosters.',
           confirmText: 'Deactivate',
           danger: true
         }).then(function (ok) {
-          if (!ok) return;
+          if (!ok) {
+            if (bulkBtn) { bulkBtn.disabled = false; bulkBtn.removeAttribute('aria-busy'); }
+            return;
+          }
           var ids = {};
           targets.forEach(function (m) { ids[keyOf(m)] = true; });
           Ta.store.update('members', function (list) {
@@ -762,6 +767,7 @@
           Ta.toast(targets.length + ' member(s) deactivated.', { type: 'success', title: 'Deactivated' });
           selected = {};
           render();
+          if (bulkBtn) { bulkBtn.disabled = false; bulkBtn.removeAttribute('aria-busy'); }
         });
       }
 
@@ -771,6 +777,9 @@
         var member = Ta.store.find('members', id);
         if (!member) return;
         var inactive = statusOf(member) === 'inactive';
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
         Ta.dialog.confirm({
           title: inactive ? 'Reactivate this member?' : 'Deactivate this member?',
           message: inactive
@@ -779,7 +788,11 @@
           confirmText: inactive ? 'Reactivate' : 'Deactivate',
           danger: !inactive
         }).then(function (ok) {
-          if (!ok) return;
+          if (!ok) {
+            if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+            form.removeAttribute('aria-busy');
+            return;
+          }
           Ta.store.update('members', function (list) {
             return (list || []).map(function (m) {
               return m.id === id ? Object.assign({}, m, { status: inactive ? 'active' : 'inactive' }) : m;
@@ -790,6 +803,8 @@
             title: inactive ? 'Reactivated' : 'Deactivated'
           });
           render();
+          if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+          form.removeAttribute('aria-busy');
         });
       }
 

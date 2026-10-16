@@ -410,7 +410,15 @@
         var events = Ta.store.get('events') || [];
         var regs = Ta.store.get('registrations') || [];
         var visible = events.filter(function (e) { return e.status !== 'draft'; });
-        if (!visible.length) return;
+        if (!visible.length) {
+          body.innerHTML = '<tr class="table-ledger__empty"><td colspan="7"><div class="empty-state">' +
+            '<svg class="icon empty-state__icon" aria-hidden="true">' +
+            '<use href="../assets/icons.svg#i-calendar"></use></svg>' +
+            '<div class="empty-state__title">No events to report yet</div>' +
+            '<p class="empty-state__help">Publish an event to start tracking registrations, attendance, and turnout.</p>' +
+            '</div></td></tr>';
+          return;
+        }
         body.innerHTML = visible.map(function (ev) {
           var attended = regs.filter(function (r) {
             return r.eventId === ev.id && r.status === 'attended';
@@ -461,7 +469,13 @@
 
       function renderBars() {
         var members = Ta.store.get('members') || [];
-        if (!members.length) return;
+        if (!members.length) {
+          ['[data-program-bars]', '[data-year-bars]'].forEach(function (sel) {
+            var host = $(sel);
+            if (host) host.innerHTML = '<p class="text-xs text-ink-muted">No member records to chart yet.</p>';
+          });
+          return;
+        }
         fillBars('[data-program-bars]', groupCount(members, 'program'));
         fillBars('[data-year-bars]', groupCount(members, 'yearSection'));
       }

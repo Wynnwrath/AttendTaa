@@ -540,11 +540,15 @@
         render();
       }
 
-      function onCancel() {
+      function onCancel(form) {
         var events = Ta.store.get('events') || [];
         var ev = null;
         for (var i = 0; i < events.length; i++) if (events[i].id === eventId) ev = events[i];
         if (!ev) return;
+
+        var submit = form ? form.querySelector('button[type="submit"]') : null;
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        if (form) form.setAttribute('aria-busy', 'true');
 
         Ta.dialog.confirm({
           title: 'Cancel this RSVP?',
@@ -553,7 +557,11 @@
           confirmText: 'Cancel RSVP',
           cancelText: 'Keep my seat'
         }).then(function (approved) {
-          if (!approved) return;
+          if (!approved) {
+            if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+            if (form) form.removeAttribute('aria-busy');
+            return;
+          }
 
           var regs = Ta.store.get('registrations') || [];
           var reg = registrationFor(regs, ev.id);
@@ -578,6 +586,8 @@
           Ta.toast('Your pass was revoked. You can rejoin anytime.',
             { type: 'warning', title: 'RSVP cancelled' });
           render();
+          if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+          if (form) form.removeAttribute('aria-busy');
         });
       }
 

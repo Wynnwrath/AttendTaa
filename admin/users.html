@@ -746,7 +746,10 @@
         var id = input ? input.value : '';
         var user = Ta.store.find('users', id);
         if (!user) return;
+        var submit = form.querySelector('button[type="submit"]');
         if (isActive(user)) {
+          if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+          form.setAttribute('aria-busy', 'true');
           Ta.dialog.confirm({
             title: 'Deactivate this user?',
             message: user.name + ' will lose access to the officer console. Their records stay, but sign-in is ' +
@@ -756,9 +759,15 @@
             danger: true
           }).then(function (ok) {
             if (ok) applyToggle(user, false);
+            if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+            form.removeAttribute('aria-busy');
           });
         } else {
+          if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+          form.setAttribute('aria-busy', 'true');
           applyToggle(user, true);
+          if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+          form.removeAttribute('aria-busy');
         }
       }
 

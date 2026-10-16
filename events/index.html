@@ -565,6 +565,9 @@
         var ev = Ta.store.find('events', id);
         if (!ev) return;
         var title = ev.title;
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
         var nextStatus = ev.date === todayISO() ? 'live' : 'upcoming';
         Ta.store.update('events', function (list) {
           return (list || []).map(function (row) {
@@ -573,6 +576,8 @@
         });
         Ta.toast(title + ' is now visible to students.', { type: 'success', title: 'Event published' });
         render();
+        if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+        form.removeAttribute('aria-busy');
       }
 
       function onSubmit(event) {

@@ -264,16 +264,24 @@
         var clearBtn = document.querySelector('[data-scan-clear]');
         if (clearBtn) {
           clearBtn.addEventListener('click', function () {
+            clearBtn.disabled = true;
+            clearBtn.setAttribute('aria-busy', 'true');
             Ta.dialog.confirm({
               title: 'Clear the scan log?',
               message: "This resets today's recorded check-ins.",
               confirmText: 'Clear log',
               danger: true
             }).then(function (ok) {
-              if (!ok) return;
+              if (!ok) {
+                clearBtn.disabled = false;
+                clearBtn.removeAttribute('aria-busy');
+                return;
+              }
               Ta.store.set('scans', []);
               if (countEl) countEl.textContent = '0';
               Ta.toast('Scan log cleared.', { type: 'info', title: 'Cleared' });
+              clearBtn.disabled = false;
+              clearBtn.removeAttribute('aria-busy');
             });
           });
         }

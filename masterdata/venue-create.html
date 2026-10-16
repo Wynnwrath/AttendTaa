@@ -147,19 +147,19 @@
             <div class="card-hairline__body space-y-5">
               <div class="field">
                 <label class="field-label field-required" for="venue-name">Name</label>
-                <input class="input" id="venue-name" name="Name" type="text" required minlength="3"
+                <input class="input" id="venue-name" name="Name" type="text" required minlength="3" data-validate
                   autocomplete="off" placeholder="e.g. Main Auditorium">
               </div>
 
               <div class="field">
                 <label class="field-label field-required" for="venue-building">Building</label>
-                <input class="input" id="venue-building" name="Building" type="text" required minlength="3"
+                <input class="input" id="venue-building" name="Building" type="text" required minlength="3" data-validate
                   autocomplete="off" placeholder="e.g. College of Engineering">
               </div>
 
               <div class="field">
                 <label class="field-label field-required" for="venue-capacity">Capacity</label>
-                <input class="input input--mono" id="venue-capacity" name="Capacity" type="number" required min="1"
+                <input class="input input--mono" id="venue-capacity" name="Capacity" type="number" required min="1" data-validate
                   max="2000" step="1" inputmode="numeric" placeholder="e.g. 150">
                 <p class="field-help">Seats available. Between 1 and 2000.</p>
               </div>
@@ -290,6 +290,10 @@
           Ta.toast('Please correct the highlighted fields.', { type: 'warning', title: 'Check the form' });
           return;
         }
+
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
 
         var name = form.elements['Name'].value.trim();
         var building = form.elements['Building'].value.trim();

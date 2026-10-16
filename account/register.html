@@ -59,7 +59,7 @@
 
           <div class="field">
             <label class="field-label field-required" for="full-name">Full name</label>
-            <input class="input" id="full-name" name="FullName" type="text" autocomplete="name" required
+            <input class="input" id="full-name" name="FullName" type="text" autocomplete="name" required data-validate
               placeholder="Maria Clara C. Santos">
             <div class="field-error"></div>
           </div>
@@ -67,14 +67,14 @@
           <div class="field">
             <label class="field-label field-required" for="student-number">Student number</label>
             <input class="input input--mono" id="student-number" name="StudentNumber" type="text"
-              pattern="^\d{4}-\d{5}$" required placeholder="2023-10482">
+              pattern="^\d{4}-\d{5}$" required data-validate placeholder="2023-10482">
             <p class="field-help">Format: 2023-10482</p>
             <div class="field-error"></div>
           </div>
 
           <div class="field">
             <label class="field-label field-required" for="email">Institutional email</label>
-            <input class="input" id="email" name="Email" type="email" autocomplete="email" required
+            <input class="input" id="email" name="Email" type="email" autocomplete="email" required data-validate
               placeholder="name@ustp.edu.ph">
             <p class="field-help">Must end with @ustp.edu.ph</p>
             <div class="field-error"></div>
@@ -82,7 +82,7 @@
 
           <div class="field">
             <label class="field-label field-required" for="program">Program</label>
-            <select class="select" id="program" name="Program" required>
+            <select class="select" id="program" name="Program" required data-validate>
               <option value="" selected disabled>Select a program</option>
               <option value="BSIT">BS Information Technology (BSIT)</option>
               <option value="BSCS">BS Computer Science (BSCS)</option>
@@ -95,7 +95,7 @@
           <div class="field">
             <label class="field-label field-required" for="year-section">Year &amp; section</label>
             <input class="input input--mono" id="year-section" name="YearSection" type="text" required
-              placeholder="3-A">
+              placeholder="3-A" data-validate>
             <p class="field-help">e.g. 3-A</p>
             <div class="field-error"></div>
           </div>
@@ -103,7 +103,7 @@
           <div class="field">
             <label class="field-label field-required" for="password">Password</label>
             <div class="flex items-center gap-2">
-              <input class="input" id="password" name="Password" type="password" autocomplete="new-password" required>
+              <input class="input" id="password" name="Password" type="password" autocomplete="new-password" required data-validate>
               <button type="button" class="icon-btn" data-password-toggle="password" aria-pressed="false"
                 aria-label="Toggle password visibility">
                 <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-eye"></use></svg>
@@ -116,7 +116,7 @@
             <label class="field-label field-required" for="confirm-password">Confirm password</label>
             <div class="flex items-center gap-2">
               <input class="input" id="confirm-password" name="ConfirmPassword" type="password" data-match="password"
-                autocomplete="new-password" required>
+                autocomplete="new-password" required data-validate>
               <button type="button" class="icon-btn" data-password-toggle="confirm-password" aria-pressed="false"
                 aria-label="Toggle password visibility">
                 <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-eye"></use></svg>

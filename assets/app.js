@@ -192,6 +192,7 @@
         { id: 'log-13', actor: 'Prof. Helena R. Salazar', action: 'Signed in', target: 'Officer console', timestamp: '2026-10-13T09:30:00+08:00' },
         { id: 'log-14', actor: 'Engr. Marcus Vance', action: 'Opened door scanner', target: 'AI Architecture & High-Agency Systems', timestamp: '2026-10-15T08:00:00+08:00' }
       ],
+      scans: [],
       session: null,
       sidebar: { collapsed: false },
       prefs: { density: 'comfortable', reducedMotion: false }
@@ -1254,6 +1255,7 @@
     if (!member) return { ok: false, reason: 'unknown' };
     if (!event || event.status !== 'live') return { ok: false, reason: 'invalid' };
     if (registration && registration.status === 'cancelled') return { ok: false, reason: 'cancelled' };
+    if (registration && registration.status === 'attended') return { ok: false, reason: 'already', member: member, event: event };
 
     var scans = scansCollection();
     var now = Date.now();
@@ -1360,14 +1362,25 @@
           at: Date.now()
         });
         Ta.store.set('scans', scans);
+        if (result.registration && result.registration.status === 'confirmed') {
+          result.registration.status = 'attended';
+          Ta.store.set('registrations', Ta.store.get('registrations') || []);
+        }
         gateFlash._msg = result.member.name + ' - ' + (result.member.studentId || result.member.id);
         gateFlash('success');
         toast('Checked in ' + result.member.name + '.', { type: 'success', title: 'Verified' });
         updateCount();
-      } else if (result.reason === 'duplicate') {
-        gateFlash._msg = (result.member ? result.member.name + ' - ' : '') + 'already scanned moments ago.';
-        gateFlash('duplicate');
-        toast('Already scanned. No duplicate recorded.', { type: 'warning', title: 'Duplicate pass' });
+      } else if (result.reason === 'duplicate' || result.reason === 'already') {
+        var who = result.member ? result.member.name + ' - ' : '';
+        if (result.reason === 'already') {
+          gateFlash._msg = who + 'already checked in.';
+          gateFlash('duplicate');
+          toast('Already checked in. No duplicate recorded.', { type: 'warning', title: 'Already checked in' });
+        } else {
+          gateFlash._msg = who + 'already scanned moments ago.';
+          gateFlash('duplicate');
+          toast('Already scanned. No duplicate recorded.', { type: 'warning', title: 'Duplicate pass' });
+        }
       } else {
         gateFlash._msg = result.reason === 'cancelled' ? 'Registration was cancelled.'
           : 'No valid pass or member found.';

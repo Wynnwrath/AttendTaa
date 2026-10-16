@@ -972,6 +972,10 @@
         if (!reg) return;
         var name = memberFor(reg.memberId).name;
 
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
+
         Ta.dialog.confirm({
           title: 'Cancel this registration?',
           message: "The member's door pass will be revoked.",
@@ -979,7 +983,11 @@
           confirmText: 'Cancel registration',
           cancelText: 'Keep registration'
         }).then(function (approved) {
-          if (!approved) return;
+          if (!approved) {
+            if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+            form.removeAttribute('aria-busy');
+            return;
+          }
 
           var regs = Ta.store.get('registrations') || [];
           var target = null;
@@ -1009,6 +1017,8 @@
 
           Ta.toast(name + "'s registration was cancelled.", { type: 'warning', title: 'Registration cancelled' });
           render();
+          if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+          form.removeAttribute('aria-busy');
         });
       }
 
@@ -1026,6 +1036,10 @@
           Ta.toast('This event is at capacity.', { type: 'warning', title: 'Cannot promote' });
           return;
         }
+
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
 
         var name = memberFor(reg.memberId).name;
         var now = new Date().toISOString();
@@ -1053,6 +1067,8 @@
         Ta.toast(name + ' was promoted from the waitlist and a door pass was issued.',
           { type: 'success', title: 'Promoted' });
         render();
+        if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+        form.removeAttribute('aria-busy');
       }
 
       function downloadCsv(filename, rows, headers) {

@@ -62,7 +62,7 @@
 
           <div class="field">
             <label class="field-label field-required" for="username">Student number or email</label>
-            <input class="input" id="username" name="Username" type="text" autocomplete="username" required
+            <input class="input" id="username" name="Username" type="text" autocomplete="username" required data-validate
               placeholder="2023-10482 or name@ustp.edu.ph">
             <p class="field-help">Students use their student number; officers and admins use their institutional email.</p>
             <div class="field-error"></div>
@@ -71,7 +71,7 @@
           <div class="field">
             <label class="field-label field-required" for="password">Password</label>
             <div class="flex items-center gap-2">
-              <input class="input" id="password" name="Password" type="password" autocomplete="current-password" required>
+              <input class="input" id="password" name="Password" type="password" autocomplete="current-password" required data-validate>
               <button type="button" class="icon-btn" data-password-toggle="password" aria-pressed="false"
                 aria-label="Toggle password visibility">
                 <svg class="icon" aria-hidden="true"><use href="../assets/icons.svg#i-eye"></use></svg>

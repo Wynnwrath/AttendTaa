@@ -494,7 +494,10 @@
         if (submitter) {
           action = submitter.getAttribute('data-submit-action') ||
             (submitter.hasAttribute('data-draft') ? 'events.save-draft' : 'events.publish');
+          submitter.disabled = true;
+          submitter.setAttribute('aria-busy', 'true');
         }
+        form.setAttribute('aria-busy', 'true');
         save(form, action === 'events.save-draft');
       }
 

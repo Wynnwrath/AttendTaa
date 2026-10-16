@@ -741,6 +741,9 @@
           Ta.toast('That type already exists.', { type: 'warning', title: 'Duplicate type' });
           return;
         }
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
         var checked = form.querySelector('input[name="Accent"]:checked');
         var accent = checked ? checked.value : 'indigo';
         Ta.store.update('types', function (list) {
@@ -752,6 +755,8 @@
         form.reset();
         syncAccent();
         render();
+        if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+        form.removeAttribute('aria-busy');
       }
 
       function archiveType(form) {
@@ -768,18 +773,27 @@
           });
           return;
         }
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
         Ta.dialog.confirm({
           title: 'Archive this type?',
           message: type.name + ' will be removed from the accent picker. Events already using this type keep their accent.',
           confirmText: 'Archive',
           danger: true
         }).then(function (ok) {
-          if (!ok) return;
+          if (!ok) {
+            if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+            form.removeAttribute('aria-busy');
+            return;
+          }
           Ta.store.update('types', function (list) {
             return (list || []).filter(function (t) { return t.id !== typeId; });
           });
           Ta.toast('Type archived.', { type: 'success', title: 'Archived' });
           render();
+          if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+          form.removeAttribute('aria-busy');
         });
       }
 

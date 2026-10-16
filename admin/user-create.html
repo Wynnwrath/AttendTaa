@@ -556,6 +556,9 @@
           Ta.toast('Please correct the highlighted fields.', { type: 'warning', title: 'Check the form' });
           return;
         }
+        var submit = form.querySelector('button[type="submit"]');
+        if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+        form.setAttribute('aria-busy', 'true');
         save(form);
       }
 
