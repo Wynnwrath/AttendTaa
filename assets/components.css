@@ -1548,6 +1548,13 @@
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
 }
+/* Hero variant — the page's single elevated surface (Events "Live now" card). */
+.live-hero {
+  border-radius: var(--radius-lg);
+}
+.live-hero .live-band {
+  border-radius: 0;
+}
 
 /* --------------------------------------------------------------------------
    27. KPI
@@ -1652,7 +1659,268 @@
 }
 
 /* --------------------------------------------------------------------------
-   30. Print
+   30. Event Moods (student backdrops + officer picker)
+   Ambient backdrops for live events — a closed set: Drift / Bloom
+   (+ Plain = none); Lattice, Ember and Tempo retired. Decorative only: aria-hidden,
+   pointer-events: none, display gated by body[data-mood]; colors come solely
+   from the event accent (--accent-here*); transform/opacity only;
+   freeze-frames under reduced motion or .mood-frozen; never printed.
+   Live takeover (Tier 1): while an event is live the page root also carries
+   body[data-accent] — the backdrop paints the accent ground wash and the
+   student header gains an accent rule (same verified accents, no new values).
+   The officer-side mood picker (events/create.html) renders mini previews of
+   the same closed set, tinted with the default amber family.
+   -------------------------------------------------------------------------- */
+.event-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: none;
+  --mood: var(--accent-here, var(--event-amber));
+  --mood-glow: var(--accent-here-glow, var(--event-amber-glow));
+  --mood-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600' preserveAspectRatio='none'%3E%3Cpath d='M0,300 C150,220 350,380 600,300 C850,220 1050,380 1200,300 L1200,600 L0,600 Z' fill='%23000'/%3E%3C/svg%3E");
+  animation: mood-in var(--motion-slow) var(--ease-standard);
+}
+body[data-mood="drift"] .event-backdrop,
+body[data-mood="bloom"] .event-backdrop {
+  display: block;
+}
+/* Live takeover (Tier 1) — accent ground wash + student header rule.
+   body[data-accent] is set only while a live event is on the page. */
+body[data-accent] .event-backdrop {
+  display: block;
+  background-color: var(--mood-glow);
+}
+body[data-accent] .mood-content > header {
+  box-shadow: inset 0 -2px 0 var(--accent-here);
+}
+@keyframes mood-in {
+  from {
+    opacity: 0;
+  }
+}
+.event-backdrop > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: block;
+}
+.event-backdrop--quiet {
+  opacity: 0.55;
+}
+
+/* Content wrapper sits above the fixed backdrop */
+.mood-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Drift — layered wave fields (55s / 80s, seamless) */
+body[data-mood="drift"] .event-backdrop__a {
+  width: 200%;
+  background-color: var(--mood-glow);
+  -webkit-mask-image: var(--mood-wave);
+  mask-image: var(--mood-wave);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: left bottom;
+  mask-position: left bottom;
+  -webkit-mask-size: 50% 58%;
+  mask-size: 50% 58%;
+  animation: mood-drift-a 55s linear infinite;
+}
+body[data-mood="drift"] .event-backdrop__b {
+  width: 200%;
+  opacity: 0.55;
+  background-color: var(--mood-glow);
+  -webkit-mask-image: var(--mood-wave);
+  mask-image: var(--mood-wave);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: left bottom;
+  mask-position: left bottom;
+  -webkit-mask-size: 50% 38%;
+  mask-size: 50% 38%;
+  animation: mood-drift-b 80s linear infinite;
+}
+@keyframes mood-drift-a {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes mood-drift-b {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* Bloom — mesh-gradient blobs (38s / 52s drift) */
+body[data-mood="bloom"] .event-backdrop__a {
+  background-image:
+    radial-gradient(46% 58% at 16% 80%, var(--mood-glow) 0%, transparent 68%),
+    radial-gradient(40% 52% at 84% 24%, var(--mood-glow) 0%, transparent 68%),
+    radial-gradient(34% 44% at 62% 92%, var(--mood-glow) 0%, transparent 70%);
+  animation: mood-bloom-a 38s ease-in-out infinite alternate;
+}
+body[data-mood="bloom"] .event-backdrop__b {
+  opacity: 0.6;
+  background-image:
+    radial-gradient(48% 56% at 70% 70%, var(--mood-glow) 0%, transparent 70%),
+    radial-gradient(36% 48% at 30% 18%, var(--mood-glow) 0%, transparent 70%);
+  animation: mood-bloom-b 52s ease-in-out infinite alternate-reverse;
+}
+@keyframes mood-bloom-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(2.5%, -2%, 0) scale(1.07); }
+}
+@keyframes mood-bloom-b {
+  from { transform: translate3d(0, 0, 0) scale(1.04); }
+  to { transform: translate3d(-2%, 1.5%, 0) scale(1); }
+}
+
+/* Lattice, Ember and Tempo retired — the type mapping routes formal events
+   to Drift and celebratory events to Bloom. */
+
+/* Mobile: keep only the calmest single layer animating */
+@media (max-width: 767px) {
+  body[data-mood="drift"] .event-backdrop__b,
+  body[data-mood="bloom"] .event-backdrop__b {
+    animation: none;
+  }
+}
+
+/* Freeze-frames — manual toggle (prefs.reducedMotion) and system preference */
+.mood-frozen .event-backdrop,
+.mood-frozen .event-backdrop > span {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .event-backdrop,
+  .event-backdrop > span {
+    animation: none !important;
+  }
+}
+
+/* Never print a backdrop */
+@media print {
+  .event-backdrop {
+    display: none !important;
+  }
+}
+
+/* Officer mood picker — radio cards with mini mood previews.
+   Preview tints use the default amber family only: the live color still
+   follows the event type, never the officer's hand. */
+.mood-option-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.mood-option {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.mood-option__option {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.mood-option__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.mood-option__card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 7px;
+  border: var(--hairline-light);
+  border-radius: var(--radius-md);
+  background-color: var(--canvas-surface);
+  cursor: pointer;
+}
+.mood-option__card:hover {
+  border-color: var(--ink-muted);
+}
+.mood-option__input:checked + .mood-option__card {
+  border-color: var(--ink-primary);
+  box-shadow: var(--shadow-subtle);
+}
+.mood-option__input:focus-visible + .mood-option__card {
+  outline: var(--focus-ring) solid var(--accent-amber);
+  outline-offset: var(--focus-offset);
+}
+.mood-option__name {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--ink-secondary);
+}
+.mood-option__input:checked + .mood-option__card .mood-option__name {
+  color: var(--ink-primary);
+}
+.mood-option__chip {
+  position: relative;
+  display: block;
+  height: 44px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: var(--hairline-light);
+  background-color: var(--canvas-ground);
+}
+/* Drift — two soft wave bands */
+.mood-option__chip--drift::before,
+.mood-option__chip--drift::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  height: 56%;
+  border-radius: 50% 50% 0 0;
+  background-color: var(--event-amber-glow);
+}
+.mood-option__chip--drift::before {
+  bottom: -26%;
+}
+.mood-option__chip--drift::after {
+  bottom: -44%;
+  opacity: 0.6;
+}
+/* Bloom — two soft orbs */
+.mood-option__chip--bloom::before,
+.mood-option__chip--bloom::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--event-amber-glow);
+}
+.mood-option__chip--bloom::before {
+  left: -8px;
+  bottom: -12px;
+  width: 42px;
+  height: 42px;
+}
+.mood-option__chip--bloom::after {
+  right: -10px;
+  top: -13px;
+  width: 34px;
+  height: 34px;
+  opacity: 0.65;
+}
+/* --------------------------------------------------------------------------
+   31. Print
    -------------------------------------------------------------------------- */
 @media print {
   .print-hidden {

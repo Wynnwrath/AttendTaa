@@ -15,6 +15,14 @@
 
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <!-- Ambient Event Mood backdrop (quieter treatment) — revealed by JS while the event is live -->
+  <div class="event-backdrop event-backdrop--quiet" aria-hidden="true">
+    <span class="event-backdrop__a"></span>
+    <span class="event-backdrop__b"></span>
+  </div>
+
+  <div class="mood-content flex-1 flex flex-col">
+
   <header class="sticky top-0 z-nav border-b border-slate-200 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3">
       <button type="button" class="icon-btn md:hidden" data-drawer-open="nav" aria-label="Open navigation"
@@ -158,6 +166,8 @@
   <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-ink-muted">
     © 2026 USTP Student Organization Council · AttendTa Event &amp; Attendance Management System
   </footer>
+
+  </div><!-- /.mood-content -->
 
   <!-- Mobile navigation drawer (<768px) -->
   <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
@@ -409,6 +419,16 @@
 
         var type = Ta.store.find('types', ev.typeId);
         var venue = Ta.store.find('venues', ev.venueId);
+
+        if (ev.status === 'live') {
+          document.body.setAttribute('data-accent', (type && type.accent) || 'amber');
+          var mood = Ta.mood.of(ev);
+          if (mood !== 'plain') document.body.setAttribute('data-mood', mood);
+          else document.body.removeAttribute('data-mood');
+        } else {
+          document.body.removeAttribute('data-mood');
+          document.body.removeAttribute('data-accent');
+        }
 
         document.title = ev.title + ' · AttendTa';
         setText('[data-crumb-title]', ev.title);

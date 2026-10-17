@@ -135,11 +135,11 @@
         { id: 'venue-4', name: 'University Gymnasium', building: 'Sports Complex', capacity: 400 }
       ],
       events: [
-        { id: 'ev-1', title: 'AI Architecture & High-Agency Systems', typeId: 'type-1', venueId: 'venue-1', date: '2026-10-15', startTime: '09:00', endTime: '12:00', capacity: 150, registered: 84, status: 'live', description: 'A keynote seminar on modern AI architecture, agentic systems, and responsible deployment.', cover: 'assets/event-cyber.jpg' },
+        { id: 'ev-1', title: 'AI Architecture & High-Agency Systems', typeId: 'type-1', venueId: 'venue-1', date: '2026-10-15', startTime: '09:00', endTime: '12:00', capacity: 150, registered: 84, status: 'live', mood: 'drift', description: 'A keynote seminar on modern AI architecture, agentic systems, and responsible deployment.', cover: 'assets/event-cyber.jpg' },
         { id: 'ev-2', title: 'C# ASP.NET Core & Entity Framework Bootcamp', typeId: 'type-3', venueId: 'venue-2', date: '2026-09-26', startTime: '13:00', endTime: '17:00', capacity: 60, registered: 60, status: 'past', description: 'Hands-on coding lab building a full-stack web application with ASP.NET Core 9.', cover: 'assets/event-workshop.jpg' },
         { id: 'ev-3', title: 'First Semester Orientation & Welcome Assembly', typeId: 'type-8', venueId: 'venue-3', date: '2026-08-29', startTime: '10:00', endTime: '15:00', capacity: 180, registered: 156, status: 'archived', description: 'Welcome orientation for the incoming organization members of AY 2026-2027.', cover: 'assets/event-assembly.jpg' },
         { id: 'ev-4', title: 'Midyear General Assembly & Constitution Review', typeId: 'type-4', venueId: 'venue-3', date: '2026-11-05', startTime: '10:00', endTime: '15:00', capacity: 180, registered: 112, status: 'upcoming', description: 'Mandatory semester meeting covering the constitution review and officer reporting.', cover: 'assets/event-assembly.jpg' },
-        { id: 'ev-5', title: 'Community Outreach: Coastal Cleanup Drive', typeId: 'type-5', venueId: 'venue-4', date: '2026-11-20', startTime: '07:00', endTime: '11:00', capacity: 120, registered: 47, status: 'upcoming', description: 'Volunteer outreach activity in partnership with the local coastal community.', cover: 'assets/event-outreach.jpg' },
+        { id: 'ev-5', title: 'Community Outreach: Coastal Cleanup Drive', typeId: 'type-5', venueId: 'venue-4', date: '2026-11-20', startTime: '07:00', endTime: '11:00', capacity: 120, registered: 47, status: 'upcoming', mood: 'bloom', description: 'Volunteer outreach activity in partnership with the local coastal community.', cover: 'assets/event-outreach.jpg' },
         { id: 'ev-6', title: 'Recognition Ceremony 2026 (Planning)', typeId: 'type-2', venueId: 'venue-1', date: '2026-12-15', startTime: '14:00', endTime: '18:00', capacity: 200, registered: 0, status: 'draft', description: 'Draft plan for the annual recognition ceremony for outstanding members.', cover: 'assets/hero-pass.jpg' }
       ],
       registrations: [
@@ -305,6 +305,45 @@
 
   Ta_store._load();
   Ta.store = Ta_store;
+
+  /* =====================================================================
+     Ta.mood - Event Moods: type-to-mood defaults + freeze-frame guard
+     ===================================================================== */
+  /* ===== Ta.mood ===== */
+  var MOOD_BY_TYPE = {
+    'type-1': 'drift',
+    'type-2': 'bloom',
+    'type-3': 'drift',
+    'type-4': 'drift',
+    'type-5': 'bloom',
+    'type-6': 'bloom',
+    'type-7': 'bloom',
+    'type-8': 'drift'
+  };
+
+  function applyMoodFreeze() {
+    try {
+      document.body.classList.toggle('mood-frozen', prefersReduced());
+    } catch (e) { /* ignore */ }
+  }
+
+  Ta.mood = {
+    LIST: ['plain', 'drift', 'bloom'],
+    byType: function (typeId) {
+      return MOOD_BY_TYPE[typeId] || 'plain';
+    },
+    of: function (event) {
+      if (!event) return 'plain';
+      var mood = event.mood;
+      if (mood && Ta.mood.LIST.indexOf(mood) !== -1) return mood;
+      return Ta.mood.byType(event.typeId);
+    },
+    applyFreeze: applyMoodFreeze
+  };
+
+  Ta.store.on('change', function (e) {
+    if (e && e.key === 'prefs') applyMoodFreeze();
+  });
 
   /* =====================================================================
      Ta.toast - stacking notifications (aria-live polite host)
@@ -1788,6 +1827,7 @@
   function boot() {
     try { Ta.fonts.init(); } catch (e) { console.error(e); }
     try { gateFonts(); } catch (e) { console.error(e); }
+    try { Ta.mood.applyFreeze(); } catch (e) { console.error(e); }
     try { Ta.nav.init(); } catch (e) { console.error(e); }
     try { Ta.sidebar.init(); } catch (e) { console.error(e); }
     try { Ta.drawer.init(); } catch (e) { console.error(e); }

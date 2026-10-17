@@ -262,6 +262,26 @@ def check_F8():
             add("F8", p, 0, f"missing marker: {n}")
 
 
+F9_MOODS = ["drift", "bloom"]
+
+
+def check_F9():
+    p = ASSETS / "components.css"
+    txt = read_text(p)
+    if not txt:
+        return
+    for n in ("event-backdrop", "mood-content", "mood-frozen"):
+        if n not in txt:
+            add("F9", p, 0, f"missing Event Moods marker: {n}")
+    for m in F9_MOODS:
+        if f'data-mood="{m}"' not in txt:
+            add("F9", p, 0, f"missing mood variant: {m}")
+    if not re.search(r"@media\s*\(\s*prefers-reduced-motion[^)]*\)\s*\{[^}]*\.event-backdrop", txt):
+        add("F9", p, 0, "missing reduced-motion kill for .event-backdrop")
+    if not re.search(r"@media\s+print\s*\{[^}]*\.event-backdrop", txt):
+        add("F9", p, 0, "missing print kill for .event-backdrop")
+
+
 # --------------------------------------------------------------------------
 # PAGE (baseline unless --strict)
 # --------------------------------------------------------------------------
@@ -424,8 +444,34 @@ def check_P12():
 
 
 # --------------------------------------------------------------------------
+MOODS = ["plain", "drift", "bloom"]
+MOOD_PAGES = {"student/events.html", "student/details.html"}
+BACKDROP_RE = re.compile(r"<div\b[^>]*\bevent-backdrop\b[^>]*>", re.I)
+DATA_MOOD_RE = re.compile(r"data-mood\s*=\s*[\"']([a-z]+)[\"']")
+
+
+def check_P13(page, txt):
+    r = rel(page)
+    m = BACKDROP_RE.search(txt)
+    if m:
+        tag = m.group(0)
+        line = txt.count("\n", 0, m.start()) + 1
+        if r not in MOOD_PAGES:
+            add("P13", page, line, "event-backdrop on a non-student page")
+        if "aria-hidden" not in tag:
+            add("P13", page, line, "event-backdrop missing aria-hidden")
+        if re.search(r"\bstyle\s*=", tag, re.I):
+            add("P13", page, line, "event-backdrop has inline style")
+        if "mood-content" not in txt:
+            add("P13", page, 0, "event-backdrop without .mood-content wrapper")
+    for m in DATA_MOOD_RE.finditer(txt):
+        if m.group(1) not in MOODS:
+            add("P13", page, txt.count("\n", 0, m.start()) + 1,
+                f"unknown mood '{m.group(1)}'")
+
+
 def run_checks():
-    for fn in (check_F1, check_F2, check_F3, check_F4, check_F5, check_F6, check_F7, check_F8):
+    for fn in (check_F1, check_F2, check_F3, check_F4, check_F5, check_F6, check_F7, check_F8, check_F9):
         fn()
     html_pages = pages()
     for page in html_pages:
@@ -441,6 +487,7 @@ def run_checks():
         check_P9(page, txt)
         check_P10(page, txt)
         check_P11(page, txt)
+        check_P13(page, txt)
     check_P12()
     return html_pages
 

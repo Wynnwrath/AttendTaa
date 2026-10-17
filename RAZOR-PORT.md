@@ -136,7 +136,7 @@ Five layouts replace the five prototype shells (plan §5). Active nav state is p
 | `attendta:v2:members` | `Member` |
 | `attendta:v2:users` | `AppUser` |
 | `attendta:v2:approvals` | `MembershipRequest` |
-| `attendta:v2:events` | `Event` |
+| `attendta:v2:events` | `Event` — gains one **`Mood`** property (see §10) |
 | `attendta:v2:types` | `EventType` |
 | `attendta:v2:venues` | `Venue` |
 | `attendta:v2:registrations` | `Registration` |
@@ -189,3 +189,18 @@ Five layouts replace the five prototype shells (plan §5). Active nav state is p
 - **`_InkSeam`** — shipped in the prototype (`assets/ink-seam.css` + `assets/ink-seam.js`; `index`, `account/login`, `account/register`, `certificates/view` only; reduced-motion + no-JS fallbacks). Port as host div + both assets.
 - **Kiosk camera** — implemented in `assets/app.js` `Ta.kiosk`: user-gesture camera start (`facingMode: environment`), `jsQR` frame decode (CDN), permission-denied → toast + manual entry. Manual **pass-code or student-number POST** (`kiosk.check-in` → `OnPostCheckInAsync`) is the base flow and fallback.
 - **QR pass images** — the prototype prints **gate codes**, not QR images; any QR rendering is a port-side decision (do not port `js/qr-engine.js`; see §8).
+
+---
+
+## 10. Event Moods addendum (UI feature, prototype shipped 2026-10-16)
+
+Live-event student backdrop + Live-Now hero. The whole system is CSS + one entity field — no new routes, no new handlers (plan: `plan.md`).
+
+- **Entity:** `Event.Mood` (string/enum, nullable). Missing/unknown value → server-side type default: 1→drift, 2→bloom, 3→drift, 4→drift, 5→bloom, 6→bloom, 7→bloom, 8→drift (prototype source of truth: `assets/app.js` `Ta.mood.byType`). One trivial EF migration.
+- **Rendering:** partial `_EventBackdrop.cshtml` — mood + accent in, markup out:
+  `<div class="event-backdrop" aria-hidden="true"><span class="event-backdrop__a"></span><span class="event-backdrop__b"></span></div>`
+  plus a `.mood-content` wrapper around the page content. `data-mood` / `data-accent` are **server-rendered** on the page root (Razor: zero flash-of-wrong-mood; the prototype JS-sets them and fades in 240ms). `student/details.html` adds `event-backdrop--quiet`. Backdrops ship **only** on the two student pages — never officer/admin/kiosk/passes/index. While live the page root also carries `data-accent` — **Tier 1 takeover**: the backdrop paints an accent ground wash and the student header gains a 2px inset accent rule (no chrome recolor; same verified accents).
+- **Form binding:** the `events/create.html` picker is a plain radio group `name="Mood"` (3 presets — Plain / Drift / Bloom — aria-labelled) inside the existing form — the field rides the current `events.publish` / `events.save-draft` POST and model-binds to `Event.Mood`. Handler map (§4) untouched. The type→mood suggestion is presentation-only (prototype JS; port may keep it or default server-side).
+- **CSS:** `components.css` section 30 (backdrops + officer picker chips) copies as-is — plain CSS, no `@apply`, no inline styles; CSP-safe (§7). Guardrails enforced by the prototype checker: F9 (kill-blocks present) + P13 (backdrop only on allowed pages, `aria-hidden`, no inline style, whitelisted mood values).
+- **Prefs:** `.mood-frozen` (from `prefs.reducedMotion`, prototype `Ta.mood.applyFreeze`) maps to the `UserPreference` row already in §5; `prefers-reduced-motion` is honored in CSS regardless.
+- **Open product calls (plan.md §10):** mood names, per-event accent override, public index, passes texture, published-event editing.

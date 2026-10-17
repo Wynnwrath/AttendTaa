@@ -14,6 +14,14 @@
 
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <!-- Ambient Event Mood backdrop — revealed by JS once a live event is known -->
+  <div class="event-backdrop" aria-hidden="true">
+    <span class="event-backdrop__a"></span>
+    <span class="event-backdrop__b"></span>
+  </div>
+
+  <div class="mood-content flex-1 flex flex-col">
+
   <header class="sticky top-0 z-nav border-b border-slate-200 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3">
       <button type="button" class="icon-btn md:hidden" data-drawer-open="nav" aria-label="Open navigation" aria-controls="app-nav-drawer">
@@ -64,21 +72,38 @@
         <p class="mt-1 text-sm text-ink-muted">Sessions, assemblies, and outreach on the organization calendar.</p>
       </div>
 
-      <!-- LIVE banner (static fallback = ev-1; replaced from the store) -->
+      <!-- Live Now hero — static fallback = ev-1; replaced from the store -->
       <section data-live-banner aria-label="Live event">
-        <div class="space-y-3" data-accent="indigo">
+        <article class="live-hero card-elevated overflow-hidden" data-accent="indigo">
           <div class="live-band">
             <span class="live-band__dot" aria-hidden="true"></span>
             <div>
-              <div class="live-band__label">Live now</div>
+              <div class="live-band__label">Live now &middot; ends 12:00</div>
               <div class="live-band__title">AI Architecture &amp; High-Agency Systems</div>
             </div>
             <div class="live-band__meta">84 / 150 registered</div>
           </div>
-          <div>
-            <a class="btn btn--secondary btn--sm" href="details.html?eventId=ev-1">View event</a>
+          <div class="p-5 space-y-4">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="badge badge--accent">Seminar</span>
+              <span class="status-pill" data-status="live">Live</span>
+              <span class="badge badge--emerald">Registered</span>
+            </div>
+            <div class="meta-cluster">
+              <span class="meta-cluster__item">Main Auditorium</span>
+              <span class="meta-cluster__item">Oct 15, 2026</span>
+              <span class="meta-cluster__item">09:00 &ndash; 12:00</span>
+            </div>
+            <div class="gauge">
+              <div class="gauge__track"><div class="gauge__fill" style="width:56%"></div></div>
+              <div class="gauge__meta"><span>84 registered</span><span>150 capacity</span></div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <a class="btn btn--primary btn--sm" href="details.html?eventId=ev-1">View details</a>
+              <a class="btn btn--secondary btn--sm" href="passes.html">Show pass</a>
+            </div>
           </div>
-        </div>
+        </article>
       </section>
 
       <!-- Filter chips -->
@@ -228,6 +253,8 @@
   </main>
 
   <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-ink-muted">&copy; 2026 USTP Student Organization Council &middot; AttendTa Event &amp; Attendance Management System</footer>
+
+  </div><!-- /.mood-content -->
 
   <!-- Mobile navigation drawer -->
   <div id="app-nav-drawer" class="drawer drawer--left" data-drawer="nav">
@@ -416,28 +443,89 @@
         });
       }
 
+      function heroCta(ev, reg) {
+        if (reg && reg.status !== 'waitlisted') {
+          return '<a class="btn btn--secondary btn--sm" href="passes.html">Show pass</a>';
+        }
+        return '<a class="btn btn--secondary btn--sm" href="details.html?eventId=' + esc(ev.id) + '">Reserve seat</a>';
+      }
+
+      function heroHtml(ev, isLive) {
+        var type = Ta.store.find('types', ev.typeId);
+        var venue = Ta.store.find('venues', ev.venueId);
+        var accent = (type && type.accent) || 'amber';
+        var reg = member ? registrationFor(ev.id) : null;
+        var label = isLive ? 'Live now \u00b7 ends ' + (ev.endTime || '') : 'Up next';
+
+        return '<article class="live-hero card-elevated overflow-hidden" data-accent="' + esc(accent) + '">' +
+          '<div class="live-band">' +
+            (isLive ? '<span class="live-band__dot" aria-hidden="true"></span>' : '') +
+            '<div>' +
+              '<div class="live-band__label">' + esc(label) + '</div>' +
+              '<div class="live-band__title">' + esc(ev.title) + '</div>' +
+            '</div>' +
+            '<div class="live-band__meta">' + esc(ev.registered) + ' / ' + esc(ev.capacity) + ' registered</div>' +
+          '</div>' +
+          '<div class="p-5 space-y-4">' +
+            '<div class="flex items-center gap-2 flex-wrap">' +
+              '<span class="badge badge--accent">' + esc(type ? type.name : 'Event') + '</span>' +
+              '<span class="status-pill" data-status="' + (isLive ? 'live' : 'neutral') + '">' + (isLive ? 'Live' : 'Upcoming') + '</span>' +
+              regBadge(reg) +
+            '</div>' +
+            '<div class="meta-cluster">' +
+              '<span class="meta-cluster__item">' + esc(venue ? venue.name : 'Venue to be announced') + '</span>' +
+              '<span class="meta-cluster__item">' + esc(fmtDate(ev.date)) + '</span>' +
+              '<span class="meta-cluster__item">' + esc(ev.startTime) + TIME_SEP + esc(ev.endTime) + '</span>' +
+            '</div>' +
+            '<div class="gauge">' +
+              '<div class="gauge__track"><div class="gauge__fill" style="width:' + pct(ev) + '%"></div></div>' +
+              '<div class="gauge__meta"><span>' + esc(ev.registered) + ' registered</span><span>' + esc(ev.capacity) + ' capacity</span></div>' +
+            '</div>' +
+            '<div class="flex flex-wrap items-center gap-2">' +
+              '<a class="btn btn--primary btn--sm" href="details.html?eventId=' + esc(ev.id) + '">View details</a>' +
+              heroCta(ev, reg) +
+            '</div>' +
+          '</div>' +
+        '</article>';
+      }
+
+      function clearMood() {
+        document.body.removeAttribute('data-mood');
+        document.body.removeAttribute('data-accent');
+      }
+
+      function applyMood(ev) {
+        var type = Ta.store.find('types', ev.typeId);
+        document.body.setAttribute('data-accent', (type && type.accent) || 'amber');
+        var mood = Ta.mood.of(ev);
+        if (mood !== 'plain') document.body.setAttribute('data-mood', mood);
+        else document.body.removeAttribute('data-mood');
+      }
+
       function renderLive(events) {
         var wrap = document.querySelector('[data-live-banner]');
         if (!wrap) return;
         var live = null;
+        var upcoming = [];
         for (var i = 0; i < events.length; i++) {
-          if (events[i].status === 'live') { live = events[i]; break; }
+          if (!live && events[i].status === 'live') live = events[i];
+          if (events[i].status === 'upcoming') upcoming.push(events[i]);
         }
-        if (!live) { wrap.setAttribute('hidden', ''); return; }
-        var type = Ta.store.find('types', live.typeId);
-        var accent = (type && type.accent) || 'amber';
-        wrap.removeAttribute('hidden');
-        wrap.innerHTML = '<div class="space-y-3" data-accent="' + esc(accent) + '">' +
-          '<div class="live-band">' +
-            '<span class="live-band__dot" aria-hidden="true"></span>' +
-            '<div>' +
-              '<div class="live-band__label">Live now</div>' +
-              '<div class="live-band__title">' + esc(live.title) + '</div>' +
-            '</div>' +
-            '<div class="live-band__meta">' + esc(live.registered) + ' / ' + esc(live.capacity) + ' registered</div>' +
-          '</div>' +
-          '<div><a class="btn btn--secondary btn--sm" href="details.html?eventId=' + esc(live.id) + '">View event</a></div>' +
-        '</div>';
+        upcoming.sort(function (a, b) { return String(a.date).localeCompare(String(b.date)); });
+
+        if (live) {
+          wrap.removeAttribute('hidden');
+          wrap.innerHTML = heroHtml(live, true);
+          applyMood(live);
+        } else if (upcoming.length) {
+          wrap.removeAttribute('hidden');
+          wrap.innerHTML = heroHtml(upcoming[0], false);
+          clearMood();
+        } else {
+          wrap.setAttribute('hidden', '');
+          wrap.innerHTML = '';
+          clearMood();
+        }
       }
 
       function render() {

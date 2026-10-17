@@ -2,9 +2,9 @@
 
 **Purpose:** the single, frozen value set for AttendTa v2 (static prototype) — the contract every builder references and no one re-invents. Design direction: *Institutional Precision* — registrar ledger × operations console. One brand accent: amber.
 
-**Version:** 2.1 · **Date:** 2026-10-16
+**Version:** 2.3 · **Date:** 2026-10-17
 **Method:** All ratios computed with WCAG 2.2 relative luminance (sRGB) against the stated surface. Source of truth: `assets/tokens.css`.
-**Changelog:** 2.1 (Phase 6 final) — adds `--navy-hover`; 2.0 (2026-10-15) — initial freeze after Wave D.
+**Changelog:** 2.3 (Event Moods final cut) — set reduced to Drift / Bloom (Lattice, Ember, Tempo retired); Tier 1 live takeover documented; 2.2 (Event Moods) — adds the Event Moods backdrop register (§ below); no token value changes; 2.1 (Phase 6 final) — adds `--navy-hover`; 2.0 (2026-10-15) — initial freeze after Wave D.
 
 ---
 
@@ -147,6 +147,26 @@ Each family: `--event-{family}` (base, marks/gauges/hairlines), `--event-{family
 | `--event-amber-deep` | `#B45309` | event-amber-subtle | 4.51 | AA | Text on amber chip (tightest pair — do not lighten) | — |
 | `--event-amber-subtle` | `#FEF3C7` | — | n/a | Not applicable | Chip wash | Text color |
 | `--event-amber-glow` | `rgba(217,119,6,0.12)` | — | n/a | Decorative — never text | Halo | Text |
+
+---
+
+## Event Moods (student backdrop register)
+
+Officer-selected per event; **shape & motion only** — color always follows the event's type accent (no free-form color, no new values — the Event accents above are reused verbatim). Closed set; pure CSS/SVG layers, no assets.
+
+| Mood | Character | Technique | Ship durations | Type default |
+|---|---|---|---|---|
+| Plain | none (today's look) | — | — | fallback |
+| Drift | layered wave fields | 2 masked wave layers, `translateX` loop | 55s / 80s | Seminar, Workshop, Assembly, Orientation |
+| Bloom | soft overlapping orbs | 5 radial-gradient blobs, scale/translate | 38s / 52s | Outreach, Sports, Recognition, Cultural Night |
+
+**Final cut (2026-10-17):** Lattice, Ember and Tempo were built, previewed, then retired — one texture mood (Bloom) and one motion mood (Drift), plus Plain.
+
+**Budgets (locked):** ≤ 2 span layers + container; `transform`/`opacity` only — no blur, no canvas, no JS loops. Washes composite from `*-glow` (≤ ~7% effective); layer accents stay ≤ 20% of the base accent. Frozen composition must read as intentional. Below 768px only the calmest layer animates. `prefers-reduced-motion` **or** `prefs.reducedMotion` (`.mood-frozen`) → full freeze-frame; `@media print` → never printed.
+
+**Placement (locked):** `student/events.html` — Live-Now hero + full backdrop; `student/details.html` — quieter backdrop (`--quiet`, 55%). While an event is live the page root also carries `data-accent` — **Tier 1 takeover**: the backdrop paints the accent ground wash and the student header gains a 2px inset accent rule (same verified accents, no chrome recolor). Officer picker previews in `events/create.html` use amber-family tints only (color still follows the type). **Never** on officer / admin / kiosk / passes / public index.
+
+**Guardrails (checker F9 / P13):** backdrop is `aria-hidden`, no inline styles, sits under a `.mood-content` wrapper above content; mood whitelist enforced in markup; reduced-motion + print kill-blocks required in `components.css`.
 
 ---
 
