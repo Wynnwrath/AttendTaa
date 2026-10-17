@@ -158,11 +158,11 @@ Officer-selected per event; **shape & motion only** — color always follows the
 |---|---|---|---|---|
 | Plain | none (today's look) | — | — | fallback |
 | Drift | layered wave fields | 2 masked wave layers, `translateX` loop | 55s / 80s | Seminar, Workshop, Assembly, Orientation |
-| Bloom | soft overlapping orbs | 5 radial-gradient blobs, scale/translate | 38s / 52s | Outreach, Sports, Recognition, Cultural Night |
+| Bloom | floating bubble field | 9 radial-gradient circles (44–120px), slow float | 38s / 52s | Outreach, Sports, Recognition, Cultural Night |
 
 **Final cut (2026-10-17):** Lattice, Ember and Tempo were built, previewed, then retired — one texture mood (Bloom) and one motion mood (Drift), plus Plain.
 
-**Budgets (locked):** ≤ 2 span layers + container; `transform`/`opacity` only — no blur, no canvas, no JS loops. Washes composite from `*-glow` (≤ ~7% effective); layer accents stay ≤ 20% of the base accent. Frozen composition must read as intentional. Below 768px only the calmest layer animates. `prefers-reduced-motion` **or** `prefs.reducedMotion` (`.mood-frozen`) → full freeze-frame; `@media print` → never printed.
+**Budgets (locked):** ≤ 2 span layers + container; `transform`/`opacity` only — no blur, no canvas, no JS loops. Washes and fills are built only from `*-glow` passes (flat wash ~12% alpha; bubble fills double-painted, ≤ ~23% effective). Frozen composition must read as intentional. Below 768px only the calmest layer animates. `prefers-reduced-motion` **or** `prefs.reducedMotion` (`.mood-frozen`) → full freeze-frame; `@media print` → never printed.
 
 **Placement (locked):** `student/events.html` — Live-Now hero + full backdrop; `student/details.html` — quieter backdrop (`--quiet`, 55%). While an event is live the page root also carries `data-accent` — **Tier 1 takeover**: the backdrop paints the accent ground wash and the student header gains a 2px inset accent rule (same verified accents, no chrome recolor). Officer picker previews in `events/create.html` use amber-family tints only (color still follows the type). **Never** on officer / admin / kiosk / passes / public index.
 

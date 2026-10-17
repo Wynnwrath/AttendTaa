@@ -1756,19 +1756,32 @@ body[data-mood="drift"] .event-backdrop__b {
   to { transform: translateX(0); }
 }
 
-/* Bloom — mesh-gradient blobs (38s / 52s drift) */
+/* Bloom — floating bubble field (38s / 52s drift; fills double-painted) */
 body[data-mood="bloom"] .event-backdrop__a {
   background-image:
-    radial-gradient(46% 58% at 16% 80%, var(--mood-glow) 0%, transparent 68%),
-    radial-gradient(40% 52% at 84% 24%, var(--mood-glow) 0%, transparent 68%),
-    radial-gradient(34% 44% at 62% 92%, var(--mood-glow) 0%, transparent 70%);
+    radial-gradient(circle 110px at 14% 78%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 72px at 32% 92%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 140px at 58% 88%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 88px at 82% 74%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 60px at 68% 97%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 110px at 14% 78%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 72px at 32% 92%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 140px at 58% 88%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 88px at 82% 74%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 60px at 68% 97%, var(--mood-glow) 0 66%, transparent 74%);
   animation: mood-bloom-a 38s ease-in-out infinite alternate;
 }
 body[data-mood="bloom"] .event-backdrop__b {
-  opacity: 0.6;
+  opacity: 0.9;
   background-image:
-    radial-gradient(48% 56% at 70% 70%, var(--mood-glow) 0%, transparent 70%),
-    radial-gradient(36% 48% at 30% 18%, var(--mood-glow) 0%, transparent 70%);
+    radial-gradient(circle 120px at 86% 18%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 80px at 44% 24%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 56px at 12% 40%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 96px at 68% 42%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 120px at 86% 18%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 80px at 44% 24%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 56px at 12% 40%, var(--mood-glow) 0 66%, transparent 74%),
+    radial-gradient(circle 96px at 68% 42%, var(--mood-glow) 0 66%, transparent 74%);
   animation: mood-bloom-b 52s ease-in-out infinite alternate-reverse;
 }
 @keyframes mood-bloom-a {
@@ -1898,7 +1911,7 @@ body[data-mood="bloom"] .event-backdrop__b {
   bottom: -44%;
   opacity: 0.6;
 }
-/* Bloom — two soft orbs */
+/* Bloom — bubble cluster */
 .mood-option__chip--bloom::before,
 .mood-option__chip--bloom::after {
   content: "";
@@ -1907,16 +1920,17 @@ body[data-mood="bloom"] .event-backdrop__b {
   background-color: var(--event-amber-glow);
 }
 .mood-option__chip--bloom::before {
-  left: -8px;
-  bottom: -12px;
-  width: 42px;
-  height: 42px;
+  left: -6px;
+  bottom: -10px;
+  width: 36px;
+  height: 36px;
+  box-shadow: 22px -14px 0 -9px var(--event-amber-glow), 38px 6px 0 -14px var(--event-amber-glow);
 }
 .mood-option__chip--bloom::after {
-  right: -10px;
-  top: -13px;
-  width: 34px;
-  height: 34px;
+  right: -9px;
+  top: -11px;
+  width: 30px;
+  height: 30px;
   opacity: 0.65;
 }
 /* --------------------------------------------------------------------------

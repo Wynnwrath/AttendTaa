@@ -135,7 +135,7 @@
         { id: 'venue-4', name: 'University Gymnasium', building: 'Sports Complex', capacity: 400 }
       ],
       events: [
-        { id: 'ev-1', title: 'AI Architecture & High-Agency Systems', typeId: 'type-1', venueId: 'venue-1', date: '2026-10-15', startTime: '09:00', endTime: '12:00', capacity: 150, registered: 84, status: 'live', mood: 'drift', description: 'A keynote seminar on modern AI architecture, agentic systems, and responsible deployment.', cover: 'assets/event-cyber.jpg' },
+        { id: 'ev-1', title: 'AI Architecture & High-Agency Systems', typeId: 'type-1', venueId: 'venue-1', date: '2026-10-15', startTime: '09:00', endTime: '12:00', capacity: 150, registered: 84, status: 'live', mood: 'bloom', description: 'A keynote seminar on modern AI architecture, agentic systems, and responsible deployment.', cover: 'assets/event-cyber.jpg' },
         { id: 'ev-2', title: 'C# ASP.NET Core & Entity Framework Bootcamp', typeId: 'type-3', venueId: 'venue-2', date: '2026-09-26', startTime: '13:00', endTime: '17:00', capacity: 60, registered: 60, status: 'past', description: 'Hands-on coding lab building a full-stack web application with ASP.NET Core 9.', cover: 'assets/event-workshop.jpg' },
         { id: 'ev-3', title: 'First Semester Orientation & Welcome Assembly', typeId: 'type-8', venueId: 'venue-3', date: '2026-08-29', startTime: '10:00', endTime: '15:00', capacity: 180, registered: 156, status: 'archived', description: 'Welcome orientation for the incoming organization members of AY 2026-2027.', cover: 'assets/event-assembly.jpg' },
         { id: 'ev-4', title: 'Midyear General Assembly & Constitution Review', typeId: 'type-4', venueId: 'venue-3', date: '2026-11-05', startTime: '10:00', endTime: '15:00', capacity: 180, registered: 112, status: 'upcoming', description: 'Mandatory semester meeting covering the constitution review and officer reporting.', cover: 'assets/event-assembly.jpg' },
@@ -219,6 +219,19 @@
 
     _load: function () {
       var seeded = seedData();
+      var version = 2;
+      var storedVersion = null;
+      var rawVersion = Ta_store._lsGet(STORE_PREFIX + 'seedVersion');
+      if (rawVersion !== null && rawVersion !== undefined) {
+        try { storedVersion = JSON.parse(rawVersion); } catch (e) { storedVersion = null; }
+      }
+      if (storedVersion !== version) {
+        /* Demo seeds changed - refresh the store in place. */
+        Ta_store.db = seeded;
+        Ta_store._lsSet(STORE_PREFIX + 'seedVersion', JSON.stringify(version));
+        Ta_store.save();
+        return seeded;
+      }
       var db = {};
       var found = false;
       Object.keys(seeded).forEach(function (key) {

@@ -40,7 +40,7 @@ All moods: pure CSS/SVG layers, 2–3 DOM nodes max, opacity ≤ 14% over `--can
 |---|---|---|---|
 | **Plain** | none (today's look) | — | — |
 | **Drift** | slow layered waves, editorial calm | 2 oversized wave layers, `translateX` loop 40–60s | Seminar, Workshop, Assembly, Orientation |
-| **Bloom** | soft overlapping translucent orbs | 4–5 radial-gradient circles, slow scale/translate 30s | Outreach, Sports, Recognition, Cultural Night |
+| **Bloom** | floating bubble field, playful | 9 radial-gradient circles (44–120px), slow float 38s | Outreach, Sports, Recognition, Cultural Night |
 
 **Final cut (2026-10-17):** Lattice, Ember and Tempo were retired after visual review — one texture mood (Bloom) + one motion mood (Drift) keep the set restrained.
 
@@ -60,7 +60,7 @@ Checked against workspace skills (`design-thinking`, `design-taste-frontend`, `f
 |---|---|---|
 | Drift | layered wave fields | Ink Seam is the in-project precedent; decorative-only, freezing cleanly |
 | Lattice | static grid + "breathing" nodes | breathing status indicator is a sanctioned micro-interaction |
-| Bloom | mesh-gradient blobs | named as a premium background archetype (organic, lava-lamp) |
+| Bloom | bubble field (radial orbs) | named as a premium background archetype (organic, bokeh) |
 | Ember | sparse particle drift | particle-lite: ≤ 8 nodes, DOM-only (no canvas) |
 | Tempo | kinetic band / sweep | a single moving highlight layer only |
 
